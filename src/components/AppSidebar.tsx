@@ -8,9 +8,11 @@ import {
   Calendar,
   User,
   LogOut,
+  Shield,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdmin } from "@/hooks/useAdmin";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
@@ -29,6 +31,7 @@ const menuItems = [
 
 export function AppSidebar() {
   const { user, signOut } = useAuth();
+  const { isAdmin } = useAdmin();
   const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
@@ -72,6 +75,15 @@ export function AppSidebar() {
             <span>{item.title}</span>
           </NavLink>
         ))}
+        {isAdmin && (
+          <>
+            <Separator className="bg-border/30 my-2" />
+            <NavLink to="/admin" activeClassName="gradient-primary text-white font-medium">
+              <Shield className="h-4 w-4" />
+              <span>Admin</span>
+            </NavLink>
+          </>
+        )}
       </nav>
 
       <Separator className="bg-border/30" />
