@@ -47,32 +47,40 @@ export function AppSidebar() {
     : user?.email?.slice(0, 2).toUpperCase() || "U";
 
   return (
-    <aside className="flex h-full w-64 flex-col border-r bg-sidebar">
+    <aside className="flex h-full w-64 flex-col border-r border-border/50 bg-sidebar">
       <div className="flex items-center gap-3 p-4">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl gradient-primary font-bold text-sm text-white">
           V
         </div>
-        <span className="font-semibold text-sidebar-foreground">Vertice</span>
+        <span className="font-bold text-lg">
+          <span className="text-gradient">Vida</span>
+          <span className="text-accent">Flow</span>
+        </span>
       </div>
 
-      <Separator />
+      <Separator className="bg-border/30" />
 
       <nav className="flex-1 space-y-1 p-3">
         {menuItems.map((item) => (
-          <NavLink key={item.url} to={item.url} end={item.url === "/"}>
+          <NavLink
+            key={item.url}
+            to={item.url}
+            end={item.url === "/"}
+            activeClassName="gradient-primary text-white font-medium"
+          >
             <item.icon className="h-4 w-4" />
             <span>{item.title}</span>
           </NavLink>
         ))}
       </nav>
 
-      <Separator />
+      <Separator className="bg-border/30" />
 
       <div className="p-3">
-        <div className="flex items-center gap-3 rounded-md px-3 py-2">
-          <Avatar className="h-8 w-8">
+        <div className="flex items-center gap-3 rounded-xl px-3 py-2 glass-card">
+          <Avatar className="h-8 w-8 ring-2 ring-primary/30">
             <AvatarImage src={profile?.avatar_url || ""} />
-            <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+            <AvatarFallback className="text-xs bg-muted">{initials}</AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium truncate text-sidebar-foreground">
