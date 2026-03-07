@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import { AchievementsProvider } from "@/contexts/AchievementsContext";
 import { Layout } from "@/components/Layout";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
