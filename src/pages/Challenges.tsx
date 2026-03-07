@@ -33,16 +33,18 @@ const Challenges = () => {
               <ChallengeCard
                 key={challenge.id}
                 challenge={challenge}
-                onJoin={() => joinChallenge(challenge.id)}
+                onJoin={(id) => joinChallenge(id)}
+                onLeave={() => {}}
+                onViewLeaderboard={() => {}}
               />
             ))}
           </div>
         )}
 
         <CreateChallengeModal
-          isOpen={showCreate}
-          onClose={() => setShowCreate(false)}
-          onCreateChallenge={createChallenge}
+          open={showCreate}
+          onOpenChange={setShowCreate}
+          onSubmit={createChallenge}
         />
       </div>
     </DashboardLayout>
