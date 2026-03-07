@@ -1,0 +1,1 @@
+ALTER TABLE public.introductions ADD COLUMN goals TEXT;
