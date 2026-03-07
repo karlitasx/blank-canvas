@@ -68,7 +68,7 @@ const TransactionsList = ({
   return (
     <div className="glass-card p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold">Transações Recentes</h3>
+        <h3 className="text-lg font-semibold text-foreground">Transações Recentes</h3>
         <span className="text-sm text-muted-foreground">
           {filteredTransactions.length} transações
         </span>
@@ -97,20 +97,20 @@ const TransactionsList = ({
               >
                 {/* Delete button (mobile swipe) */}
                 <div
-                  className={`absolute right-0 top-0 bottom-0 flex items-center justify-center bg-red-500 px-4 transition-all ${
+                  className={`absolute right-0 top-0 bottom-0 flex items-center justify-center bg-destructive px-4 transition-all ${
                     isSwiped ? "translate-x-0" : "translate-x-full"
                   }`}
                 >
                   <button
                     onClick={() => onDelete(transaction.id)}
-                    className="p-2 text-white"
+                    className="p-2 text-destructive-foreground"
                   >
                     <Trash2 className="w-5 h-5" />
                   </button>
                 </div>
 
                 <div
-                  className={`flex items-center gap-4 p-4 bg-glass rounded-xl transition-all hover:bg-white/10 ${
+                  className={`flex items-center gap-4 p-4 bg-muted/50 rounded-xl transition-all hover:bg-muted ${
                     isSwiped ? "-translate-x-16" : ""
                   }`}
                 >
@@ -125,7 +125,7 @@ const TransactionsList = ({
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">{transaction.description}</p>
+                    <p className="font-medium truncate text-foreground">{transaction.description}</p>
                     <p className="text-sm text-muted-foreground">
                       {transaction.category} •{" "}
                       {format(transaction.date, "dd MMM yyyy", { locale: ptBR })}
@@ -136,8 +136,8 @@ const TransactionsList = ({
                     <span
                       className={`font-semibold ${
                         transaction.type === "income"
-                          ? "text-green-400"
-                          : "text-red-400"
+                          ? "text-success"
+                          : "text-destructive"
                       }`}
                     >
                       {transaction.type === "income" ? "+" : "-"}
@@ -147,7 +147,7 @@ const TransactionsList = ({
                     {/* Desktop delete button */}
                     <button
                       onClick={() => onDelete(transaction.id)}
-                      className="hidden md:block p-2 text-muted-foreground hover:text-red-400 transition-colors"
+                      className="hidden md:block p-2 text-muted-foreground hover:text-destructive transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

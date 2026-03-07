@@ -21,27 +21,27 @@ const SummaryCards = ({ balance, income, expenses, investments = 0 }: SummaryCar
       sublabel: "Total de entradas",
       value: income,
       icon: TrendingUp,
-      iconColor: "text-green-500",
-      iconBg: "bg-green-500/10",
-      valueColor: "text-green-500",
+      iconColor: "text-success",
+      iconBg: "bg-success/10",
+      valueColor: "text-success",
     },
     {
       label: "Despesas",
       sublabel: "Total de saídas",
       value: expenses,
       icon: TrendingDown,
-      iconColor: "text-red-500",
-      iconBg: "bg-red-500/10",
-      valueColor: "text-red-500",
+      iconColor: "text-destructive",
+      iconBg: "bg-destructive/10",
+      valueColor: "text-destructive",
     },
     {
       label: "Investimentos",
       sublabel: "Total investido",
       value: investments,
       icon: BarChart3,
-      iconColor: "text-violet-500",
-      iconBg: "bg-violet-500/10",
-      valueColor: "text-violet-500",
+      iconColor: "text-secondary",
+      iconBg: "bg-secondary/10",
+      valueColor: "text-secondary",
     },
     {
       label: "Saldo Atual",
@@ -50,7 +50,7 @@ const SummaryCards = ({ balance, income, expenses, investments = 0 }: SummaryCar
       icon: Wallet,
       iconColor: "text-primary",
       iconBg: "bg-primary/10",
-      valueColor: balance >= 0 ? "text-primary" : "text-red-500",
+      valueColor: balance >= 0 ? "text-primary" : "text-destructive",
     },
   ];
 
@@ -61,7 +61,7 @@ const SummaryCards = ({ balance, income, expenses, investments = 0 }: SummaryCar
         return (
           <div
             key={card.label}
-            className="glass-card p-4 md:p-5 rounded-2xl flex flex-col gap-3 hover:shadow-md transition-shadow"
+            className="glass-card p-4 md:p-5 flex flex-col gap-3 hover:shadow-md transition-shadow"
           >
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-muted-foreground">{card.label}</span>
