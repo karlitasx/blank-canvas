@@ -28,7 +28,6 @@ const HabitStats = ({ habitId }: HabitStatsProps) => {
         setHeatmapData(history);
         setConsistency(cons);
       } else if (habits.length > 0) {
-        // For "all", use first habit
         const first = habits[0];
         const [history, cons] = await Promise.all([
           getHabitHistory(first.id, 90),
@@ -60,41 +59,37 @@ const HabitStats = ({ habitId }: HabitStatsProps) => {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="glass-card p-4 text-center rounded-2xl">
-          <Flame className="w-6 h-6 mx-auto mb-2 text-[hsl(345,60%,35%)]" />
-          <p className="text-2xl font-bold">{currentStreak}</p>
+          <Flame className="w-6 h-6 mx-auto mb-2 text-primary" />
+          <p className="text-2xl font-bold text-foreground">{currentStreak}</p>
           <p className="text-xs text-muted-foreground">Streak Atual</p>
         </div>
         <div className="glass-card p-4 text-center rounded-2xl">
-          <Trophy className="w-6 h-6 mx-auto mb-2 text-yellow-400" />
-          <p className="text-2xl font-bold">{bestStreak}</p>
+          <Trophy className="w-6 h-6 mx-auto mb-2 text-accent" />
+          <p className="text-2xl font-bold text-foreground">{bestStreak}</p>
           <p className="text-xs text-muted-foreground">Melhor Streak</p>
         </div>
         <div className="glass-card p-4 text-center rounded-2xl">
-          <Calendar className="w-6 h-6 mx-auto mb-2 text-[hsl(220,70%,50%)]" />
-          <p className="text-2xl font-bold">{totalDays}</p>
+          <Calendar className="w-6 h-6 mx-auto mb-2 text-secondary" />
+          <p className="text-2xl font-bold text-foreground">{totalDays}</p>
           <p className="text-xs text-muted-foreground">Dias Concluídos</p>
         </div>
         <div className="glass-card p-4 text-center rounded-2xl">
-          <TrendingUp className="w-6 h-6 mx-auto mb-2 text-green-400" />
-          <p className="text-2xl font-bold">{consistency}%</p>
+          <TrendingUp className="w-6 h-6 mx-auto mb-2 text-success" />
+          <p className="text-2xl font-bold text-foreground">{consistency}%</p>
           <p className="text-xs text-muted-foreground">Consistência Mensal</p>
         </div>
       </div>
 
       {/* Heat Map */}
       <div className="glass-card p-6 rounded-2xl">
-        <h3 className="font-semibold mb-4">Últimos 90 dias</h3>
+        <h3 className="font-semibold mb-4 text-foreground">Últimos 90 dias</h3>
         <div className="grid grid-cols-15 gap-1">
           {heatmapData.map((day, index) => (
             <div
               key={index}
-              className="aspect-square rounded-sm transition-all hover:scale-125"
-              style={{
-                backgroundColor: day.completed
-                  ? "hsl(220, 70%, 50%)"
-                  : "hsl(var(--muted))",
-                opacity: day.completed ? 0.85 : 0.3,
-              }}
+              className={`aspect-square rounded-sm transition-all hover:scale-125 ${
+                day.completed ? "bg-secondary opacity-85" : "bg-muted opacity-30"
+              }`}
               title={day.date}
             />
           ))}
@@ -102,7 +97,7 @@ const HabitStats = ({ habitId }: HabitStatsProps) => {
         <div className="flex items-center justify-end gap-2 mt-3 text-xs text-muted-foreground">
           <span>Não feito</span>
           <div className="w-3 h-3 rounded-sm bg-muted opacity-30" />
-          <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: "hsl(220, 70%, 50%)", opacity: 0.85 }} />
+          <div className="w-3 h-3 rounded-sm bg-secondary opacity-85" />
           <span>Feito</span>
         </div>
       </div>
