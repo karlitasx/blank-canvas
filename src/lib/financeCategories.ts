@@ -1,61 +1,97 @@
 import {
-  Briefcase, Car, Coffee, CreditCard, DollarSign, Gift, GraduationCap,
-  Heart, Home, Landmark, LineChart, Package, Percent, PiggyBank,
-  Receipt, Shirt, ShoppingBag, ShoppingCart, Smartphone, Stethoscope,
-  TrendingUp, Utensils, Wifi, Wrench, Zap,
-  type LucideIcon,
+  ShoppingBag, Utensils, Car, Home, Gamepad2, Heart, GraduationCap,
+  Briefcase, Banknote, Gift, Building2, Truck, Users, FileText,
+  Receipt, Landmark, Package, Wrench, Megaphone, LucideIcon,
+  TrendingUp, Bitcoin, PiggyBank, Shield, BarChart3, Coins, Building, CircleDollarSign,
 } from "lucide-react";
 
 export interface FinanceCategory {
-  id: string;
   name: string;
   icon: LucideIcon;
   color: string;
 }
 
 export const personalIncomeCategories: FinanceCategory[] = [
-  { id: "salary", name: "Salário", icon: DollarSign, color: "#22c55e" },
-  { id: "freelance", name: "Freelance", icon: Briefcase, color: "#3b82f6" },
-  { id: "investments_income", name: "Rendimentos", icon: TrendingUp, color: "#8b5cf6" },
-  { id: "gifts", name: "Presentes", icon: Gift, color: "#ec4899" },
-  { id: "other_income", name: "Outros", icon: Receipt, color: "#6b7280" },
+  { name: "Salário", icon: Briefcase, color: "#22c55e" },
+  { name: "Presente", icon: Gift, color: "#a855f7" },
+  { name: "Freelance", icon: Banknote, color: "#14b8a6" },
 ];
 
 export const personalExpenseCategories: FinanceCategory[] = [
-  { id: "food", name: "Alimentação", icon: Utensils, color: "#f97316" },
-  { id: "transport", name: "Transporte", icon: Car, color: "#3b82f6" },
-  { id: "housing", name: "Moradia", icon: Home, color: "#8b5cf6" },
-  { id: "health", name: "Saúde", icon: Stethoscope, color: "#ef4444" },
-  { id: "education", name: "Educação", icon: GraduationCap, color: "#06b6d4" },
-  { id: "shopping", name: "Compras", icon: ShoppingBag, color: "#ec4899" },
-  { id: "entertainment", name: "Lazer", icon: Coffee, color: "#f59e0b" },
-  { id: "clothing", name: "Vestuário", icon: Shirt, color: "#a855f7" },
-  { id: "bills", name: "Contas", icon: Zap, color: "#eab308" },
-  { id: "internet", name: "Internet/Tel", icon: Wifi, color: "#14b8a6" },
-  { id: "subscriptions", name: "Assinaturas", icon: CreditCard, color: "#6366f1" },
-  { id: "maintenance", name: "Manutenção", icon: Wrench, color: "#78716c" },
-  { id: "other_expense", name: "Outros", icon: Receipt, color: "#6b7280" },
+  { name: "Alimentação", icon: Utensils, color: "#f97316" },
+  { name: "Transporte", icon: Car, color: "#3b82f6" },
+  { name: "Moradia", icon: Home, color: "#8b5cf6" },
+  { name: "Lazer", icon: Gamepad2, color: "#ec4899" },
+  { name: "Saúde", icon: Heart, color: "#ef4444" },
+  { name: "Educação", icon: GraduationCap, color: "#14b8a6" },
+  { name: "Compras", icon: ShoppingBag, color: "#f59e0b" },
 ];
 
 export const investmentCategories: FinanceCategory[] = [
-  { id: "stocks", name: "Ações", icon: LineChart, color: "#22c55e" },
-  { id: "fixed_income", name: "Renda Fixa", icon: Landmark, color: "#3b82f6" },
-  { id: "crypto", name: "Criptomoedas", icon: Smartphone, color: "#f59e0b" },
-  { id: "real_estate", name: "Imóveis", icon: Home, color: "#8b5cf6" },
-  { id: "savings", name: "Poupança", icon: PiggyBank, color: "#06b6d4" },
-  { id: "funds", name: "Fundos", icon: Percent, color: "#ec4899" },
-  { id: "other_investment", name: "Outros", icon: Package, color: "#6b7280" },
+  { name: "LCI/LCA", icon: Landmark, color: "#3b82f6" },
+  { name: "Tesouro Direto", icon: Shield, color: "#22c55e" },
+  { name: "Fundos de Investimento", icon: BarChart3, color: "#8b5cf6" },
+  { name: "Ações", icon: TrendingUp, color: "#ef4444" },
+  { name: "FIIs (Fundos Imobiliários)", icon: Building, color: "#f97316" },
+  { name: "Criptomoedas", icon: Bitcoin, color: "#f59e0b" },
+  { name: "Previdência Privada", icon: PiggyBank, color: "#6366f1" },
+  { name: "Poupança", icon: Coins, color: "#14b8a6" },
+  { name: "Outro", icon: CircleDollarSign, color: "#6b7280" },
+];
+
+// Legacy combined lists for backward compat
+export const personalCategories: FinanceCategory[] = [
+  ...personalExpenseCategories,
+  ...personalIncomeCategories,
+  { name: "Investimento", icon: Banknote, color: "#6366f1" },
 ];
 
 export const businessCategories: FinanceCategory[] = [
-  { id: "revenue", name: "Receita", icon: DollarSign, color: "#22c55e" },
-  { id: "supplies", name: "Insumos", icon: Package, color: "#f97316" },
-  { id: "payroll", name: "Folha de Pagamento", icon: Briefcase, color: "#3b82f6" },
-  { id: "taxes", name: "Impostos", icon: Receipt, color: "#ef4444" },
-  { id: "marketing", name: "Marketing", icon: TrendingUp, color: "#8b5cf6" },
-  { id: "rent", name: "Aluguel", icon: Home, color: "#06b6d4" },
-  { id: "utilities", name: "Utilidades", icon: Zap, color: "#eab308" },
-  { id: "equipment", name: "Equipamentos", icon: Wrench, color: "#78716c" },
-  { id: "services", name: "Serviços", icon: ShoppingCart, color: "#14b8a6" },
-  { id: "other_business", name: "Outros", icon: Receipt, color: "#6b7280" },
+  { name: "Receita de Vendas", icon: Banknote, color: "#22c55e" },
+  { name: "Serviços Prestados", icon: Wrench, color: "#3b82f6" },
+  { name: "Fornecedores", icon: Truck, color: "#f97316" },
+  { name: "Folha de Pagamento", icon: Users, color: "#8b5cf6" },
+  { name: "Impostos", icon: Landmark, color: "#ef4444" },
+  { name: "Aluguel Comercial", icon: Building2, color: "#6366f1" },
+  { name: "Marketing", icon: Megaphone, color: "#ec4899" },
+  { name: "Materiais/Estoque", icon: Package, color: "#f59e0b" },
+  { name: "Nota Fiscal", icon: Receipt, color: "#14b8a6" },
+  { name: "Despesas Gerais", icon: FileText, color: "#6b7280" },
 ];
+
+export const categoryColors: Record<string, string> = {
+  // Personal
+  "Alimentação": "#f97316",
+  "Transporte": "#3b82f6",
+  "Moradia": "#8b5cf6",
+  "Lazer": "#ec4899",
+  "Saúde": "#ef4444",
+  "Educação": "#14b8a6",
+  "Compras": "#f59e0b",
+  "Salário": "#22c55e",
+  "Freelance": "#14b8a6",
+  "Investimento": "#6366f1",
+  "Investimento / Objetivo": "#10b981",
+  "Presente": "#a855f7",
+  // Investment
+  "LCI/LCA": "#3b82f6",
+  "Tesouro Direto": "#22c55e",
+  "Fundos de Investimento": "#8b5cf6",
+  "Ações": "#ef4444",
+  "FIIs (Fundos Imobiliários)": "#f97316",
+  "Criptomoedas": "#f59e0b",
+  "Previdência Privada": "#6366f1",
+  "Poupança": "#14b8a6",
+  "Outro": "#6b7280",
+  // Business
+  "Receita de Vendas": "#22c55e",
+  "Serviços Prestados": "#3b82f6",
+  "Fornecedores": "#f97316",
+  "Folha de Pagamento": "#8b5cf6",
+  "Impostos": "#ef4444",
+  "Aluguel Comercial": "#6366f1",
+  "Marketing": "#ec4899",
+  "Materiais/Estoque": "#f59e0b",
+  "Nota Fiscal": "#14b8a6",
+  "Despesas Gerais": "#6b7280",
+};
