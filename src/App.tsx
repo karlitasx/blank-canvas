@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import { AchievementsProvider } from "@/contexts/AchievementsContext";
 import { Layout } from "@/components/Layout";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
@@ -34,22 +35,24 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route element={<Layout />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/habits" element={<Habits />} />
-              <Route path="/finance" element={<Finance />} />
-              <Route path="/social" element={<Social />} />
-              <Route path="/selfcare" element={<SelfCare />} />
-              <Route path="/challenges" element={<Challenges />} />
-              <Route path="/calendar" element={<CalendarPage />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/admin" element={<Admin />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AchievementsProvider>
+            <Routes>
+              <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route element={<Layout />}>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/habits" element={<Habits />} />
+                <Route path="/finance" element={<Finance />} />
+                <Route path="/social" element={<Social />} />
+                <Route path="/selfcare" element={<SelfCare />} />
+                <Route path="/challenges" element={<Challenges />} />
+                <Route path="/calendar" element={<CalendarPage />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/admin" element={<Admin />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AchievementsProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
