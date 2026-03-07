@@ -35,22 +35,24 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route element={<Layout />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/habits" element={<Habits />} />
-              <Route path="/finance" element={<Finance />} />
-              <Route path="/social" element={<Social />} />
-              <Route path="/selfcare" element={<SelfCare />} />
-              <Route path="/challenges" element={<Challenges />} />
-              <Route path="/calendar" element={<CalendarPage />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/admin" element={<Admin />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AchievementsProvider>
+            <Routes>
+              <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route element={<Layout />}>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/habits" element={<Habits />} />
+                <Route path="/finance" element={<Finance />} />
+                <Route path="/social" element={<Social />} />
+                <Route path="/selfcare" element={<SelfCare />} />
+                <Route path="/challenges" element={<Challenges />} />
+                <Route path="/calendar" element={<CalendarPage />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/admin" element={<Admin />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AchievementsProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
