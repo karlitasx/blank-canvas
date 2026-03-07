@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { AchievementsProvider } from "@/contexts/AchievementsContext";
+import { PreferencesProvider } from "@/contexts/PreferencesContext";
 import { Layout } from "@/components/Layout";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
@@ -35,7 +36,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <AchievementsProvider>
+            <PreferencesProvider>
+              <AchievementsProvider>
             <Routes>
               <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
               <Route path="/reset-password" element={<ResetPassword />} />
@@ -53,6 +55,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AchievementsProvider>
+        </PreferencesProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
