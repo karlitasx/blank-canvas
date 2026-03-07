@@ -37,6 +37,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
+          <ThemeProvider>
             <PreferencesProvider>
               <AchievementsProvider>
             <Routes>
@@ -57,6 +58,7 @@ const App = () => (
             </Routes>
           </AchievementsProvider>
         </PreferencesProvider>
+            </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
