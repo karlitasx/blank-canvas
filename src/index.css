@@ -43,6 +43,46 @@
     --gradient-purple: 270 60% 55%;
     --gradient-blue: 220 70% 55%;
   }
+
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 20 14% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14% 10%;
+    --primary: 330 80% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 55% 55%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 93%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 40 90% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 85%;
+    --input: 0 0% 85%;
+    --ring: 330 80% 50%;
+    --success: 142 70% 40%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --sidebar-background: 0 0% 96%;
+    --sidebar-foreground: 20 14% 20%;
+    --sidebar-primary: 330 80% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 90%;
+    --sidebar-accent-foreground: 20 14% 10%;
+    --sidebar-border: 0 0% 88%;
+    --sidebar-ring: 330 80% 50%;
+    --glass-bg: 0 0% 96%;
+    --glass-border: 0 0% 85%;
+    --glass-hover: 0 0% 92%;
+    --gradient-pink: 330 80% 50%;
+    --gradient-purple: 270 60% 50%;
+    --gradient-blue: 220 70% 50%;
+  }
 }
 
 @layer base {
