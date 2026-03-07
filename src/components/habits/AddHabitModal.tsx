@@ -111,7 +111,7 @@ const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-lg glass-card p-6 animate-scale-in max-h-[90vh] overflow-y-auto">
+      <div className="relative w-full max-w-lg bg-card border border-border rounded-2xl p-6 animate-scale-in max-h-[90vh] overflow-y-auto shadow-xl">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 rounded-lg hover:bg-muted transition-all"
@@ -119,7 +119,7 @@ const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
           <X className="w-5 h-5 text-muted-foreground" />
         </button>
 
-        <h2 className="text-xl font-bold mb-6">Novo Hábito</h2>
+        <h2 className="text-xl font-bold mb-6 text-foreground">Novo Hábito</h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Emoji selector */}
@@ -134,7 +134,7 @@ const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
                   className={cn(
                     "w-10 h-10 rounded-lg text-xl flex items-center justify-center transition-all",
                     emoji === e
-                      ? "bg-[hsl(345,60%,35%)]/20 ring-2 ring-[hsl(345,60%,35%)] scale-110"
+                      ? "bg-primary/20 ring-2 ring-primary scale-110"
                       : "bg-muted hover:bg-muted/80 hover:scale-105"
                   )}
                 >
@@ -152,7 +152,7 @@ const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Beber 2L de água"
-              className="w-full px-4 py-3 bg-muted rounded-xl outline-none focus:ring-2 focus:ring-[hsl(220,70%,50%)] transition-all"
+              className="w-full px-4 py-3 bg-muted border border-border text-foreground rounded-xl outline-none focus:ring-2 focus:ring-ring transition-all"
             />
           </div>
 
@@ -168,8 +168,8 @@ const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
                   className={cn(
                     "flex items-center gap-2 px-4 py-3 rounded-xl transition-all text-sm font-medium",
                     category === cat.id
-                      ? "bg-[hsl(220,70%,50%)]/20 ring-2 ring-[hsl(220,70%,50%)] text-[hsl(220,70%,50%)]"
-                      : "bg-muted hover:bg-muted/80"
+                      ? "bg-secondary/20 ring-2 ring-secondary text-secondary"
+                      : "bg-muted hover:bg-muted/80 text-foreground"
                   )}
                 >
                   <span>{cat.emoji}</span>
@@ -191,7 +191,7 @@ const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
                   className={cn(
                     "px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
                     frequencyType === f.id
-                      ? "bg-[hsl(345,60%,35%)] text-white"
+                      ? "bg-primary text-primary-foreground"
                       : "bg-muted hover:bg-muted/80 text-muted-foreground"
                   )}
                 >
@@ -211,7 +211,7 @@ const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
                     className={cn(
                       "flex-1 py-2 rounded-lg text-xs font-medium transition-all",
                       frequencyDays.includes(day.id)
-                        ? "bg-[hsl(220,70%,50%)] text-white"
+                        ? "bg-secondary text-secondary-foreground"
                         : "bg-muted text-muted-foreground"
                     )}
                   >
@@ -230,9 +230,9 @@ const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
                   max={6}
                   value={frequencyTimesPerWeek}
                   onChange={(e) => setFrequencyTimesPerWeek(Number(e.target.value))}
-                  className="flex-1 accent-[hsl(220,70%,50%)]"
+                  className="flex-1 accent-secondary"
                 />
-                <span className="text-sm font-semibold w-20 text-center">
+                <span className="text-sm font-semibold w-20 text-center text-foreground">
                   {frequencyTimesPerWeek}x / semana
                 </span>
               </div>
@@ -248,7 +248,7 @@ const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
                   max={30}
                   value={frequencyIntervalDays}
                   onChange={(e) => setFrequencyIntervalDays(Number(e.target.value))}
-                  className="w-16 px-3 py-2 bg-muted rounded-lg text-center outline-none"
+                  className="w-16 px-3 py-2 bg-muted border border-border text-foreground rounded-lg text-center outline-none"
                 />
                 <span className="text-sm text-muted-foreground">dias</span>
               </div>
@@ -265,7 +265,7 @@ const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
                 onChange={(e) => setGoalDays(e.target.value)}
                 placeholder="Ex: 30"
                 min={1}
-                className="w-24 px-4 py-3 bg-muted rounded-xl outline-none focus:ring-2 focus:ring-[hsl(220,70%,50%)] transition-all"
+                className="w-24 px-4 py-3 bg-muted border border-border text-foreground rounded-xl outline-none focus:ring-2 focus:ring-ring transition-all"
               />
               <span className="text-sm text-muted-foreground">dias consecutivos</span>
             </div>
@@ -274,7 +274,7 @@ const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
           {/* Motivation */}
           <div>
             <label className="text-sm text-muted-foreground mb-2 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[hsl(345,60%,35%)]" />
+              <Sparkles className="w-3.5 h-3.5 text-primary" />
               Por que esse hábito é importante para você?
             </label>
             <textarea
@@ -282,7 +282,7 @@ const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
               onChange={(e) => setMotivation(e.target.value)}
               placeholder="Ex: Quero ter mais energia e disposição no dia a dia..."
               rows={2}
-              className="w-full px-4 py-3 bg-muted rounded-xl outline-none focus:ring-2 focus:ring-[hsl(345,60%,35%)] transition-all resize-none"
+              className="w-full px-4 py-3 bg-muted border border-border text-foreground rounded-xl outline-none focus:ring-2 focus:ring-ring transition-all resize-none"
             />
           </div>
 
@@ -295,7 +295,7 @@ const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
               type="time"
               value={reminderTime}
               onChange={(e) => setReminderTime(e.target.value)}
-              className="w-full px-4 py-3 bg-muted rounded-xl outline-none"
+              className="w-full px-4 py-3 bg-muted border border-border text-foreground rounded-xl outline-none"
             />
           </div>
 
@@ -304,15 +304,14 @@ const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-3 rounded-xl bg-muted hover:bg-muted/80 transition-all font-medium"
+              className="flex-1 px-4 py-3 rounded-xl bg-muted hover:bg-muted/80 transition-all font-medium text-foreground"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={!name.trim()}
-              className="flex-1 px-4 py-3 rounded-xl font-medium text-white transition-all disabled:opacity-40"
-              style={{ background: "linear-gradient(135deg, hsl(345, 60%, 35%), hsl(220, 70%, 50%))" }}
+              className="flex-1 px-4 py-3 rounded-xl font-medium transition-all disabled:opacity-40 btn-gradient"
             >
               Criar Hábito
             </button>

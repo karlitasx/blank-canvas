@@ -20,8 +20,8 @@ const CategoryDonut = ({ data, onCategoryClick, selectedCategory }: CategoryDonu
       const item = payload[0].payload;
       const percentage = ((item.value / total) * 100).toFixed(1);
       return (
-        <div className="glass-card p-3 border border-white/20">
-          <p className="font-medium">{item.name}</p>
+        <div className="bg-popover border border-border rounded-lg p-3 shadow-lg">
+          <p className="font-medium text-foreground">{item.name}</p>
           <p className="text-sm text-muted-foreground">
             R$ {item.value.toLocaleString("pt-BR")} ({percentage}%)
           </p>
@@ -33,7 +33,7 @@ const CategoryDonut = ({ data, onCategoryClick, selectedCategory }: CategoryDonu
 
   return (
     <div className="glass-card p-6">
-      <h3 className="text-lg font-semibold mb-4">Gastos por Categoria</h3>
+      <h3 className="text-lg font-semibold mb-4 text-foreground">Gastos por Categoria</h3>
 
       <div className="flex flex-col md:flex-row items-center gap-6">
         <div className="w-48 h-48">
@@ -58,7 +58,7 @@ const CategoryDonut = ({ data, onCategoryClick, selectedCategory }: CategoryDonu
                     key={`cell-${index}`}
                     fill={entry.color}
                     opacity={selectedCategory && selectedCategory !== entry.name ? 0.3 : 1}
-                    stroke={selectedCategory === entry.name ? "#fff" : "transparent"}
+                    stroke="transparent"
                     strokeWidth={2}
                   />
                 ))}
@@ -79,8 +79,8 @@ const CategoryDonut = ({ data, onCategoryClick, selectedCategory }: CategoryDonu
                 }
                 className={`flex items-center gap-2 p-2 rounded-lg transition-all text-left ${
                   selectedCategory === item.name
-                    ? "bg-white/20"
-                    : "hover:bg-white/10"
+                    ? "bg-muted"
+                    : "hover:bg-muted/50"
                 } ${selectedCategory && selectedCategory !== item.name ? "opacity-50" : ""}`}
               >
                 <div
@@ -88,7 +88,7 @@ const CategoryDonut = ({ data, onCategoryClick, selectedCategory }: CategoryDonu
                   style={{ backgroundColor: item.color }}
                 />
                 <div className="min-w-0">
-                  <p className="text-sm font-medium truncate">{item.name}</p>
+                  <p className="text-sm font-medium truncate text-foreground">{item.name}</p>
                   <p className="text-xs text-muted-foreground">{percentage}%</p>
                 </div>
               </button>

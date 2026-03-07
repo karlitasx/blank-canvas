@@ -41,7 +41,6 @@ const Habits = () => {
 
   const stats = getStats();
 
-  // Load consistency for each habit
   useEffect(() => {
     if (!isLoaded || habits.length === 0) return;
     const load = async () => {
@@ -67,16 +66,12 @@ const Habits = () => {
     const habit = habits.find(h => h.id === id);
     if (!habit) return { newStreak: 0, streakIncreased: false };
 
-    // If completing (not already completed), show check-in modal
     if (!habit.completed) {
       setCheckInHabit(habit);
       return { newStreak: 0, streakIncreased: false };
     }
 
-    // If uncompleting, just toggle directly
-    toggleHabit(id).then((result) => {
-      // no special handling for uncomplete
-    });
+    toggleHabit(id).then((result) => {});
     return { newStreak: 0, streakIncreased: false };
   };
 
@@ -114,7 +109,6 @@ const Habits = () => {
     const habit = checkInHabit;
     setCheckInHabit(null);
 
-    // Complete without check-in data
     toggleHabit(habit.id).then((result) => {
       if (result.streakIncreased) {
         incrementStat('habitsCompleted');
@@ -203,11 +197,11 @@ const Habits = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 animate-fade-in">
           <div className="flex items-center gap-3">
-            <div className="p-3 rounded-xl" style={{ background: "hsl(345, 60%, 35%)/0.15" }}>
-              <Target className="w-6 h-6" style={{ color: "hsl(345, 60%, 35%)" }} />
+            <div className="p-3 rounded-xl bg-primary/15">
+              <Target className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Meus Hábitos</h1>
+              <h1 className="text-2xl font-bold text-foreground">Meus Hábitos</h1>
               <p className="text-sm text-muted-foreground">
                 {stats.completedToday} de {stats.totalHabits} concluídos hoje
               </p>
@@ -216,8 +210,7 @@ const Habits = () => {
 
           <button
             onClick={() => setShowAddModal(true)}
-            className="px-5 py-3 rounded-xl flex items-center justify-center gap-2 hover:scale-105 transition-all duration-300 text-white font-medium"
-            style={{ background: "linear-gradient(135deg, hsl(345, 60%, 35%), hsl(220, 70%, 50%))" }}
+            className="px-5 py-3 rounded-xl flex items-center justify-center gap-2 hover:scale-105 transition-all duration-300 font-medium btn-gradient"
           >
             <Plus className="w-5 h-5" />
             <span>Novo Hábito</span>
@@ -226,18 +219,15 @@ const Habits = () => {
 
         {/* Progress Bar */}
         {habits.length > 0 && (
-          <div className="glass-card p-4 mb-6 animate-slide-up rounded-2xl">
+          <div className="glass-card p-4 mb-6 animate-slide-up">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-muted-foreground">Progresso do dia</span>
-              <span className="font-semibold">{stats.progressPercent}%</span>
+              <span className="font-semibold text-foreground">{stats.progressPercent}%</span>
             </div>
             <div className="h-3 rounded-full bg-muted overflow-hidden">
               <div
-                className="h-full rounded-full transition-all duration-500"
-                style={{
-                  width: `${stats.progressPercent}%`,
-                  background: "linear-gradient(90deg, hsl(345, 60%, 35%), hsl(220, 70%, 50%))",
-                }}
+                className="h-full rounded-full transition-all duration-500 btn-gradient"
+                style={{ width: `${stats.progressPercent}%` }}
               />
             </div>
           </div>
@@ -253,10 +243,9 @@ const Habits = () => {
                 className={cn(
                   "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300",
                   filter === f.id
-                    ? "text-white"
+                    ? "bg-secondary text-secondary-foreground"
                     : "bg-muted hover:bg-muted/80 text-muted-foreground hover:scale-105"
                 )}
-                style={filter === f.id ? { background: "hsl(220, 70%, 50%)" } : undefined}
               >
                 {f.name}
               </button>
@@ -268,10 +257,9 @@ const Habits = () => {
                 className={cn(
                   "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2",
                   ["health", "productivity", "spiritual", "financial", "selfcare"].includes(filter)
-                    ? "text-white"
+                    ? "bg-primary text-primary-foreground"
                     : "bg-muted hover:bg-muted/80 text-muted-foreground hover:scale-105"
                 )}
-                style={["health", "productivity", "spiritual", "financial", "selfcare"].includes(filter) ? { background: "hsl(345, 60%, 35%)" } : undefined}
               >
                 <Filter className="w-4 h-4" />
                 Categoria
@@ -280,14 +268,14 @@ const Habits = () => {
               {showCategoryFilter && (
                 <>
                   <div className="fixed inset-0 z-10" onClick={() => setShowCategoryFilter(false)} />
-                  <div className="absolute left-0 top-full mt-2 w-48 glass-card py-2 z-20 animate-scale-in rounded-xl">
+                  <div className="absolute left-0 top-full mt-2 w-48 glass-card py-2 z-20 animate-scale-in">
                     {categoryFilters.map((cat) => (
                       <button
                         key={cat.id}
                         onClick={() => { setFilter(cat.id); setShowCategoryFilter(false); }}
                         className={cn(
                           "w-full px-4 py-2 text-left text-sm flex items-center gap-2 hover:bg-muted transition-all",
-                          filter === cat.id && "text-[hsl(345,60%,35%)]"
+                          filter === cat.id && "text-primary font-medium"
                         )}
                       >
                         <span>{cat.emoji}</span>
@@ -304,10 +292,9 @@ const Habits = () => {
               className={cn(
                 "ml-auto px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2",
                 showStats
-                  ? "text-white"
+                  ? "bg-secondary text-secondary-foreground"
                   : "bg-muted hover:bg-muted/80 text-muted-foreground hover:scale-105"
               )}
-              style={showStats ? { background: "hsl(220, 70%, 50%)" } : undefined}
             >
               <BarChart3 className="w-4 h-4" />
               Estatísticas
@@ -326,26 +313,25 @@ const Habits = () => {
         <div className="space-y-3">
           {habits.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 px-4 animate-fade-in">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6" style={{ background: "hsl(345, 60%, 35%)/0.1" }}>
-                <Sparkles className="w-8 h-8" style={{ color: "hsl(345, 60%, 35%)" }} />
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-primary/10">
+                <Sparkles className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Quais pequenas ações vão transformar sua rotina?</h3>
+              <h3 className="text-xl font-semibold mb-2 text-foreground">Quais pequenas ações vão transformar sua rotina?</h3>
               <p className="text-muted-foreground text-center max-w-sm mb-6">
                 Comece criando seu primeiro hábito e dê o primeiro passo para uma rotina mais saudável.
               </p>
               <button
                 onClick={() => setShowAddModal(true)}
-                className="px-6 py-3 rounded-xl text-white font-medium flex items-center gap-2 hover:scale-105 transition-all"
-                style={{ background: "linear-gradient(135deg, hsl(345, 60%, 35%), hsl(220, 70%, 50%))" }}
+                className="px-6 py-3 rounded-xl font-medium flex items-center gap-2 hover:scale-105 transition-all btn-gradient"
               >
                 <Plus className="w-5 h-5" />
                 Criar meu primeiro hábito
               </button>
             </div>
           ) : filteredHabits.length === 0 ? (
-            <div className="glass-card p-8 text-center animate-fade-in rounded-2xl">
+            <div className="glass-card p-8 text-center animate-fade-in">
               <Target className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-              <h3 className="font-semibold mb-2">Nenhum hábito encontrado</h3>
+              <h3 className="font-semibold mb-2 text-foreground">Nenhum hábito encontrado</h3>
               <p className="text-sm text-muted-foreground">Tente mudar os filtros</p>
             </div>
           ) : (

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Smile, Meh, Frown, ThumbsUp, Sparkles } from "lucide-react";
+import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface HabitCheckInModalProps {
@@ -17,10 +17,10 @@ export interface CheckInData {
 }
 
 const moods = [
-  { id: "great" as const, label: "Muito bem", emoji: "😄", color: "hsl(142, 76%, 45%)" },
-  { id: "good" as const, label: "Bem", emoji: "🙂", color: "hsl(220, 70%, 50%)" },
-  { id: "neutral" as const, label: "Neutro", emoji: "😐", color: "hsl(45, 80%, 50%)" },
-  { id: "hard" as const, label: "Difícil", emoji: "😤", color: "hsl(345, 60%, 35%)" },
+  { id: "great" as const, label: "Muito bem", emoji: "😄", cls: "bg-success/20 ring-success" },
+  { id: "good" as const, label: "Bem", emoji: "🙂", cls: "bg-secondary/20 ring-secondary" },
+  { id: "neutral" as const, label: "Neutro", emoji: "😐", cls: "bg-accent/20 ring-accent" },
+  { id: "hard" as const, label: "Difícil", emoji: "😤", cls: "bg-primary/20 ring-primary" },
 ];
 
 const HabitCheckInModal = ({ isOpen, habitName, habitEmoji, onClose, onSubmit }: HabitCheckInModalProps) => {
@@ -42,14 +42,14 @@ const HabitCheckInModal = ({ isOpen, habitName, habitEmoji, onClose, onSubmit }:
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fade-in" onClick={onClose} />
 
-      <div className="relative w-full max-w-sm glass-card p-6 animate-scale-in">
+      <div className="relative w-full max-w-sm bg-card border border-border rounded-2xl p-6 animate-scale-in shadow-xl">
         <button onClick={onClose} className="absolute top-4 right-4 p-2 rounded-lg hover:bg-muted transition-all">
           <X className="w-4 h-4 text-muted-foreground" />
         </button>
 
         <div className="text-center mb-5">
           <span className="text-4xl">{habitEmoji}</span>
-          <h3 className="text-lg font-bold mt-2">{habitName}</h3>
+          <h3 className="text-lg font-bold mt-2 text-foreground">{habitName}</h3>
           <p className="text-sm text-muted-foreground">Como foi hoje?</p>
         </div>
 
@@ -65,10 +65,9 @@ const HabitCheckInModal = ({ isOpen, habitName, habitEmoji, onClose, onSubmit }:
                 className={cn(
                   "flex flex-col items-center gap-1 py-3 rounded-xl transition-all text-xs font-medium",
                   mood === m.id
-                    ? "ring-2 scale-105"
+                    ? `${m.cls} ring-2 scale-105`
                     : "bg-muted hover:bg-muted/80"
                 )}
-                style={mood === m.id ? { background: `${m.color}20`, borderColor: m.color, boxShadow: `0 0 0 2px ${m.color}` } : undefined}
               >
                 <span className="text-2xl">{m.emoji}</span>
                 {m.label}
@@ -91,10 +90,9 @@ const HabitCheckInModal = ({ isOpen, habitName, habitEmoji, onClose, onSubmit }:
                 className={cn(
                   "flex-1 py-2.5 rounded-lg text-sm font-medium transition-all",
                   difficulty === d
-                    ? "text-white"
+                    ? "bg-secondary text-secondary-foreground"
                     : "bg-muted text-muted-foreground"
                 )}
-                style={difficulty === d ? { background: "hsl(220, 70%, 50%)" } : undefined}
               >
                 {d}
               </button>
@@ -110,7 +108,7 @@ const HabitCheckInModal = ({ isOpen, habitName, habitEmoji, onClose, onSubmit }:
             value={note}
             onChange={(e) => setNote(e.target.value)}
             placeholder="Como foi sua experiência..."
-            className="w-full px-4 py-3 bg-muted rounded-xl outline-none text-sm"
+            className="w-full px-4 py-3 bg-muted border border-border text-foreground rounded-xl outline-none text-sm"
             maxLength={140}
           />
         </div>
@@ -119,15 +117,14 @@ const HabitCheckInModal = ({ isOpen, habitName, habitEmoji, onClose, onSubmit }:
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-3 rounded-xl bg-muted hover:bg-muted/80 transition-all font-medium text-sm"
+            className="flex-1 px-4 py-3 rounded-xl bg-muted hover:bg-muted/80 transition-all font-medium text-sm text-foreground"
           >
             Pular
           </button>
           <button
             onClick={handleSubmit}
             disabled={!mood}
-            className="flex-1 px-4 py-3 rounded-xl font-medium text-sm text-white transition-all disabled:opacity-40"
-            style={{ background: "linear-gradient(135deg, hsl(345, 60%, 35%), hsl(220, 70%, 50%))" }}
+            className="flex-1 px-4 py-3 rounded-xl font-medium text-sm transition-all disabled:opacity-40 btn-gradient"
           >
             Registrar
           </button>
