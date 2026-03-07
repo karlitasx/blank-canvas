@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { AchievementsProvider } from "@/contexts/AchievementsContext";
 import { PreferencesProvider } from "@/contexts/PreferencesContext";
 import { Layout } from "@/components/Layout";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
