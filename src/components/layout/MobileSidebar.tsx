@@ -25,7 +25,7 @@ const sections = [
       { icon: Target, label: "Hábitos", href: "/habits" },
       { icon: Heart, label: "Autocuidado", href: "/selfcare" },
       { icon: Award, label: "Conquistas", href: "/challenges" },
-      { icon: Trophy, label: "Ranking", href: "/admin" },
+      { icon: Trophy, label: "Ranking", href: "/ranking" },
     ],
   },
   {
