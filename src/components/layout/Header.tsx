@@ -37,7 +37,7 @@ const Header = () => {
         <Menu className="w-5 h-5 text-foreground" />
       </button>
 
-      <MobileSidebar open={sidebarOpen} onOpenChange={setSidebarOpen} />
+      <MobileSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Logo */}
       <div className="flex items-center gap-2">
