@@ -75,12 +75,13 @@ export const useFinanceGoals = () => {
             title: goal.title,
             description: goal.description,
             emoji: goal.emoji,
+            image_url: goal.image_url,
             target_amount: goal.target_amount,
             current_amount: goal.current_amount,
             status: goal.status,
             priority: goal.priority,
             target_date: goal.target_date,
-          })
+          } as any)
           .select()
           .single();
 
