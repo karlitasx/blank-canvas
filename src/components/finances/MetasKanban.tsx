@@ -51,16 +51,20 @@ const formatCurrency = (value: number) =>
 
 const MetasKanban = () => {
   const { goals, isLoaded, addGoal, updateGoal, deleteGoal, changeStatus, addAmount } = useFinanceGoals();
+  const { user } = useAuth();
   const [viewMode, setViewMode] = useState<ViewMode>("kanban");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingGoal, setEditingGoal] = useState<FinanceGoal | null>(null);
   const [addValueGoalId, setAddValueGoalId] = useState<string | null>(null);
   const [addValueAmount, setAddValueAmount] = useState("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Form state
   const [formTitle, setFormTitle] = useState("");
   const [formDescription, setFormDescription] = useState("");
   const [formEmoji, setFormEmoji] = useState("🎯");
+  const [formImageUrl, setFormImageUrl] = useState<string | null>(null);
   const [formTargetAmount, setFormTargetAmount] = useState("");
   const [formCurrentAmount, setFormCurrentAmount] = useState("");
   const [formPriority, setFormPriority] = useState("medium");
