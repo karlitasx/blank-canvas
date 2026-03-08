@@ -90,8 +90,9 @@ export const useFinanceGoals = () => {
         const newGoal: FinanceGoal = {
           id: data.id,
           title: data.title,
-          description: data.description || undefined,
+          description: (data as any).description || undefined,
           emoji: data.emoji,
+          image_url: (data as any).image_url || undefined,
           target_amount: Number(data.target_amount),
           current_amount: Number(data.current_amount),
           status: data.status as GoalStatus,
