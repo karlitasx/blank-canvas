@@ -37,6 +37,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.community': 'Comunidade',
     'nav.selfcare': 'Autocuidado',
     'nav.achievements': 'Conquistas',
+    'nav.ranking': 'Ranking',
     'nav.profile': 'Perfil',
     // Greeting
     'greeting.morning': 'Bom dia',
@@ -121,6 +122,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.community': 'Community',
     'nav.selfcare': 'Self Care',
     'nav.achievements': 'Achievements',
+    'nav.ranking': 'Ranking',
     'nav.profile': 'Profile',
     'greeting.morning': 'Good morning',
     'greeting.afternoon': 'Good afternoon',
@@ -199,6 +201,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.community': 'Comunidad',
     'nav.selfcare': 'Autocuidado',
     'nav.achievements': 'Logros',
+    'nav.ranking': 'Ranking',
     'nav.profile': 'Perfil',
     'greeting.morning': 'Buenos días',
     'greeting.afternoon': 'Buenas tardes',
