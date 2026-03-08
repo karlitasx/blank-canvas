@@ -20,6 +20,7 @@ import CalendarPage from "./pages/CalendarPage";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import Ranking from "./pages/Ranking";
 
 const queryClient = new QueryClient();
 
