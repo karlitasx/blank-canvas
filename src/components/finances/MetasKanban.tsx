@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Plus, Target, Clock, Pause, CheckCircle2, LayoutGrid, Table,
   Pencil, Trash2, ArrowRight, DollarSign, MoreHorizontal, X, Check,
-  ChevronRight, ChevronLeft,
+  ChevronRight, ChevronLeft, ImagePlus, Trash,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,8 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useFinanceGoals, type GoalStatus, type FinanceGoal } from "@/hooks/useFinanceGoals";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 type ViewMode = "kanban" | "table";
@@ -49,16 +51,20 @@ const formatCurrency = (value: number) =>
 
 const MetasKanban = () => {
   const { goals, isLoaded, addGoal, updateGoal, deleteGoal, changeStatus, addAmount } = useFinanceGoals();
+  const { user } = useAuth();
   const [viewMode, setViewMode] = useState<ViewMode>("kanban");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingGoal, setEditingGoal] = useState<FinanceGoal | null>(null);
   const [addValueGoalId, setAddValueGoalId] = useState<string | null>(null);
   const [addValueAmount, setAddValueAmount] = useState("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Form state
   const [formTitle, setFormTitle] = useState("");
   const [formDescription, setFormDescription] = useState("");
   const [formEmoji, setFormEmoji] = useState("🎯");
+  const [formImageUrl, setFormImageUrl] = useState<string | null>(null);
   const [formTargetAmount, setFormTargetAmount] = useState("");
   const [formCurrentAmount, setFormCurrentAmount] = useState("");
   const [formPriority, setFormPriority] = useState("medium");
@@ -72,6 +78,7 @@ const MetasKanban = () => {
     setFormTitle("");
     setFormDescription("");
     setFormEmoji("🎯");
+    setFormImageUrl(null);
     setFormTargetAmount("");
     setFormCurrentAmount("");
     setFormPriority("medium");
@@ -84,11 +91,43 @@ const MetasKanban = () => {
     setFormTitle(goal.title);
     setFormDescription(goal.description || "");
     setFormEmoji(goal.emoji);
+    setFormImageUrl(goal.image_url || null);
     setFormTargetAmount(goal.target_amount.toString());
     setFormCurrentAmount(goal.current_amount.toString());
     setFormPriority(goal.priority);
     setFormTargetDate(goal.target_date || "");
     setIsModalOpen(true);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Selecione um arquivo de imagem");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Imagem deve ter no máximo 5MB");
+      return;
+    }
+
+    setIsUploadingImage(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const path = `${user.id}/${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from("goal-images").upload(path, file);
+      if (error) throw error;
+
+      const { data: urlData } = supabase.storage.from("goal-images").getPublicUrl(path);
+      setFormImageUrl(urlData.publicUrl);
+    } catch (err) {
+      console.error(err);
+      toast.error("Erro ao enviar imagem");
+    } finally {
+      setIsUploadingImage(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   };
 
   const handleSave = async () => {
@@ -97,10 +136,11 @@ const MetasKanban = () => {
       return;
     }
 
-    const data = {
+    const data: any = {
       title: formTitle.trim(),
       description: formDescription.trim() || undefined,
       emoji: formEmoji,
+      image_url: formImageUrl || undefined,
       target_amount: parseFloat(formTargetAmount),
       current_amount: parseFloat(formCurrentAmount || "0"),
       status: (editingGoal?.status || "planning") as GoalStatus,
@@ -332,20 +372,67 @@ const MetasKanban = () => {
           <div className="space-y-4 pt-2">
             {/* Emoji */}
             <div className="space-y-2">
-              <Label>Ícone</Label>
-              <div className="flex flex-wrap gap-1.5">
+              <Label>Emoji</Label>
+              <div className="flex items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center text-2xl shrink-0">
+                  {formEmoji}
+                </div>
+                <Input
+                  value={formEmoji}
+                  onChange={(e) => setFormEmoji(e.target.value)}
+                  placeholder="Digite ou cole um emoji"
+                  className="flex-1"
+                  maxLength={4}
+                />
+              </div>
+              <div className="flex flex-wrap gap-1">
                 {emojis.map((e) => (
                   <button
                     key={e}
+                    type="button"
                     onClick={() => setFormEmoji(e)}
-                    className={`w-9 h-9 rounded-lg flex items-center justify-center text-lg transition-all ${
-                      formEmoji === e ? "bg-primary/10 ring-2 ring-primary" : "bg-muted hover:bg-muted/80"
+                    className={`w-8 h-8 rounded-md flex items-center justify-center text-base transition-all ${
+                      formEmoji === e ? "bg-primary/10 ring-1 ring-primary" : "hover:bg-muted"
                     }`}
                   >
                     {e}
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Image */}
+            <div className="space-y-2">
+              <Label>Imagem (opcional)</Label>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
+              {formImageUrl ? (
+                <div className="relative rounded-xl overflow-hidden border border-border">
+                  <img src={formImageUrl} alt="Meta" className="w-full h-32 object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => setFormImageUrl(null)}
+                    className="absolute top-2 right-2 p-1.5 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors"
+                  >
+                    <Trash className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploadingImage}
+                  className="w-full py-6 border-2 border-dashed border-border rounded-xl flex flex-col items-center gap-2 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors"
+                >
+                  <ImagePlus className="w-6 h-6" />
+                  <span className="text-sm">{isUploadingImage ? "Enviando..." : "Adicionar imagem"}</span>
+                </button>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -468,7 +555,12 @@ const GoalCard = ({ goal, onEdit, onDelete, onChangeStatus, onAddValue }: GoalCa
   const colDef = columns.find((c) => c.key === goal.status)!;
 
   return (
-    <div className="glass-card p-4 rounded-xl space-y-3 group hover:shadow-md transition-all">
+    <div className="glass-card rounded-xl space-y-3 group hover:shadow-md transition-all overflow-hidden">
+      {/* Image */}
+      {goal.image_url && (
+        <img src={goal.image_url} alt={goal.title} className="w-full h-24 object-cover" />
+      )}
+      <div className="p-4 pt-3 space-y-3">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-2 min-w-0">
@@ -548,6 +640,7 @@ const GoalCard = ({ goal, onEdit, onDelete, onChangeStatus, onAddValue }: GoalCa
           Guardar valor
         </button>
       )}
+      </div>
     </div>
   );
 };

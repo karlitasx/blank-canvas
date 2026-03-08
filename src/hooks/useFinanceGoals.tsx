@@ -9,6 +9,7 @@ export interface FinanceGoal {
   title: string;
   description?: string;
   emoji: string;
+  image_url?: string;
   target_amount: number;
   current_amount: number;
   status: GoalStatus;
@@ -43,6 +44,7 @@ export const useFinanceGoals = () => {
           title: d.title,
           description: d.description || undefined,
           emoji: d.emoji,
+          image_url: d.image_url || undefined,
           target_amount: Number(d.target_amount),
           current_amount: Number(d.current_amount),
           status: d.status as GoalStatus,
@@ -73,12 +75,13 @@ export const useFinanceGoals = () => {
             title: goal.title,
             description: goal.description,
             emoji: goal.emoji,
+            image_url: goal.image_url,
             target_amount: goal.target_amount,
             current_amount: goal.current_amount,
             status: goal.status,
             priority: goal.priority,
             target_date: goal.target_date,
-          })
+          } as any)
           .select()
           .single();
 
@@ -87,8 +90,9 @@ export const useFinanceGoals = () => {
         const newGoal: FinanceGoal = {
           id: data.id,
           title: data.title,
-          description: data.description || undefined,
+          description: (data as any).description || undefined,
           emoji: data.emoji,
+          image_url: (data as any).image_url || undefined,
           target_amount: Number(data.target_amount),
           current_amount: Number(data.current_amount),
           status: data.status as GoalStatus,
@@ -112,7 +116,7 @@ export const useFinanceGoals = () => {
       try {
         const { error } = await supabase
           .from("finance_goals")
-          .update({ ...updates, updated_at: new Date().toISOString() })
+          .update({ ...updates, updated_at: new Date().toISOString() } as any)
           .eq("id", id);
 
         if (error) throw error;

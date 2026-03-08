@@ -373,6 +373,7 @@ export type Database = {
           description: string | null
           emoji: string
           id: string
+          image_url: string | null
           priority: string
           status: string
           target_amount: number
@@ -387,6 +388,7 @@ export type Database = {
           description?: string | null
           emoji?: string
           id?: string
+          image_url?: string | null
           priority?: string
           status?: string
           target_amount?: number
@@ -401,6 +403,7 @@ export type Database = {
           description?: string | null
           emoji?: string
           id?: string
+          image_url?: string | null
           priority?: string
           status?: string
           target_amount?: number
