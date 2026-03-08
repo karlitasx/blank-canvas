@@ -1,4 +1,4 @@
-// src/components/Layout.tsx
+import { useState } from "react";
 import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export const Layout = () => {
   const { user, loading } = useAuth();
   const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   if (loading) {
     return (
@@ -28,11 +29,22 @@ export const Layout = () => {
 
   return (
     <div className="min-h-screen flex bg-white">
+      {/* Botão hamburguer (aparece só no celular) */}
+      <button
+        className="md:hidden p-4 fixed top-2 left-2 z-20 bg-gray-200 rounded"
+        onClick={() => setMenuOpen(!menuOpen)}
+        aria-label="Abrir menu"
+      >
+        ☰
+      </button>
+
       {/* Menu lateral */}
-      <nav className="w-60 border-r p-6 flex flex-col gap-4">
+      <nav
+        className={`fixed top-0 left-0 h-full bg-white border-r p-6 flex flex-col gap-4 z-10
+          ${menuOpen ? "block" : "hidden"} md:flex md:w-60`}
+      >
         <div className="text-sm font-semibold text-pink-600 uppercase mb-4">Comece aqui!</div>
         <Link to="/auth" className={`flex items-center gap-2 ${isActive("/auth")}`}>
-          {/* Ícone de play pode ser um SVG ou emoji */}
           <span>▶️</span> Primeiros Passos
         </Link>
         <Link to="/apresente-se" className={`flex items-center gap-2 ${isActive("/apresente-se")}`}>
@@ -72,7 +84,11 @@ export const Layout = () => {
       </nav>
 
       {/* Conteúdo principal */}
-      <main className="flex-1 p-8 overflow-auto">
+      <main
+        className={`flex-1 p-8 overflow-auto transition-all duration-300
+          ${menuOpen ? "opacity-50 pointer-events-none" : "opacity-100"}`}
+        onClick={() => menuOpen && setMenuOpen(false)}
+      >
         <Outlet />
       </main>
     </div>
