@@ -555,7 +555,12 @@ const GoalCard = ({ goal, onEdit, onDelete, onChangeStatus, onAddValue }: GoalCa
   const colDef = columns.find((c) => c.key === goal.status)!;
 
   return (
-    <div className="glass-card p-4 rounded-xl space-y-3 group hover:shadow-md transition-all">
+    <div className="glass-card rounded-xl space-y-3 group hover:shadow-md transition-all overflow-hidden">
+      {/* Image */}
+      {goal.image_url && (
+        <img src={goal.image_url} alt={goal.title} className="w-full h-24 object-cover" />
+      )}
+      <div className="p-4 pt-3 space-y-3">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-2 min-w-0">
