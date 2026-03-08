@@ -68,10 +68,14 @@ const Dashboard = () => {
       {/* Achievements & Navigation Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Recent Achievements */}
-        <RecentAchievements />
+        <div data-tour="achievements">
+          <RecentAchievements />
+        </div>
         
         {/* Quick Navigation */}
-        <QuickNavigation />
+        <div data-tour="quick-nav">
+          <QuickNavigation />
+        </div>
       </div>
 
       {/* Weekly Summary */}
