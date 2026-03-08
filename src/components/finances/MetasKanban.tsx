@@ -640,7 +640,9 @@ const GoalCard = ({ goal, onEdit, onDelete, onChangeStatus, onAddValue }: GoalCa
           Guardar valor
         </button>
       )}
+      </div>
     </div>
+  );
   );
 };
 
