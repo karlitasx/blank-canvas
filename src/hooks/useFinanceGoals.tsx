@@ -44,6 +44,7 @@ export const useFinanceGoals = () => {
           title: d.title,
           description: d.description || undefined,
           emoji: d.emoji,
+          image_url: d.image_url || undefined,
           target_amount: Number(d.target_amount),
           current_amount: Number(d.current_amount),
           status: d.status as GoalStatus,
