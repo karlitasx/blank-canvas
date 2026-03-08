@@ -372,20 +372,67 @@ const MetasKanban = () => {
           <div className="space-y-4 pt-2">
             {/* Emoji */}
             <div className="space-y-2">
-              <Label>Ícone</Label>
-              <div className="flex flex-wrap gap-1.5">
+              <Label>Emoji</Label>
+              <div className="flex items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center text-2xl shrink-0">
+                  {formEmoji}
+                </div>
+                <Input
+                  value={formEmoji}
+                  onChange={(e) => setFormEmoji(e.target.value)}
+                  placeholder="Digite ou cole um emoji"
+                  className="flex-1"
+                  maxLength={4}
+                />
+              </div>
+              <div className="flex flex-wrap gap-1">
                 {emojis.map((e) => (
                   <button
                     key={e}
+                    type="button"
                     onClick={() => setFormEmoji(e)}
-                    className={`w-9 h-9 rounded-lg flex items-center justify-center text-lg transition-all ${
-                      formEmoji === e ? "bg-primary/10 ring-2 ring-primary" : "bg-muted hover:bg-muted/80"
+                    className={`w-8 h-8 rounded-md flex items-center justify-center text-base transition-all ${
+                      formEmoji === e ? "bg-primary/10 ring-1 ring-primary" : "hover:bg-muted"
                     }`}
                   >
                     {e}
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Image */}
+            <div className="space-y-2">
+              <Label>Imagem (opcional)</Label>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
+              {formImageUrl ? (
+                <div className="relative rounded-xl overflow-hidden border border-border">
+                  <img src={formImageUrl} alt="Meta" className="w-full h-32 object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => setFormImageUrl(null)}
+                    className="absolute top-2 right-2 p-1.5 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors"
+                  >
+                    <Trash className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploadingImage}
+                  className="w-full py-6 border-2 border-dashed border-border rounded-xl flex flex-col items-center gap-2 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors"
+                >
+                  <ImagePlus className="w-6 h-6" />
+                  <span className="text-sm">{isUploadingImage ? "Enviando..." : "Adicionar imagem"}</span>
+                </button>
+              )}
             </div>
 
             <div className="space-y-2">
