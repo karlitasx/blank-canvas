@@ -48,7 +48,7 @@ const Dashboard = () => {
       </div>
 
       {/* Quick Stats Grid */}
-      <div className="mb-8">
+      <div className="mb-8" data-tour="quick-stats">
         <QuickStats />
       </div>
 
