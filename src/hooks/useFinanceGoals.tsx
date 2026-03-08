@@ -9,6 +9,7 @@ export interface FinanceGoal {
   title: string;
   description?: string;
   emoji: string;
+  image_url?: string;
   target_amount: number;
   current_amount: number;
   status: GoalStatus;
