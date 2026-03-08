@@ -201,6 +201,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.community': 'Comunidad',
     'nav.selfcare': 'Autocuidado',
     'nav.achievements': 'Logros',
+    'nav.ranking': 'Ranking',
     'nav.profile': 'Perfil',
     'greeting.morning': 'Buenos días',
     'greeting.afternoon': 'Buenas tardes',
