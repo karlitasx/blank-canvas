@@ -116,7 +116,7 @@ export const useFinanceGoals = () => {
       try {
         const { error } = await supabase
           .from("finance_goals")
-          .update({ ...updates, updated_at: new Date().toISOString() })
+          .update({ ...updates, updated_at: new Date().toISOString() } as any)
           .eq("id", id);
 
         if (error) throw error;
