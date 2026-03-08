@@ -11,20 +11,12 @@ import { Separator } from "@/components/ui/separator";
 
 const sections = [
   {
-    titleKey: "Comece aqui!",
+    titleKey: "Dashboard",
     items: [
-      { icon: Play, label: "Primeiros Passos", href: "/" },
-      { icon: User, label: "Apresente-se", href: "/community" },
-      { icon: BookOpen, label: "Regras da Comunidade", href: "/community" },
-    ],
-  },
-  {
-    titleKey: "Navegue pela comunidade",
-    items: [
-      { icon: Home, label: "Feed", href: "/community" },
-      { icon: Users, label: "Grupos e Temas", href: "/community" },
-      { icon: Calendar, label: "Eventos", href: "/agenda" },
-      { icon: Newspaper, label: "Novidades", href: "/community" },
+      { icon: Home, label: "Dashboard", href: "/" },
+      { icon: Calendar, label: "Calendário", href: "/calendar" },
+      { icon: User, label: "Perfil", href: "/profile" },
+      { icon: Play, label: "Social", href: "/social" },
     ],
   },
   {
@@ -32,14 +24,14 @@ const sections = [
     items: [
       { icon: Target, label: "Hábitos", href: "/habits" },
       { icon: Heart, label: "Autocuidado", href: "/selfcare" },
-      { icon: Award, label: "Conquistas", href: "/achievements" },
-      { icon: Trophy, label: "Ranking", href: "/community" },
+      { icon: Award, label: "Conquistas", href: "/challenges" },
+      { icon: Trophy, label: "Ranking", href: "/admin" },
     ],
   },
   {
     titleKey: "Controle suas finanças",
     items: [
-      { icon: Wallet, label: "Minhas Finanças", href: "/finances" },
+      { icon: Wallet, label: "Minhas Finanças", href: "/finance" },
     ],
   },
 ];
