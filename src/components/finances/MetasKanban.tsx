@@ -78,6 +78,7 @@ const MetasKanban = () => {
     setFormTitle("");
     setFormDescription("");
     setFormEmoji("🎯");
+    setFormImageUrl(null);
     setFormTargetAmount("");
     setFormCurrentAmount("");
     setFormPriority("medium");
@@ -90,11 +91,43 @@ const MetasKanban = () => {
     setFormTitle(goal.title);
     setFormDescription(goal.description || "");
     setFormEmoji(goal.emoji);
+    setFormImageUrl(goal.image_url || null);
     setFormTargetAmount(goal.target_amount.toString());
     setFormCurrentAmount(goal.current_amount.toString());
     setFormPriority(goal.priority);
     setFormTargetDate(goal.target_date || "");
     setIsModalOpen(true);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Selecione um arquivo de imagem");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Imagem deve ter no máximo 5MB");
+      return;
+    }
+
+    setIsUploadingImage(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const path = `${user.id}/${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from("goal-images").upload(path, file);
+      if (error) throw error;
+
+      const { data: urlData } = supabase.storage.from("goal-images").getPublicUrl(path);
+      setFormImageUrl(urlData.publicUrl);
+    } catch (err) {
+      console.error(err);
+      toast.error("Erro ao enviar imagem");
+    } finally {
+      setIsUploadingImage(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   };
 
   const handleSave = async () => {
@@ -103,10 +136,11 @@ const MetasKanban = () => {
       return;
     }
 
-    const data = {
+    const data: any = {
       title: formTitle.trim(),
       description: formDescription.trim() || undefined,
       emoji: formEmoji,
+      image_url: formImageUrl || undefined,
       target_amount: parseFloat(formTargetAmount),
       current_amount: parseFloat(formCurrentAmount || "0"),
       status: (editingGoal?.status || "planning") as GoalStatus,
