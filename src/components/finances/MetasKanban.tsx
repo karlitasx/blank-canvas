@@ -20,16 +20,6 @@ import { useFinanceGoals, type GoalStatus, type FinanceGoal } from "@/hooks/useF
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Progress } from "@/components/ui/progress";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Dialog, DialogContent, DialogHeader, DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useFinanceGoals, type GoalStatus, type FinanceGoal } from "@/hooks/useFinanceGoals";
-import { toast } from "sonner";
 
 type ViewMode = "kanban" | "table";
 
