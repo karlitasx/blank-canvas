@@ -1,13 +1,25 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Plus, Target, Clock, Pause, CheckCircle2, LayoutGrid, Table,
   Pencil, Trash2, ArrowRight, DollarSign, MoreHorizontal, X, Check,
-  ChevronRight, ChevronLeft,
+  ChevronRight, ChevronLeft, ImagePlus, Trash,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useFinanceGoals, type GoalStatus, type FinanceGoal } from "@/hooks/useFinanceGoals";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
