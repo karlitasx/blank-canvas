@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import HeroSection from "@/components/dashboard/HeroSection";
 import DailyProgress from "@/components/dashboard/DailyProgress";
@@ -6,12 +7,45 @@ import QuickStats from "@/components/dashboard/QuickStats";
 import QuickNavigation from "@/components/dashboard/QuickNavigation";
 import WeeklySummary from "@/components/dashboard/WeeklySummary";
 import RecentAchievements from "@/components/dashboard/RecentAchievements";
+import OnboardingTour from "@/components/onboarding/OnboardingTour";
+import FirstStepsCard from "@/components/onboarding/FirstStepsCard";
 
 const Dashboard = () => {
+  const [runTour, setRunTour] = useState(false);
+  const [showFirstStepsCard, setShowFirstStepsCard] = useState(false);
+
+  useEffect(() => {
+    const hasSeenTour = localStorage.getItem("hasSeenOnboardingTour");
+    if (!hasSeenTour) {
+      setShowFirstStepsCard(true);
+    }
+  }, []);
+
+  const handleStartTour = () => {
+    setRunTour(true);
+  };
+
+  const handleFinishTour = () => {
+    setRunTour(false);
+    setShowFirstStepsCard(false);
+    localStorage.setItem("hasSeenOnboardingTour", "true");
+  };
+
   return (
     <DashboardLayout activeNav="/">
+      <OnboardingTour run={runTour} onFinish={handleFinishTour} />
+      
+      {/* First Steps Card */}
+      {showFirstStepsCard && (
+        <div className="mb-6">
+          <FirstStepsCard onStart={handleStartTour} />
+        </div>
+      )}
+
       {/* Hero Section */}
-      <HeroSection />
+      <div data-tour="hero">
+        <HeroSection />
+      </div>
 
       {/* Quick Stats Grid */}
       <div className="mb-8">
