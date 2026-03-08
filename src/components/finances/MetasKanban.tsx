@@ -643,7 +643,6 @@ const GoalCard = ({ goal, onEdit, onDelete, onChangeStatus, onAddValue }: GoalCa
       </div>
     </div>
   );
-  );
 };
 
 export default MetasKanban;
