@@ -60,7 +60,7 @@ const Sidebar = ({ activeItem = "/" }: SidebarProps) => {
   };
 
   return (
-    <aside className="hidden md:flex fixed left-0 top-14 bottom-0 w-64 bg-background border-r border-border flex-col z-40">
+    <aside className="hidden md:flex fixed left-0 top-14 bottom-0 w-64 bg-background border-r border-border flex-col z-40" data-tour="sidebar">
       {/* Navigation Sections */}
       <div className="flex-1 overflow-y-auto py-2">
         {sections.map((section, idx) => (
