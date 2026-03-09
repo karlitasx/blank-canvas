@@ -85,7 +85,7 @@ export const useAdminHairCare = () => {
       .select("*")
       .eq("user_id", userId)
       .order("treatment_date", { ascending: false });
-    return (data as HairTreatmentLog[]) || [];
+    return (data as unknown as HairTreatmentLog[]) || [];
   };
 
   const createSchedule = async (

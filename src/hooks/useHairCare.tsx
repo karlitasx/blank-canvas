@@ -132,7 +132,7 @@ export const useHairCare = () => {
       .single();
 
     if (error) throw error;
-    setTreatmentLogs(prev => [inserted as HairTreatmentLog, ...prev]);
+    setTreatmentLogs(prev => [inserted as unknown as HairTreatmentLog, ...prev]);
     return inserted;
   };
 
