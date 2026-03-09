@@ -162,10 +162,12 @@ export type Database = {
           created_at: string
           created_by: string
           description: string | null
+          difficulty: string
           emoji: string
           end_date: string
           id: string
           is_public: boolean
+          points_per_checkin: number
           start_date: string
           target_value: number
           title: string
@@ -176,10 +178,12 @@ export type Database = {
           created_at?: string
           created_by: string
           description?: string | null
+          difficulty?: string
           emoji?: string
           end_date: string
           id?: string
           is_public?: boolean
+          points_per_checkin?: number
           start_date: string
           target_value: number
           title: string
@@ -190,10 +194,12 @@ export type Database = {
           created_at?: string
           created_by?: string
           description?: string | null
+          difficulty?: string
           emoji?: string
           end_date?: string
           id?: string
           is_public?: boolean
+          points_per_checkin?: number
           start_date?: string
           target_value?: number
           title?: string
