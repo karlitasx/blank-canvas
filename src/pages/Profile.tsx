@@ -186,6 +186,7 @@ const Profile = () => {
   const ProfileAchievementsGrid = () => {
     const { getAllAchievements, getAchievementProgress } = useAchievementsContext();
     const achievements = getAllAchievements();
+    const [selectedAchievement, setSelectedAchievement] = useState<(typeof achievements)[0] | null>(null);
     
     // Show first 6 achievements, prioritizing unlocked ones
     const sortedAchievements = [...achievements].sort((a, b) => {
@@ -194,58 +195,150 @@ const Profile = () => {
       return 0;
     }).slice(0, 6);
 
+    const getCategoryLabel = (category: string) => {
+      const labels: Record<string, string> = {
+        habits: 'Hábitos',
+        streaks: 'Streaks',
+        finance: 'Finanças',
+        selfcare: 'Autocuidado',
+        community: 'Comunidade',
+        routine: 'Rotina',
+        special: 'Especial',
+      };
+      return labels[category] || category;
+    };
+
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        {sortedAchievements.map((achievement) => (
-          <div
-            key={achievement.id}
-            className={cn(
-              "relative p-3 rounded-xl border transition-all",
-              achievement.isUnlocked
-                ? "bg-card border-primary/30 hover:shadow-md"
-                : "bg-muted/30 border-muted/20 opacity-60"
-            )}
-          >
-            {/* Rarity Badge */}
-            <div 
+      <>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {sortedAchievements.map((achievement) => (
+            <div
+              key={achievement.id}
+              onClick={() => setSelectedAchievement(achievement)}
               className={cn(
-                "absolute top-2 right-2 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase",
-                achievement.isUnlocked 
-                  ? `bg-gradient-to-r ${RARITY_COLORS[achievement.rarity]} text-white` 
-                  : "bg-muted text-muted-foreground"
+                "relative p-3 rounded-xl border transition-all cursor-pointer",
+                achievement.isUnlocked
+                  ? "bg-card border-primary/30 hover:shadow-md hover:scale-[1.02]"
+                  : "bg-muted/30 border-muted/20 opacity-60 hover:opacity-80"
               )}
             >
-              {RARITY_LABELS[achievement.rarity]}
-            </div>
-
-            <div className="flex flex-col items-center text-center">
+              {/* Rarity Badge */}
               <div 
                 className={cn(
-                  "w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-2",
+                  "absolute top-2 right-2 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase",
                   achievement.isUnlocked 
-                    ? `bg-gradient-to-br ${RARITY_COLORS[achievement.rarity]}` 
-                    : "bg-muted"
+                    ? `bg-gradient-to-r ${RARITY_COLORS[achievement.rarity]} text-white` 
+                    : "bg-muted text-muted-foreground"
                 )}
               >
-                {achievement.isUnlocked ? achievement.emoji : <Lock className="w-5 h-5 text-muted-foreground" />}
+                {RARITY_LABELS[achievement.rarity]}
               </div>
-              <p className={cn(
-                "text-xs font-semibold line-clamp-1",
-                achievement.isUnlocked ? "text-foreground" : "text-muted-foreground"
-              )}>
-                {achievement.name}
-              </p>
-              {achievement.isUnlocked ? (
-                <p className="text-[10px] text-accent font-medium mt-1">+{achievement.points} pts</p>
-              ) : (
-                <div className="w-full mt-1">
-                  <Progress value={getAchievementProgress(achievement.id)} className="h-1" />
+
+              <div className="flex flex-col items-center text-center">
+                <div 
+                  className={cn(
+                    "w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-2",
+                    achievement.isUnlocked 
+                      ? `bg-gradient-to-br ${RARITY_COLORS[achievement.rarity]}` 
+                      : "bg-muted"
+                  )}
+                >
+                  {achievement.isUnlocked ? achievement.emoji : <Lock className="w-5 h-5 text-muted-foreground" />}
                 </div>
-              )}
+                <p className={cn(
+                  "text-xs font-semibold line-clamp-1",
+                  achievement.isUnlocked ? "text-foreground" : "text-muted-foreground"
+                )}>
+                  {achievement.name}
+                </p>
+                {achievement.isUnlocked ? (
+                  <p className="text-[10px] text-accent font-medium mt-1">+{achievement.points} pts</p>
+                ) : (
+                  <div className="w-full mt-1">
+                    <Progress value={getAchievementProgress(achievement.id)} className="h-1" />
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+
+        {/* Achievement Detail Dialog */}
+        <Dialog open={!!selectedAchievement} onOpenChange={() => setSelectedAchievement(null)}>
+          <DialogContent className="sm:max-w-md">
+            {selectedAchievement && (
+              <>
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-3">
+                    <div 
+                      className={cn(
+                        "w-14 h-14 rounded-xl flex items-center justify-center text-3xl",
+                        selectedAchievement.isUnlocked 
+                          ? `bg-gradient-to-br ${RARITY_COLORS[selectedAchievement.rarity]}` 
+                          : "bg-muted"
+                      )}
+                    >
+                      {selectedAchievement.isUnlocked ? selectedAchievement.emoji : <Lock className="w-6 h-6 text-muted-foreground" />}
+                    </div>
+                    <div>
+                      <span className="text-foreground">{selectedAchievement.name}</span>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span 
+                          className={cn(
+                            "px-2 py-0.5 rounded text-[10px] font-bold uppercase",
+                            `bg-gradient-to-r ${RARITY_COLORS[selectedAchievement.rarity]} text-white`
+                          )}
+                        >
+                          {RARITY_LABELS[selectedAchievement.rarity]}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {getCategoryLabel(selectedAchievement.category)}
+                        </span>
+                      </div>
+                    </div>
+                  </DialogTitle>
+                </DialogHeader>
+                
+                <div className="space-y-4 pt-4">
+                  <p className="text-sm text-muted-foreground">
+                    {selectedAchievement.description}
+                  </p>
+                  
+                  <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Trophy className="w-4 h-4 text-accent" />
+                      <span className="text-sm font-medium">Recompensa</span>
+                    </div>
+                    <span className="text-sm font-bold text-accent">+{selectedAchievement.points} pts</span>
+                  </div>
+                  
+                  {selectedAchievement.isUnlocked ? (
+                    <div className="flex items-center gap-2 p-3 bg-success/10 rounded-lg border border-success/30">
+                      <CheckCircle2 className="w-5 h-5 text-success" />
+                      <div>
+                        <p className="text-sm font-medium text-success">Conquistada!</p>
+                        {selectedAchievement.unlockedAt && (
+                          <p className="text-xs text-muted-foreground">
+                            {format(new Date(selectedAchievement.unlockedAt), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">Progresso</span>
+                        <span className="font-medium">{getAchievementProgress(selectedAchievement.id)}%</span>
+                      </div>
+                      <Progress value={getAchievementProgress(selectedAchievement.id)} className="h-2" />
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
+      </>
     );
   };
 
