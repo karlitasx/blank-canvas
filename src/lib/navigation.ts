@@ -12,7 +12,6 @@ export interface NavItem {
 // Navigation items shared across Sidebar and BottomNav
 export const navigationItems: NavItem[] = [
   { icon: Home, label: "Home", labelKey: "nav.dashboard", href: "/" },
-  { icon: Target, label: "Hábitos", labelKey: "nav.habits", href: "/habits" },
   { icon: CalendarDays, label: "Rotina", labelKey: "nav.routine", href: "/routine" },
   { icon: DollarSign, label: "Finanças", labelKey: "nav.finances", href: "/finance" },
   { icon: Heart, label: "Autocuidado", labelKey: "nav.selfcare", href: "/selfcare" },
