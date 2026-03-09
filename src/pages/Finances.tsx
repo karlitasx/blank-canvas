@@ -62,6 +62,9 @@ const Finances = () => {
   const [showSecurityBanner, setShowSecurityBanner] = useState(true);
   const [veveOpen, setVeveOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [bizActiveTab, setBizActiveTab] = useState("biz-dashboard");
+
+  const { settings: businessSettings, isLoading: bizLoading } = useBusinessSettings();
 
   const { transactions, isLoaded, stats, addTransaction, deleteTransaction, filterTransactions, getCategoryData } =
     useSupabaseFinances(financeType || undefined);
