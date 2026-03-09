@@ -4,23 +4,40 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { toast } from "@/hooks/use-toast";
 import {
-  Home, User, Play, LogOut, HelpCircle, BookOpen, Calendar,
-  Users, Newspaper, Wallet, Target, Heart, Award, Trophy,
+  Home, User, LogOut, HelpCircle, Calendar,
+  Wallet, Target, Heart, Award, Trophy,
+  Sparkles, UserPlus, BookOpen, Newspaper, Users, Bell, Rss,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 const sections = [
+  {
+    titleKey: "Comece aqui!",
+    items: [
+      { icon: Sparkles, label: "Primeiros Passos", href: "/", highlight: true },
+      { icon: UserPlus, label: "Apresente-se", href: "/social?tab=introductions" },
+      { icon: BookOpen, label: "Regras da Comunidade", href: "/social?tab=rules" },
+    ],
+  },
   {
     titleKey: "Dashboard",
     items: [
       { icon: Home, label: "Dashboard", href: "/" },
       { icon: Calendar, label: "Calendário", href: "/calendar" },
       { icon: User, label: "Perfil", href: "/profile" },
-      { icon: Play, label: "Social", href: "/social" },
     ],
   },
   {
-    titleKey: "Navegue pelo app",
+    titleKey: "Navegue pela comunidade",
+    items: [
+      { icon: Rss, label: "Feed", href: "/social" },
+      { icon: Users, label: "Grupos e Temas", href: "/social?tab=groups" },
+      { icon: Calendar, label: "Eventos", href: "/calendar" },
+      { icon: Bell, label: "Novidades", href: "/social?tab=news" },
+    ],
+  },
+  {
+    titleKey: "Organize sua vida",
     items: [
       { icon: Target, label: "Hábitos", href: "/habits" },
       { icon: Heart, label: "Autocuidado", href: "/selfcare" },
@@ -59,6 +76,14 @@ const Sidebar = ({ activeItem = "/" }: SidebarProps) => {
     navigate("/auth", { replace: true });
   };
 
+  const isActive = (href: string) => {
+    const [path, query] = href.split("?");
+    if (query) {
+      return location.pathname === path && location.search === `?${query}`;
+    }
+    return location.pathname === path && !location.search;
+  };
+
   return (
     <aside className="hidden md:flex fixed left-0 top-14 bottom-0 w-64 bg-background border-r border-border flex-col z-40" data-tour="sidebar">
       {/* Navigation Sections */}
@@ -69,7 +94,7 @@ const Sidebar = ({ activeItem = "/" }: SidebarProps) => {
               {section.titleKey}
             </p>
             {section.items.map((item) => {
-              const isActive = location.pathname === item.href;
+              const active = isActive(item.href);
               const Icon = item.icon;
               return (
                 <button
@@ -77,9 +102,10 @@ const Sidebar = ({ activeItem = "/" }: SidebarProps) => {
                   onClick={() => handleNavigate(item.href)}
                   className={cn(
                     "flex items-center gap-4 w-full px-3 py-3 rounded-lg text-left transition-colors",
-                    isActive
+                    active
                       ? "bg-primary/10 text-primary font-medium"
-                      : "text-foreground hover:bg-muted"
+                      : "text-foreground hover:bg-muted",
+                    item.highlight && !active && "border border-primary/30 bg-primary/5"
                   )}
                 >
                   <Icon className="w-5 h-5 flex-shrink-0" />
