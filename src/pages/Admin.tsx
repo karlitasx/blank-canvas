@@ -90,6 +90,7 @@ const Admin = () => {
             <TabsTrigger value="events" className="text-xs sm:text-sm">Eventos</TabsTrigger>
             <TabsTrigger value="groups" className="text-xs sm:text-sm">Grupos</TabsTrigger>
             <TabsTrigger value="novidades" className="text-xs sm:text-sm">Novidades</TabsTrigger>
+            <TabsTrigger value="haircare" className="text-xs sm:text-sm">Capilar</TabsTrigger>
           </TabsList>
 
           <TabsContent value="posts">
