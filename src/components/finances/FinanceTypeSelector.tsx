@@ -1,4 +1,5 @@
-import { User, Building2, Wallet, ChevronRight, DollarSign } from "lucide-react";
+import { User, Building2, ChevronRight, DollarSign } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export type FinanceType = "personal" | "business";
 
@@ -7,6 +8,8 @@ interface FinanceTypeSelectorProps {
 }
 
 const FinanceTypeSelector = ({ onSelect }: FinanceTypeSelectorProps) => {
+  const navigate = useNavigate();
+
   return (
     <div className="w-full max-w-2xl mx-auto animate-fade-in">
       {/* Hero Banner */}
@@ -45,7 +48,7 @@ const FinanceTypeSelector = ({ onSelect }: FinanceTypeSelectorProps) => {
         </button>
 
         <button
-          onClick={() => onSelect("business")}
+          onClick={() => navigate("/business-finance")}
           className="w-full group glass-card p-6 flex items-center gap-5 hover:border-primary/40 transition-all duration-300 text-left"
         >
           <div className="w-14 h-14 rounded-2xl bg-accent/15 flex items-center justify-center shrink-0 group-hover:bg-accent/25 transition-colors">
@@ -54,7 +57,7 @@ const FinanceTypeSelector = ({ onSelect }: FinanceTypeSelectorProps) => {
           <div className="flex-1 min-w-0">
             <h3 className="font-bold text-lg text-foreground">Finanças Empresariais</h3>
             <p className="text-sm text-muted-foreground mt-1">
-              Gerencie as finanças do seu negócio, CNPJ, fluxo de caixa e despesas
+              MEI, Simples Nacional ou Autônomo — controle faturamento, despesas e impostos
             </p>
           </div>
           <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
