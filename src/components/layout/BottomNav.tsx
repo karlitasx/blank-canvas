@@ -3,10 +3,11 @@ import { cn } from "@/lib/utils";
 import { navigationItems } from "@/lib/navigation";
 import { usePreferences } from "@/contexts/PreferencesContext";
 import { MoreHorizontal, X } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const PRIMARY_COUNT = 4;
-const primaryItems = navigationItems.slice(0, PRIMARY_COUNT);
-const moreItems = navigationItems.slice(PRIMARY_COUNT);
+const PRIMARY_HREFS = ["/", "/routine", "/finance", "/gymrats"];
+const primaryItems = navigationItems.filter(i => PRIMARY_HREFS.includes(i.href));
+const moreItems = navigationItems.filter(i => !PRIMARY_HREFS.includes(i.href));
 
 interface BottomNavProps {
   activeItem?: string;
@@ -14,8 +15,18 @@ interface BottomNavProps {
 
 const BottomNav = ({ activeItem = "/" }: BottomNavProps) => {
   const { t } = usePreferences();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [showMore, setShowMore] = useState(false);
-  const isMoreActive = moreItems.some((item) => item.href === activeItem);
+
+  const currentPath = location.pathname;
+  const isActiveHref = (href: string) => currentPath === href;
+  const isMoreActive = moreItems.some((item) => isActiveHref(item.href));
+
+  const handleNav = (href: string) => {
+    navigate(href);
+    setShowMore(false);
+  };
 
   return (
     <>
@@ -28,22 +39,22 @@ const BottomNav = ({ activeItem = "/" }: BottomNavProps) => {
             onClick={(e) => e.stopPropagation()}
           >
             {moreItems.map((item) => {
-              const isActive = activeItem === item.href;
+              const active = isActiveHref(item.href);
               const Icon = item.icon;
               return (
-                <a
+                <button
                   key={item.href}
-                  href={item.href}
+                  onClick={() => handleNav(item.href)}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors",
-                    isActive
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors w-full text-left",
+                    active
                       ? "bg-primary/10 text-primary"
                       : "text-foreground hover:bg-muted"
                   )}
                 >
                   <Icon className="w-5 h-5" />
                   <span className="text-sm font-medium">{t(item.labelKey)}</span>
-                </a>
+                </button>
               );
             })}
           </div>
@@ -54,22 +65,22 @@ const BottomNav = ({ activeItem = "/" }: BottomNavProps) => {
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border">
         <ul className="flex items-center justify-around py-1 px-1">
           {primaryItems.map((item) => {
-            const isActive = activeItem === item.href;
+            const active = isActiveHref(item.href);
             const Icon = item.icon;
             return (
               <li key={item.href}>
-                <a
-                  href={item.href}
+                <button
+                  onClick={() => handleNav(item.href)}
                   className={cn(
                     "flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-md transition-colors",
-                    isActive ? "text-primary" : "text-muted-foreground"
+                    active ? "text-primary" : "text-muted-foreground"
                   )}
                 >
-                  <div className={cn("p-1.5 rounded-md transition-colors", isActive && "bg-primary/10")}>
+                  <div className={cn("p-1.5 rounded-md transition-colors", active && "bg-primary/10")}>
                     <Icon className="w-5 h-5" />
                   </div>
                   <span className="text-[10px] font-medium">{t(item.labelKey)}</span>
-                </a>
+                </button>
               </li>
             );
           })}
