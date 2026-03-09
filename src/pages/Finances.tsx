@@ -305,13 +305,13 @@ const Finances = () => {
 
       {/* Security Banner */}
       {showSecurityBanner && (
-        <div className="mb-4 p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 flex gap-3 items-start">
-          <Shield className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-          <div className="flex-1">
-            <p className="text-sm text-foreground">
-              <strong>Seus dados estão seguros:</strong>{" "}
-              <span className="text-muted-foreground">
-                Utilizamos criptografia de ponta e não compartilhamos suas informações financeiras com terceiros.
+        <div className="mb-4 p-3 md:p-4 rounded-xl border border-success/30 bg-success/5 flex gap-2 md:gap-3 items-start">
+          <Shield className="w-4 h-4 md:w-5 md:h-5 text-success flex-shrink-0 mt-0.5" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs md:text-sm text-foreground">
+              <strong>Dados seguros</strong>{" "}
+              <span className="text-muted-foreground hidden sm:inline">
+                — Utilizamos criptografia de ponta e não compartilhamos suas informações financeiras.
               </span>
             </p>
           </div>
