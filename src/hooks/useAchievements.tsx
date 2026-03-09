@@ -25,6 +25,18 @@ export interface UserStats {
   gratitudeEntries: number;
   communityPoints: number;
   wishesCompleted: number;
+  routineCompleted: number;
+  eventsCreated: number;
+  challengesJoined: number;
+  postsCreated: number;
+  likesGiven: number;
+  commentsMade: number;
+  followersGained: number;
+  goalsCreated: number;
+  goalsCompleted: number;
+  cardsCreated: number;
+  categoriesCreated: number;
+  investmentsMade: number;
   categoryCompletions: Record<string, number>;
 }
 
@@ -43,6 +55,18 @@ const defaultStats: UserStats = {
   gratitudeEntries: 0,
   communityPoints: 0,
   wishesCompleted: 0,
+  routineCompleted: 0,
+  eventsCreated: 0,
+  challengesJoined: 0,
+  postsCreated: 0,
+  likesGiven: 0,
+  commentsMade: 0,
+  followersGained: 0,
+  goalsCreated: 0,
+  goalsCompleted: 0,
+  cardsCreated: 0,
+  categoriesCreated: 0,
+  investmentsMade: 0,
   categoryCompletions: {},
 };
 
