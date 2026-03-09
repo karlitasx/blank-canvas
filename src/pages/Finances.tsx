@@ -25,6 +25,7 @@ import BusinessExpensesTab from "@/components/finances/BusinessExpensesTab";
 import MeiFeatures from "@/components/finances/MeiFeatures";
 import SimplesCalculator from "@/components/finances/SimplesCalculator";
 import FiscalAgenda from "@/components/finances/FiscalAgenda";
+import AutonomoFeatures from "@/components/finances/AutonomoFeatures";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
