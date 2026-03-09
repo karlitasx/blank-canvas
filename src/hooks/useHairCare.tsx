@@ -79,8 +79,8 @@ export const useHairCare = () => {
           .order("day_of_week", { ascending: true });
 
         setActiveSchedule({
-          ...(scheduleRes.data as HairSchedule),
-          items: (items as HairScheduleItem[]) || [],
+          ...(scheduleRes.data as unknown as HairSchedule),
+          items: (items as unknown as HairScheduleItem[]) || [],
         });
       }
     } catch (err) {
