@@ -134,7 +134,7 @@ export const useRoutine = () => {
         
       if (error) throw error;
       
-      setTasks(prev => [...prev, data]);
+      setTasks(prev => [...prev, data as RoutineTask]);
       toast.success("Tarefa adicionada com sucesso!");
       return data;
     } catch (error) {

@@ -9,7 +9,7 @@ const Routine = () => {
       <PageHeader 
         title="Rotina" 
         description="Organize seu dia e acompanhe seu progresso"
-        icon={<CalendarDays className="text-primary w-8 h-8" />}
+        icon={CalendarDays}
       />
 
       <RoutinePlanner />
