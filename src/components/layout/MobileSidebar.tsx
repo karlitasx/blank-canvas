@@ -39,7 +39,7 @@ const sections = [
   {
     titleKey: "Organize sua vida",
     items: [
-      { icon: Target, label: "Hábitos", href: "/habits" },
+      { icon: Target, label: "Rotina & Hábitos", href: "/routine" },
       { icon: Heart, label: "Autocuidado", href: "/selfcare" },
       { icon: Award, label: "Conquistas", href: "/challenges" },
       { icon: Trophy, label: "Ranking", href: "/ranking" },
