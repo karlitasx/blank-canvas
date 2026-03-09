@@ -739,6 +739,172 @@ export type Database = {
         }
         Relationships: []
       }
+      hair_profiles: {
+        Row: {
+          created_at: string
+          extra_notes: string | null
+          goal: string
+          hair_type: string
+          id: string
+          main_problem: string
+          texture: string
+          updated_at: string
+          user_id: string
+          wash_frequency: string
+        }
+        Insert: {
+          created_at?: string
+          extra_notes?: string | null
+          goal: string
+          hair_type: string
+          id?: string
+          main_problem: string
+          texture: string
+          updated_at?: string
+          user_id: string
+          wash_frequency: string
+        }
+        Update: {
+          created_at?: string
+          extra_notes?: string | null
+          goal?: string
+          hair_type?: string
+          id?: string
+          main_problem?: string
+          texture?: string
+          updated_at?: string
+          user_id?: string
+          wash_frequency?: string
+        }
+        Relationships: []
+      }
+      hair_schedule_items: {
+        Row: {
+          created_at: string
+          day_of_week: number
+          id: string
+          product_recommendation: string | null
+          schedule_id: string
+          sort_order: number
+          treatment_type: string
+          week_number: number
+          yara_note: string | null
+        }
+        Insert: {
+          created_at?: string
+          day_of_week: number
+          id?: string
+          product_recommendation?: string | null
+          schedule_id: string
+          sort_order?: number
+          treatment_type: string
+          week_number?: number
+          yara_note?: string | null
+        }
+        Update: {
+          created_at?: string
+          day_of_week?: number
+          id?: string
+          product_recommendation?: string | null
+          schedule_id?: string
+          sort_order?: number
+          treatment_type?: string
+          week_number?: number
+          yara_note?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hair_schedule_items_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "hair_schedules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hair_schedules: {
+        Row: {
+          created_at: string
+          created_by: string
+          duration_weeks: number
+          id: string
+          notes: string | null
+          starts_at: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          duration_weeks?: number
+          id?: string
+          notes?: string | null
+          starts_at?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          duration_weeks?: number
+          id?: string
+          notes?: string | null
+          starts_at?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      hair_treatment_logs: {
+        Row: {
+          completed_at: string
+          created_at: string
+          hair_reaction: string | null
+          id: string
+          rating: string
+          schedule_item_id: string
+          treatment_date: string
+          user_id: string
+          user_note: string | null
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          hair_reaction?: string | null
+          id?: string
+          rating?: string
+          schedule_item_id: string
+          treatment_date?: string
+          user_id: string
+          user_note?: string | null
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          hair_reaction?: string | null
+          id?: string
+          rating?: string
+          schedule_item_id?: string
+          treatment_date?: string
+          user_id?: string
+          user_note?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hair_treatment_logs_schedule_item_id_fkey"
+            columns: ["schedule_item_id"]
+            isOneToOne: false
+            referencedRelation: "hair_schedule_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       introduction_comments: {
         Row: {
           content: string
@@ -1163,6 +1329,39 @@ export type Database = {
           created_at?: string
           id?: string
           pillar?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          plan: string
+          starts_at: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          plan?: string
+          starts_at?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          plan?: string
+          starts_at?: string
+          status?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

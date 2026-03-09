@@ -12,6 +12,7 @@ import AdminAchievementsSection from "@/components/admin/AdminAchievementsSectio
 import AdminEventsSection from "@/components/admin/AdminEventsSection";
 import AdminGroupsSection from "@/components/admin/AdminGroupsSection";
 import AdminNovidadesSection from "@/components/admin/AdminNovidadesSection";
+import AdminHairCareSection from "@/components/admin/AdminHairCareSection";
 
 const Admin = () => {
   const {
@@ -89,6 +90,7 @@ const Admin = () => {
             <TabsTrigger value="events" className="text-xs sm:text-sm">Eventos</TabsTrigger>
             <TabsTrigger value="groups" className="text-xs sm:text-sm">Grupos</TabsTrigger>
             <TabsTrigger value="novidades" className="text-xs sm:text-sm">Novidades</TabsTrigger>
+            <TabsTrigger value="haircare" className="text-xs sm:text-sm">Capilar</TabsTrigger>
           </TabsList>
 
           <TabsContent value="posts">
@@ -129,6 +131,10 @@ const Admin = () => {
 
           <TabsContent value="novidades">
             <AdminNovidadesSection />
+          </TabsContent>
+
+          <TabsContent value="haircare">
+            <AdminHairCareSection />
           </TabsContent>
         </Tabs>
 
