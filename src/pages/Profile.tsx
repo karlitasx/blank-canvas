@@ -117,8 +117,8 @@ const Profile = () => {
   const longestStreak = dbStats?.longest_streak || 0;
   const habitsCompleted = dbStats?.habits_completed || 0;
   const memberSince = user?.created_at 
-    ? new Date(user.created_at).toLocaleDateString('pt-BR') 
-    : 'Recentemente';
+    ? format(new Date(user.created_at), "MMMM 'de' yyyy", { locale: ptBR })
+    : 'recentemente';
 
   // Update edited name when profile loads
   useEffect(() => {
@@ -337,6 +337,10 @@ const Profile = () => {
                 )}
               </div>
               <p className="text-muted-foreground text-sm">{user?.email}</p>
+              <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+                <CalendarDays className="w-3.5 h-3.5" />
+                <span>Membra desde {memberSince}</span>
+              </div>
               
               {/* Subscription Badge */}
               <div className="mt-3">
