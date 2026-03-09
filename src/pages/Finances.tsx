@@ -24,9 +24,10 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { useSupabaseFinances } from "@/hooks/useSupabaseFinances";
 
 const financeTabs = [
-  { value: "overview", label: "Visão Geral", icon: LayoutGrid },
-  { value: "expenses", label: "Saídas", icon: TrendingDown },
+  { value: "overview", label: "Resumo", icon: LayoutGrid },
   { value: "transactions", label: "Transações", icon: FileText },
+  { value: "ai", label: "IA", icon: Bot },
+  { value: "expenses", label: "Saídas", icon: TrendingDown },
   { value: "investments", label: "Investimentos", icon: BarChart3 },
   { value: "goals", label: "Metas", icon: Target },
   { value: "debts", label: "Dívidas", icon: CreditCard },
