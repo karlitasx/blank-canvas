@@ -61,6 +61,7 @@ const App = () => (
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/ranking" element={<Ranking />} />
                 <Route path="/gymrats" element={<GymRats />} />
+                <Route path="/primeiros-passos" element={<FirstSteps />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

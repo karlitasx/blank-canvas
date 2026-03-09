@@ -65,14 +65,6 @@ const Sidebar = ({ activeItem = "/" }: SidebarProps) => {
   const { profile } = useProfile();
 
   const handleNavigate = (href: string) => {
-    if (href === "/?tour=welcome") {
-      if (location.pathname === "/") {
-        // Already on dashboard, just trigger via search param
-        navigate("/?tour=welcome", { replace: true });
-        window.location.search = "?tour=welcome";
-        return;
-      }
-    }
     navigate(href);
   };
 
