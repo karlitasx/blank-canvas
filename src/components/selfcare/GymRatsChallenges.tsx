@@ -18,12 +18,20 @@ interface Props {
 
 const GymRatsChallenges = ({ className }: Props) => {
   const { user } = useAuth();
-  const { challenges, loading, joinChallenge, leaveChallenge, getParticipants, getActiveChallenges, getAvailableChallenges } = useSupabaseChallenges();
+  const { challenges, loading, joinChallenge, leaveChallenge, getParticipants, getActiveChallenges, getAvailableChallenges, refetch } = useSupabaseChallenges();
+  const { uploadCheckinPhoto, getChallengeCheckins, getUserMonthlyCheckins, loading: uploadLoading } = useGymRatsChallenges();
+  
   const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null);
   const [participants, setParticipants] = useState<ChallengeParticipant[]>([]);
   const [loadingParticipants, setLoadingParticipants] = useState(false);
-  const [rankingTab, setRankingTab] = useState<"constancy" | "performance">("constancy");
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({ calendar: true });
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [caption, setCaption] = useState("");
+  const [monthlyCheckins, setMonthlyCheckins] = useState<any[]>([]);
+  const [recentCheckins, setRecentCheckins] = useState<any[]>([]);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const activeChallenges = getActiveChallenges();
   const availableChallenges = getAvailableChallenges();
