@@ -27,7 +27,6 @@ import GymRats from "./pages/GymRats";
 import FirstSteps from "./pages/FirstSteps";
 import Rules from "./pages/Rules";
 import Novidades from "./pages/Novidades";
-import BusinessFinance from "./pages/BusinessFinance";
 const queryClient = new QueryClient();
 
 function AuthRoute({ children }: { children: React.ReactNode }) {
@@ -67,7 +66,6 @@ const App = () => (
                 <Route path="/primeiros-passos" element={<FirstSteps />} />
                 <Route path="/regras" element={<Rules />} />
                 <Route path="/novidades" element={<Novidades />} />
-                <Route path="/business-finance" element={<BusinessFinance />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
