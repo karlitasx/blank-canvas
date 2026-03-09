@@ -236,6 +236,7 @@ const Finances = () => {
           {bizActiveTab === "biz-expenses" && <BusinessExpensesTab />}
           {bizActiveTab === "biz-mei" && bType === "mei" && <MeiFeatures />}
           {bizActiveTab === "biz-simples" && bType === "simples" && <SimplesCalculator />}
+          {bizActiveTab === "biz-autonomo" && bType === "autonomo" && <AutonomoFeatures />}
           {bizActiveTab === "biz-fiscal" && <FiscalAgenda businessType={bType} />}
           {bizActiveTab === "biz-settings" && <BusinessSettingsForm />}
         </div>
