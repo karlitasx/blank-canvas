@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, DollarSign, Star, Wallet, ArrowLeft, Building2, User, LayoutGrid, BarChart3, FileText, Target, CreditCard, FolderKanban, TrendingDown, Sparkles, Shield, X } from "lucide-react";
+import { Plus, DollarSign, Wallet, ArrowLeft, Building2, User, LayoutGrid, BarChart3, FileText, Target, CreditCard, FolderKanban, TrendingDown, Sparkles, Shield, X, Filter } from "lucide-react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SummaryCards from "@/components/finances/SummaryCards";
 import FinanceBarChart from "@/components/finances/FinanceBarChart";
@@ -8,7 +8,6 @@ import TransactionsList from "@/components/finances/TransactionsList";
 import AddTransactionModal from "@/components/finances/AddTransactionModal";
 import FinanceFilters from "@/components/finances/FinanceFilters";
 import SavingsGoal from "@/components/finances/SavingsGoal";
-import WishlistTab from "@/components/finances/WishlistTab";
 import MetasKanban from "@/components/finances/MetasKanban";
 import OrganizationTab from "@/components/finances/OrganizationTab";
 import EmergencyFundCalculator from "@/components/finances/EmergencyFundCalculator";
@@ -42,6 +41,7 @@ const Finances = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [showSecurityBanner, setShowSecurityBanner] = useState(true);
   const [veveOpen, setVeveOpen] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
 
   const { transactions, isLoaded, stats, addTransaction, deleteTransaction, filterTransactions, getCategoryData } =
     useSupabaseFinances(financeType || undefined);
@@ -97,10 +97,8 @@ const Finances = () => {
   // Show type selector if not chosen
   if (!financeType) {
     return (
-      <DashboardLayout activeNav="/finances">
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <FinanceTypeSelector onSelect={setFinanceType} />
-        </div>
+      <DashboardLayout activeNav="/finance">
+        <FinanceTypeSelector onSelect={setFinanceType} />
       </DashboardLayout>
     );
   }
@@ -112,15 +110,9 @@ const Finances = () => {
 
   if (!isLoaded) {
     return (
-      <DashboardLayout activeNav="/finances">
+      <DashboardLayout activeNav="/finance">
         <div className="space-y-6">
-          <div className="flex items-center gap-4 mb-6">
-            <Skeleton className="w-14 h-14 rounded-xl" />
-            <div>
-              <Skeleton className="h-8 w-32 mb-2" />
-              <Skeleton className="h-4 w-48" />
-            </div>
-          </div>
+          <Skeleton className="h-40 rounded-2xl" />
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map(i => (
               <Skeleton key={i} className="h-32 rounded-2xl" />
@@ -133,53 +125,84 @@ const Finances = () => {
   }
 
   return (
-    <DashboardLayout activeNav="/finances">
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setFinanceType(null)}
-            className="shrink-0"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <div className="p-3 rounded-xl bg-primary/20">
-            <TypeIcon className="w-6 h-6 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold">Finanças {typeLabel}</h1>
-            <p className="text-muted-foreground">
-              {isBusiness
-                ? "Gerencie o fluxo de caixa do seu negócio"
-                : "Gerencie suas receitas e despesas pessoais"}
-            </p>
+    <DashboardLayout activeNav="/finance">
+      {/* Hero Banner */}
+      <div className="relative rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-primary via-secondary to-accent">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-primary-foreground/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-36 h-36 bg-primary-foreground/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+        <div className="relative z-10 p-6 md:p-8">
+          <div className="flex items-center gap-3 mb-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setFinanceType(null)}
+              className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0 -ml-2"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-primary-foreground/20 backdrop-blur-sm">
+                <TypeIcon className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="text-xl md:text-2xl font-extrabold text-primary-foreground">
+                  Finanças {typeLabel}
+                </h1>
+                <p className="text-primary-foreground/70 text-sm">
+                  {isBusiness
+                    ? "Gerencie o fluxo de caixa do seu negócio"
+                    : "Controle total da sua vida financeira"}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Action Row */}
-      <div className="flex items-center gap-3 mb-4 flex-wrap">
+      {/* Centered Action Row */}
+      <div className="flex flex-col items-center gap-3 mb-6">
+        {/* Filters Button */}
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className="w-full max-w-md py-3 px-5 rounded-xl border border-border bg-card text-foreground flex items-center justify-center gap-2 hover:bg-muted transition-colors"
+        >
+          <Filter className="w-4 h-4 text-muted-foreground" />
+          <span className="text-sm font-medium">Filtros</span>
+        </button>
+
+        {/* Veve Button */}
+        <button
+          onClick={() => setVeveOpen(true)}
+          className="w-full max-w-md py-3 px-5 rounded-xl border border-primary/30 text-primary flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors"
+        >
+          <Sparkles className="w-4 h-4" />
+          <span className="text-sm font-medium">Veve</span>
+        </button>
+
+        {/* Add Transaction - Central CTA */}
         <Button
           onClick={() => setIsModalOpen(true)}
-          className="btn-gradient gap-2"
+          className="btn-gradient gap-2 px-8 py-5 text-sm font-semibold rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-5 h-5" />
           Adicionar transação
         </Button>
+
         <LgpdNotice />
       </div>
 
-      {/* Veve Button */}
-      <Button
-        variant="outline"
-        onClick={() => setVeveOpen(true)}
-        className="w-full mb-4 border-primary/30 text-primary hover:bg-primary/5 gap-2 py-5"
-      >
-        <Sparkles className="w-5 h-5" />
-        Veve
-      </Button>
+      {/* Collapsible Filters */}
+      {showFilters && (
+        <div className="mb-6 animate-fade-in">
+          <FinanceFilters
+            selectedPeriod={selectedPeriod}
+            selectedType={selectedType}
+            onPeriodChange={setSelectedPeriod}
+            onTypeChange={setSelectedType}
+            onClearFilters={handleClearFilters}
+          />
+        </div>
+      )}
 
       {/* Security Banner */}
       {showSecurityBanner && (
@@ -189,7 +212,7 @@ const Finances = () => {
             <p className="text-sm text-foreground">
               <strong>Seus dados estão seguros:</strong>{" "}
               <span className="text-muted-foreground">
-                Utilizamos criptografia de ponta e não compartilhamos suas informações financeiras com terceiros. Todos os dados são armazenados com segurança em nossos servidores protegidos.
+                Utilizamos criptografia de ponta e não compartilhamos suas informações financeiras com terceiros.
               </span>
             </p>
           </div>
@@ -199,7 +222,7 @@ const Finances = () => {
         </div>
       )}
 
-      {/* Summary Cards - always visible */}
+      {/* Summary Cards */}
       <SummaryCards balance={stats.balance} income={stats.income} expenses={stats.expenses} />
 
       {/* Tabs */}
@@ -238,13 +261,6 @@ const Finances = () => {
             />
           ) : (
             <>
-              <FinanceFilters
-                selectedPeriod={selectedPeriod}
-                selectedType={selectedType}
-                onPeriodChange={setSelectedPeriod}
-                onTypeChange={setSelectedType}
-                onClearFilters={handleClearFilters}
-              />
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 <div className="xl:col-span-2 space-y-6">
                   <FinanceBarChart />
