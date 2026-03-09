@@ -1,4 +1,4 @@
-import { Home, Target, DollarSign, User, Trophy, Heart, Award, Medal, CalendarDays, LucideIcon } from "lucide-react";
+import { Home, DollarSign, User, Trophy, Heart, Award, Medal, CalendarDays, LucideIcon } from "lucide-react";
 
 export interface NavItem {
   icon: LucideIcon;

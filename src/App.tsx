@@ -11,7 +11,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
-import Habits from "./pages/Habits";
+// Habits is now merged into Routine page
 import Routine from "./pages/Routine";
 import Finance from "./pages/Finance";
 import Social from "./pages/Social";
