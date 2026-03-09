@@ -16,6 +16,7 @@ import FinanceTypeSelector, { type FinanceType } from "@/components/finances/Fin
 import VeveAssistant from "@/components/finances/VeveAssistant";
 import ExpenseOverview from "@/components/finances/ExpenseOverview";
 import LgpdNotice from "@/components/finances/LgpdNotice";
+import VeveInlineAssistant from "@/components/finances/VeveInlineAssistant";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
