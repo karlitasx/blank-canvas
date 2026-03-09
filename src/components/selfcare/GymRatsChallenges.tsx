@@ -194,24 +194,121 @@ const GymRatsChallenges = ({ className }: Props) => {
             )}
           </div>
 
-          {/* Expandable Sections */}
+            {/* Expandable Sections */}
           <div className="divide-y divide-border">
             {/* Rules */}
             {selectedChallenge.description && (
-              <button
-                onClick={() => toggleSection("rules")}
-                className="w-full flex items-center justify-between p-4 text-sm text-muted-foreground hover:bg-muted/30 transition-colors"
-              >
-                <span className="flex items-center gap-2">
-                  <span className="text-xs">ℹ️</span> Regras do Desafio
-                </span>
-                {expandedSections.rules ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              </button>
+              <>
+                <button
+                  onClick={() => toggleSection("rules")}
+                  className="w-full flex items-center justify-between p-4 text-sm text-muted-foreground hover:bg-muted/30 transition-colors"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="text-xs">ℹ️</span> Regras do Desafio
+                  </span>
+                  {expandedSections.rules ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </button>
+                {expandedSections.rules && (
+                  <div className="px-4 pb-4 text-sm text-muted-foreground animate-fade-in">
+                    {selectedChallenge.description}
+                  </div>
+                )}
+              </>
             )}
-            {expandedSections.rules && selectedChallenge.description && (
-              <div className="px-4 pb-4 text-sm text-muted-foreground animate-fade-in">
-                {selectedChallenge.description}
-              </div>
+
+            {/* Calendar */}
+            {selectedChallenge.is_joined && (
+              <>
+                <button
+                  onClick={() => toggleSection("calendar")}
+                  className="w-full flex items-center justify-between p-4 text-sm hover:bg-muted/30 transition-colors"
+                >
+                  <span className="flex items-center gap-2 text-foreground font-medium">
+                    <Calendar className="w-4 h-4 text-primary" /> {format(currentMonth, "MMMM yyyy", { locale: ptBR })}
+                  </span>
+                  {expandedSections.calendar ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+                </button>
+
+                {expandedSections.calendar && (
+                  <div className="px-4 pb-4 animate-fade-in">
+                    {/* Calendar Grid */}
+                    <div className="grid grid-cols-7 gap-1 mb-4">
+                      {['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'].map((day) => (
+                        <div key={day} className="text-center text-[10px] text-muted-foreground font-medium py-1">
+                          {day}
+                        </div>
+                      ))}
+                      {(() => {
+                        const year = currentMonth.getFullYear();
+                        const month = currentMonth.getMonth();
+                        const firstDay = startOfMonth(currentMonth).getDay();
+                        const daysInMonth = getDaysInMonth(currentMonth);
+                        const days = [];
+
+                        // Empty cells before first day
+                        for (let i = 0; i < firstDay; i++) {
+                          days.push(<div key={`empty-${i}`} className="aspect-square" />);
+                        }
+
+                        // Days of month
+                        for (let day = 1; day <= daysInMonth; day++) {
+                          const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                          const checkin = monthlyCheckins.find(c => c.checkin_date === dateStr);
+                          const isToday = new Date().toISOString().split('T')[0] === dateStr;
+
+                          days.push(
+                            <div
+                              key={day}
+                              className={cn(
+                                "aspect-square rounded-lg flex items-center justify-center text-xs relative",
+                                isToday && "ring-2 ring-primary",
+                                checkin ? "bg-primary/10" : "hover:bg-muted/30"
+                              )}
+                            >
+                              {checkin ? (
+                                <img
+                                  src={checkin.photo_url}
+                                  alt={`Check-in ${day}`}
+                                  className="w-full h-full object-cover rounded-lg"
+                                />
+                              ) : (
+                                <span className={cn("text-foreground", isToday && "font-bold")}>{day}</span>
+                              )}
+                            </div>
+                          );
+                        }
+
+                        return days;
+                      })()}
+                    </div>
+
+                    {/* Recent Check-ins Feed */}
+                    {recentCheckins.length > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-xs font-medium text-muted-foreground mb-2">Check-ins Recentes</p>
+                        <div className="grid grid-cols-3 gap-2">
+                          {recentCheckins.map((checkin) => (
+                            <div key={checkin.id} className="aspect-square rounded-lg overflow-hidden relative group">
+                              <img
+                                src={checkin.photo_url}
+                                alt="Check-in"
+                                className="w-full h-full object-cover"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="absolute bottom-1 left-1 right-1">
+                                  <p className="text-[10px] text-white font-medium truncate">
+                                    {checkin.display_name}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
             )}
 
             {/* Ranking */}
