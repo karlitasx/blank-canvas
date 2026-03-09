@@ -14,7 +14,7 @@ const sections = [
   {
     titleKey: "Comece aqui!",
     items: [
-      { icon: Sparkles, label: "Primeiros Passos", href: "/?tour=welcome", highlight: true },
+      { icon: Sparkles, label: "Primeiros Passos", href: "/primeiros-passos", highlight: true },
       { icon: UserPlus, label: "Apresente-se", href: "/social?tab=introductions" },
       { icon: BookOpen, label: "Regras da Comunidade", href: "/social?tab=rules" },
     ],
