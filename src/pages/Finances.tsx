@@ -255,7 +255,22 @@ const Finances = () => {
 
         {/* IA */}
         <TabsContent value="ia" className="animate-fade-in mt-5">
-          <VeveAssistant externalOpen={true} onExternalOpenChange={() => {}} embedded />
+          <div className="glass-card p-6 text-center space-y-4">
+            <div className="mx-auto w-14 h-14 rounded-2xl bg-primary/15 flex items-center justify-center">
+              <Sparkles className="w-7 h-7 text-primary" />
+            </div>
+            <h3 className="text-lg font-bold text-foreground">Assistente Financeira</h3>
+            <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+              Tire suas dúvidas sobre finanças com a Veve, sua assistente de inteligência artificial.
+            </p>
+            <Button
+              onClick={() => setVeveOpen(true)}
+              className="btn-gradient gap-2 px-6 py-4 rounded-xl"
+            >
+              <Sparkles className="w-4 h-4" />
+              Abrir Veve
+            </Button>
+          </div>
         </TabsContent>
       </Tabs>
 
