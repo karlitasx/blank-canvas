@@ -183,23 +183,23 @@ const Finances = () => {
     return (
       <DashboardLayout activeNav="/finance">
         {/* Hero Banner */}
-        <div className="relative rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-primary via-secondary to-accent">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-primary-foreground/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-36 h-36 bg-primary-foreground/5 rounded-full translate-y-1/2 -translate-x-1/2" />
-          <div className="relative z-10 p-6 md:p-8">
-            <div className="flex items-center gap-3 mb-1">
-              <Button variant="ghost" size="icon" onClick={() => setFinanceType(null)} className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0 -ml-2">
-                <ArrowLeft className="w-5 h-5" />
+        <div className="relative rounded-2xl overflow-hidden mb-4 md:mb-6 bg-gradient-to-br from-primary via-secondary to-accent">
+          <div className="absolute top-0 right-0 w-32 md:w-48 h-32 md:h-48 bg-primary-foreground/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-24 md:w-36 h-24 md:h-36 bg-primary-foreground/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+          <div className="relative z-10 p-4 md:p-8">
+            <div className="flex items-center gap-2 md:gap-3 mb-1">
+              <Button variant="ghost" size="icon" onClick={() => setFinanceType(null)} className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0 -ml-1 md:-ml-2 h-8 w-8 md:h-10 md:w-10">
+                <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
               </Button>
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-primary-foreground/20 backdrop-blur-sm">
-                  <Building2 className="w-5 h-5 text-primary-foreground" />
+              <div className="flex items-center gap-2 md:gap-3 min-w-0">
+                <div className="p-2 md:p-2.5 rounded-xl bg-primary-foreground/20 backdrop-blur-sm shrink-0">
+                  <Building2 className="w-4 h-4 md:w-5 md:h-5 text-primary-foreground" />
                 </div>
-                <div>
-                  <h1 className="text-xl md:text-2xl font-extrabold text-primary-foreground">
+                <div className="min-w-0">
+                  <h1 className="text-lg md:text-2xl font-extrabold text-primary-foreground truncate">
                     Finanças Empresariais
                   </h1>
-                  <p className="text-primary-foreground/70 text-sm">
+                  <p className="text-primary-foreground/70 text-xs md:text-sm truncate">
                     {businessSettings?.company_name || "Gerencie seu negócio"} · {bType === "mei" ? "MEI" : bType === "simples" ? "Simples Nacional" : "Autônomo"}
                   </p>
                 </div>
