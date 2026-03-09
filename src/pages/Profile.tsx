@@ -337,6 +337,10 @@ const Profile = () => {
                 )}
               </div>
               <p className="text-muted-foreground text-sm">{user?.email}</p>
+              <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+                <CalendarDays className="w-3.5 h-3.5" />
+                <span>Membra desde {memberSince}</span>
+              </div>
               
               {/* Subscription Badge */}
               <div className="mt-3">
