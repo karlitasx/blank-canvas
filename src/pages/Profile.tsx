@@ -355,8 +355,8 @@ const Profile = () => {
             </TabsTrigger>
           </TabsList>
 
-          {/* Stats Tab */}
-          <TabsContent value="stats" className="space-y-4 animate-fade-in">
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="space-y-4 animate-fade-in">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <ProfileStatCard 
                 icon={Target} 
@@ -420,6 +420,21 @@ const Profile = () => {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          {/* Saved Tab */}
+          <TabsContent value="saved" className="animate-fade-in">
+            <Card className="bg-card border-border">
+              <CardContent className="pt-6">
+                <div className="text-center py-12">
+                  <Bookmark className="w-12 h-12 text-muted-foreground/40 mx-auto mb-3" />
+                  <p className="text-muted-foreground">Nenhum item salvo</p>
+                  <p className="text-muted-foreground/60 text-sm mt-1">
+                    Seus itens salvos aparecerão aqui
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Activity Tab */}
