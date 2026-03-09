@@ -40,6 +40,8 @@ const Finances = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("month");
   const [selectedType, setSelectedType] = useState<"all" | "income" | "expense">("all");
   const [activeTab, setActiveTab] = useState("overview");
+  const [showSecurityBanner, setShowSecurityBanner] = useState(true);
+  const [veveOpen, setVeveOpen] = useState(false);
 
   const { transactions, isLoaded, stats, addTransaction, deleteTransaction, filterTransactions, getCategoryData } =
     useSupabaseFinances(financeType || undefined);
