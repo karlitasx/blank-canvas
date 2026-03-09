@@ -28,7 +28,12 @@ const BusinessSettingsForm = ({ onComplete }: BusinessSettingsFormProps) => {
     await saveSettings(selectedType, cnpj, companyName);
     toast.success("Configurações salvas!");
     setSaving(false);
-    onComplete?.();
+    if (onComplete) {
+      onComplete();
+    } else {
+      // Força refresh para atualizar todas as telas
+      window.location.reload();
+    }
   };
 
   return (

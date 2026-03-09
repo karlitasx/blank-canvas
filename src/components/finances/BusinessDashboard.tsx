@@ -1,4 +1,4 @@
-import { TrendingUp, TrendingDown, DollarSign, Receipt } from "lucide-react";
+import { TrendingUp, TrendingDown, DollarSign, Receipt, Briefcase, AlertTriangle, Info } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { useBusinessSales } from "@/hooks/useBusinessSales";
 import { useBusinessExpenses } from "@/hooks/useBusinessExpenses";
@@ -8,10 +8,20 @@ interface BusinessDashboardProps {
   businessType: BusinessType;
 }
 
-const MEI_ANNUAL_LIMIT = 81000;
+// Valores atualizados para 2026
+const MEI_ANNUAL_LIMIT = 81000; // Limite MEI 2026
+const DAS_MEI_2026 = 75.90; // DAS MEI atualizado para 2026 (salário mínimo R$ 1.518)
+const INSS_AUTONOMO_RATE = 0.20; // 20% sobre rendimentos para autônomo
+const ISS_AUTONOMO_RATE = 0.05; // 5% ISS (varia por município)
 
-const SIMPLES_RATES: Record<string, number> = {
-  "1": 0.06, "2": 0.112, "3": 0.135, "4": 0.16, "5": 0.21, "6": 0.335,
+// Faixas Simples Nacional 2026 (Anexo III - Serviços)
+const getSimplesTaxRate = (rbt12: number): number => {
+  if (rbt12 <= 180000) return 0.06;
+  if (rbt12 <= 360000) return 0.112 - (9360 / rbt12);
+  if (rbt12 <= 720000) return 0.135 - (17640 / rbt12);
+  if (rbt12 <= 1800000) return 0.16 - (35640 / rbt12);
+  if (rbt12 <= 3600000) return 0.21 - (125640 / rbt12);
+  return 0.33 - (648000 / rbt12);
 };
 
 const BusinessDashboard = ({ businessType }: BusinessDashboardProps) => {
@@ -19,7 +29,33 @@ const BusinessDashboard = ({ businessType }: BusinessDashboardProps) => {
   const { monthlyTotal: expenses } = useBusinessExpenses();
 
   const profit = revenue - expenses;
-  const estimatedTax = businessType === "mei" ? 71.6 : businessType === "simples" ? revenue * 0.06 : revenue * 0.15;
+  
+  // Cálculo de imposto baseado no tipo de empresa (valores 2026)
+  const calculateTax = () => {
+    if (businessType === "mei") {
+      return DAS_MEI_2026;
+    }
+    if (businessType === "simples") {
+      const rbt12 = yearlyTotal > 0 ? yearlyTotal : revenue * 12;
+      const rate = getSimplesTaxRate(rbt12);
+      return revenue * Math.max(rate, 0);
+    }
+    // Autônomo: INSS + ISS estimado
+    const inss = Math.min(revenue * INSS_AUTONOMO_RATE, 1518 * 0.20); // Teto INSS
+    const iss = revenue * ISS_AUTONOMO_RATE;
+    return inss + iss;
+  };
+
+  const estimatedTax = calculateTax();
+
+  const getBusinessTypeLabel = () => {
+    switch (businessType) {
+      case "mei": return "MEI";
+      case "simples": return "Simples Nacional";
+      case "autonomo": return "Autônomo";
+      default: return "Empresa";
+    }
+  };
 
   const cards = [
     { label: "Faturamento", value: revenue, icon: TrendingUp, color: "text-emerald-500", bg: "bg-emerald-500/10" },
@@ -30,6 +66,14 @@ const BusinessDashboard = ({ businessType }: BusinessDashboardProps) => {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {/* Badge do tipo de empresa */}
+      <div className="flex items-center gap-2 p-3 rounded-xl bg-muted/50 border border-border">
+        <Briefcase className="w-4 h-4 text-primary" />
+        <span className="text-sm text-muted-foreground">Regime:</span>
+        <span className="text-sm font-semibold text-foreground">{getBusinessTypeLabel()}</span>
+        <span className="text-xs text-muted-foreground ml-auto">Valores 2026</span>
+      </div>
+
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {cards.map((card) => {
           const Icon = card.icon;
@@ -49,10 +93,11 @@ const BusinessDashboard = ({ businessType }: BusinessDashboardProps) => {
         })}
       </div>
 
+      {/* Seção específica MEI */}
       {businessType === "mei" && (
         <div className="glass-card p-4 rounded-xl">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-semibold text-foreground">Limite Anual MEI</p>
+            <p className="text-sm font-semibold text-foreground">Limite Anual MEI 2026</p>
             <p className="text-xs text-muted-foreground">
               R$ {yearlyTotal.toLocaleString("pt-BR", { minimumFractionDigits: 2 })} / R$ {MEI_ANNUAL_LIMIT.toLocaleString("pt-BR")}
             </p>
@@ -71,6 +116,57 @@ const BusinessDashboard = ({ businessType }: BusinessDashboardProps) => {
               <p className="text-xs text-red-400 font-medium">⚠️ Atenção: Você está próximo do limite anual de faturamento do MEI!</p>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Seção específica Simples Nacional */}
+      {businessType === "simples" && (
+        <div className="glass-card p-4 rounded-xl">
+          <div className="flex items-center gap-2 mb-3">
+            <Info className="w-4 h-4 text-blue-500" />
+            <p className="text-sm font-semibold text-foreground">Simples Nacional 2026</p>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-xs text-muted-foreground">RBT12 Estimado</p>
+              <p className="text-base font-bold text-foreground">
+                R$ {(yearlyTotal > 0 ? yearlyTotal : revenue * 12).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Alíquota Efetiva</p>
+              <p className="text-base font-bold text-primary">
+                {(getSimplesTaxRate(yearlyTotal > 0 ? yearlyTotal : revenue * 12) * 100).toFixed(2)}%
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Seção específica Autônomo */}
+      {businessType === "autonomo" && (
+        <div className="glass-card p-4 rounded-xl">
+          <div className="flex items-center gap-2 mb-3">
+            <AlertTriangle className="w-4 h-4 text-amber-500" />
+            <p className="text-sm font-semibold text-foreground">Impostos Autônomo 2026</p>
+          </div>
+          <div className="grid grid-cols-2 gap-4 mb-3">
+            <div>
+              <p className="text-xs text-muted-foreground">INSS (20%)</p>
+              <p className="text-base font-bold text-foreground">
+                R$ {Math.min(revenue * INSS_AUTONOMO_RATE, 1518 * 0.20).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">ISS (~5%)</p>
+              <p className="text-base font-bold text-foreground">
+                R$ {(revenue * ISS_AUTONOMO_RATE).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              </p>
+            </div>
+          </div>
+          <div className="p-3 rounded-lg bg-amber-500/5 border border-amber-500/20">
+            <p className="text-xs text-muted-foreground">💡 Dica: Considere se formalizar como MEI se seu faturamento for até R$ 81.000/ano para pagar menos impostos.</p>
+          </div>
         </div>
       )}
 

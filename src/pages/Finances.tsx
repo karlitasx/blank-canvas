@@ -25,6 +25,7 @@ import BusinessExpensesTab from "@/components/finances/BusinessExpensesTab";
 import MeiFeatures from "@/components/finances/MeiFeatures";
 import SimplesCalculator from "@/components/finances/SimplesCalculator";
 import FiscalAgenda from "@/components/finances/FiscalAgenda";
+import AutonomoFeatures from "@/components/finances/AutonomoFeatures";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -48,6 +49,7 @@ const businessTabs = [
   { value: "biz-expenses", label: "Despesas", icon: Package },
   { value: "biz-mei", label: "MEI", icon: Store, onlyFor: "mei" as const },
   { value: "biz-simples", label: "Simples", icon: Calculator, onlyFor: "simples" as const },
+  { value: "biz-autonomo", label: "Autônomo", icon: User, onlyFor: "autonomo" as const },
   { value: "biz-fiscal", label: "Agenda Fiscal", icon: CalendarCheck },
   { value: "biz-settings", label: "Config.", icon: Settings },
 ];
@@ -234,6 +236,7 @@ const Finances = () => {
           {bizActiveTab === "biz-expenses" && <BusinessExpensesTab />}
           {bizActiveTab === "biz-mei" && bType === "mei" && <MeiFeatures />}
           {bizActiveTab === "biz-simples" && bType === "simples" && <SimplesCalculator />}
+          {bizActiveTab === "biz-autonomo" && bType === "autonomo" && <AutonomoFeatures />}
           {bizActiveTab === "biz-fiscal" && <FiscalAgenda businessType={bType} />}
           {bizActiveTab === "biz-settings" && <BusinessSettingsForm />}
         </div>
