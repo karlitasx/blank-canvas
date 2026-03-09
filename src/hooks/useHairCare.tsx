@@ -103,7 +103,7 @@ export const useHairCare = () => {
         .select()
         .single();
       if (error) throw error;
-      setHairProfile(updated as HairProfile);
+      setHairProfile(updated as unknown as HairProfile);
     } else {
       const { data: inserted, error } = await supabase
         .from("hair_profiles" as any)
@@ -111,7 +111,7 @@ export const useHairCare = () => {
         .select()
         .single();
       if (error) throw error;
-      setHairProfile(inserted as HairProfile);
+      setHairProfile(inserted as unknown as HairProfile);
     }
   };
 
