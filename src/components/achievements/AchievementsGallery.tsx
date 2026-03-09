@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Trophy, Filter, Sparkles } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { Trophy, Filter, Sparkles, Clock } from "lucide-react";
 import { 
   AchievementCategory, 
   CATEGORY_LABELS, 
@@ -8,17 +8,20 @@ import {
 } from "@/types/achievements";
 import { useAchievementsContext } from "@/contexts/AchievementsContext";
 import { useAchievementSharing } from "@/hooks/useAchievementSharing";
+import { supabase } from "@/integrations/supabase/client";
 import AchievementCard from "./AchievementCard";
 import { ShareAchievementModal } from "./ShareAchievementModal";
 import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-type FilterType = 'all' | 'unlocked' | 'locked' | AchievementCategory;
+type FilterType = 'all' | 'unlocked' | 'locked' | 'event' | AchievementCategory;
 
 const filters: { id: FilterType; name: string; emoji?: string }[] = [
   { id: 'all', name: 'Todas' },
   { id: 'unlocked', name: 'Desbloqueadas', emoji: '✨' },
   { id: 'locked', name: 'Bloqueadas', emoji: '🔒' },
+  { id: 'event', name: 'Temporárias', emoji: '⏳' },
 ];
 
 const categoryFilters = Object.entries(CATEGORY_LABELS).map(([id, name]) => ({
@@ -27,11 +30,25 @@ const categoryFilters = Object.entries(CATEGORY_LABELS).map(([id, name]) => ({
   emoji: CATEGORY_EMOJIS[id as AchievementCategory],
 }));
 
+interface AdminAchievement {
+  id: string;
+  achievement_key: string;
+  name: string;
+  description: string;
+  emoji: string;
+  xp_reward: number;
+  unlock_condition: string;
+  is_active: boolean;
+  is_permanent: boolean;
+  expires_at: string | null;
+}
+
 const AchievementsGallery = () => {
   const [filter, setFilter] = useState<FilterType>('all');
   const [showCategoryFilter, setShowCategoryFilter] = useState(false);
   const [selectedAchievement, setSelectedAchievement] = useState<Achievement | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [adminAchievements, setAdminAchievements] = useState<AdminAchievement[]>([]);
   
   const {
     state,
@@ -44,17 +61,52 @@ const AchievementsGallery = () => {
 
   const { shareAchievement } = useAchievementSharing();
 
+  // Fetch admin-created achievements
+  useEffect(() => {
+    const fetchAdminAchievements = async () => {
+      const { data } = await supabase
+        .from("admin_achievements")
+        .select("*")
+        .eq("is_active", true);
+      setAdminAchievements(data || []);
+    };
+    fetchAdminAchievements();
+  }, []);
+
+  // Convert admin achievements to the Achievement format
+  const adminAsAchievements = useMemo(() => {
+    const now = new Date();
+    return adminAchievements
+      .filter(a => !a.expires_at || new Date(a.expires_at) > now)
+      .map(a => ({
+        id: `admin_${a.achievement_key}`,
+        name: a.name,
+        description: a.description,
+        emoji: a.emoji,
+        category: 'special' as AchievementCategory,
+        rarity: (a.is_permanent ? 'epic' : 'legendary') as any,
+        points: a.xp_reward,
+        requirement: { type: 'first_action' as const, value: 1 },
+        isUnlocked: state.unlockedAchievements.includes(`admin_${a.achievement_key}`),
+        _isAdminCreated: true,
+        _isTemporary: !a.is_permanent,
+        _expiresAt: a.expires_at,
+      }));
+  }, [adminAchievements, state.unlockedAchievements]);
+
   const allAchievements = getAllAchievements();
+  const combinedAchievements = [...allAchievements, ...adminAsAchievements];
   const unlockedCount = getUnlockedCount();
-  const totalCount = getTotalCount();
-  const overallProgress = (unlockedCount / totalCount) * 100;
+  const totalCount = getTotalCount() + adminAsAchievements.length;
+  const overallProgress = totalCount > 0 ? (unlockedCount / totalCount) * 100 : 0;
   const hints = getMotivationalHints();
 
   // Filter achievements
-  const filteredAchievements = allAchievements.filter(achievement => {
+  const filteredAchievements = combinedAchievements.filter(achievement => {
     if (filter === 'unlocked') return achievement.isUnlocked;
     if (filter === 'locked') return !achievement.isUnlocked;
-    if (['habits', 'streaks', 'finance', 'selfcare', 'community', 'special'].includes(filter)) {
+    if (filter === 'event') return (achievement as any)._isTemporary === true;
+    if (['habits', 'streaks', 'finance', 'selfcare', 'community', 'routine', 'special'].includes(filter)) {
       return achievement.category === filter;
     }
     return true;
