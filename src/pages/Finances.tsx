@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, DollarSign, Wallet, ArrowLeft, Building2, User, LayoutGrid, BarChart3, FileText, Target, CreditCard, FolderKanban, TrendingDown, Sparkles, Shield, X, Filter } from "lucide-react";
+import { Plus, DollarSign, Wallet, ArrowLeft, Building2, User, LayoutGrid, BarChart3, FileText, Target, CreditCard, FolderKanban, TrendingDown, Sparkles, Shield, X, Filter, Bot } from "lucide-react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SummaryCards from "@/components/finances/SummaryCards";
 import FinanceBarChart from "@/components/finances/FinanceBarChart";
@@ -16,6 +16,7 @@ import FinanceTypeSelector, { type FinanceType } from "@/components/finances/Fin
 import VeveAssistant from "@/components/finances/VeveAssistant";
 import ExpenseOverview from "@/components/finances/ExpenseOverview";
 import LgpdNotice from "@/components/finances/LgpdNotice";
+import VeveInlineAssistant from "@/components/finances/VeveInlineAssistant";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,9 +24,10 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { useSupabaseFinances } from "@/hooks/useSupabaseFinances";
 
 const financeTabs = [
-  { value: "overview", label: "Visão Geral", icon: LayoutGrid },
-  { value: "expenses", label: "Saídas", icon: TrendingDown },
+  { value: "overview", label: "Resumo", icon: LayoutGrid },
   { value: "transactions", label: "Transações", icon: FileText },
+  { value: "ai", label: "IA", icon: Bot },
+  { value: "expenses", label: "Saídas", icon: TrendingDown },
   { value: "investments", label: "Investimentos", icon: BarChart3 },
   { value: "goals", label: "Metas", icon: Target },
   { value: "debts", label: "Dívidas", icon: CreditCard },
@@ -305,6 +307,11 @@ const Finances = () => {
             onDelete={handleDeleteTransaction}
             categoryFilter={selectedCategory}
           />
+        </TabsContent>
+
+        {/* IA - Assistente Veve */}
+        <TabsContent value="ai" className="animate-fade-in mt-6">
+          <VeveInlineAssistant />
         </TabsContent>
 
         {/* Investimentos */}
