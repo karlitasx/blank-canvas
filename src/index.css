@@ -130,6 +130,38 @@
   background: hsl(var(--muted) / 0.5);
 }
 
+.bg-glass-hover {
+  background: hsl(var(--muted) / 0.7);
+}
+
+/* Safe area padding for mobile devices */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Custom scrollbar */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.2);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.4);
+}
+
 /* Geometric decorative shapes */
 .geometric-bg {
   position: relative;
@@ -161,4 +193,13 @@
   top: 5%;
   right: 10%;
   transform: rotate(8deg);
+}
+
+/* Mobile horizontal scroll for tabs - convert to wrapped cards */
+@media (max-width: 640px) {
+  .tabs-mobile-scroll {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
 }
