@@ -83,6 +83,99 @@ export type Database = {
         }
         Relationships: []
       }
+      business_expenses: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          description: string | null
+          expense_date: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category?: string
+          created_at?: string
+          description?: string | null
+          expense_date?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          description?: string | null
+          expense_date?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      business_sales: {
+        Row: {
+          amount: number
+          client_name: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          payment_method: string
+          sale_date: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          client_name?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          payment_method?: string
+          sale_date?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          client_name?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          payment_method?: string
+          sale_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      business_settings: {
+        Row: {
+          business_type: string
+          cnpj: string | null
+          company_name: string | null
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_type?: string
+          cnpj?: string | null
+          company_name?: string | null
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_type?: string
+          cnpj?: string | null
+          company_name?: string | null
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       challenge_checkins: {
         Row: {
           caption: string | null
@@ -265,6 +358,36 @@ export type Database = {
           created_at?: string
           id?: string
           target_user_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      das_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          paid_at: string | null
+          reference_month: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          id?: string
+          paid_at?: string | null
+          reference_month: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          paid_at?: string | null
+          reference_month?: string
+          status?: string
           user_id?: string
         }
         Relationships: []
@@ -454,6 +577,39 @@ export type Database = {
           target_date?: string | null
           title?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fiscal_reminders: {
+        Row: {
+          created_at: string
+          description: string | null
+          due_date: string
+          id: string
+          is_completed: boolean
+          reminder_type: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          due_date: string
+          id?: string
+          is_completed?: boolean
+          reminder_type?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          due_date?: string
+          id?: string
+          is_completed?: boolean
+          reminder_type?: string
+          title?: string
           user_id?: string
         }
         Relationships: []
