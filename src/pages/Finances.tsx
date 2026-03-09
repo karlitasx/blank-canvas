@@ -15,6 +15,7 @@ import BudgetMethods from "@/components/finances/BudgetMethods";
 import FinanceTypeSelector, { type FinanceType } from "@/components/finances/FinanceTypeSelector";
 import VeveAssistant from "@/components/finances/VeveAssistant";
 import ExpenseOverview from "@/components/finances/ExpenseOverview";
+import InvestmentsOverview from "@/components/finances/InvestmentsOverview";
 import LgpdNotice from "@/components/finances/LgpdNotice";
 import VeveInlineAssistant from "@/components/finances/VeveInlineAssistant";
 import { Button } from "@/components/ui/button";
@@ -298,6 +299,10 @@ const Finances = () => {
 
         {/* Investimentos */}
         <TabsContent value="investments" className="animate-fade-in mt-6 space-y-8">
+          <InvestmentsOverview
+            transactions={transactions.map(t => ({ ...t, date: t.date }))}
+            onAddInvestment={() => setIsModalOpen(true)}
+          />
           <EmergencyFundCalculator />
           <BudgetMethods />
         </TabsContent>
