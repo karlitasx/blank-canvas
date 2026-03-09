@@ -709,6 +709,95 @@ export type Database = {
         }
         Relationships: []
       }
+      routine_completions: {
+        Row: {
+          completed_at: string
+          completed_date: string
+          id: string
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          completed_date?: string
+          id?: string
+          task_id: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          completed_date?: string
+          id?: string
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "routine_completions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "routine_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      routine_tasks: {
+        Row: {
+          category: string
+          created_at: string
+          difficulty: string
+          emoji: string
+          end_time: string | null
+          frequency_days: string[] | null
+          frequency_type: string
+          id: string
+          is_active: boolean
+          is_recurring: boolean
+          points_value: number
+          sort_order: number
+          start_time: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          difficulty?: string
+          emoji?: string
+          end_time?: string | null
+          frequency_days?: string[] | null
+          frequency_type?: string
+          id?: string
+          is_active?: boolean
+          is_recurring?: boolean
+          points_value?: number
+          sort_order?: number
+          start_time?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          difficulty?: string
+          emoji?: string
+          end_time?: string | null
+          frequency_days?: string[] | null
+          frequency_type?: string
+          id?: string
+          is_active?: boolean
+          is_recurring?: boolean
+          points_value?: number
+          sort_order?: number
+          start_time?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       selfcare_checkins: {
         Row: {
           checkin_date: string
