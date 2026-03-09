@@ -1,11 +1,9 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Sparkles } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import AnimatedPlant from "./AnimatedPlant";
 import confetti from "canvas-confetti";
 import { useRoutine } from "@/hooks/useRoutine";
-import { format } from "date-fns";
-import confetti from "canvas-confetti";
 
 interface PlantStage {
   name: string;
