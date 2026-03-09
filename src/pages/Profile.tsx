@@ -268,13 +268,13 @@ const Profile = () => {
                 )}
               </div>
               <p className="text-muted-foreground text-sm">{user?.email}</p>
-              <div className="flex items-center gap-3 mt-2">
-                <span className="px-2.5 py-1 rounded-md bg-primary/15 text-primary text-sm font-medium">
-                  {LEVEL_EMOJIS[currentLevel]} {currentLevel}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  Membro desde {memberSince}
-                </span>
+              
+              {/* Subscription Badge */}
+              <div className="mt-3">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-primary to-accent text-white text-sm font-medium shadow-md">
+                  <Crown className="w-4 h-4" />
+                  Período de teste
+                </div>
               </div>
             </div>
           </CardContent>
