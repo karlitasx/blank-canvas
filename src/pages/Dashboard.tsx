@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import HeroSection from "@/components/dashboard/HeroSection";
 import DailyProgress from "@/components/dashboard/DailyProgress";
@@ -13,13 +14,18 @@ import WelcomeModal from "@/components/onboarding/WelcomeModal";
 const Dashboard = () => {
   const [runTour, setRunTour] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const hasSeenTour = localStorage.getItem("hasSeenOnboardingTour");
-    if (!hasSeenTour) {
+    if (!hasSeenTour || searchParams.get("tour") === "welcome") {
       setShowWelcomeModal(true);
+      if (searchParams.get("tour")) {
+        searchParams.delete("tour");
+        setSearchParams(searchParams, { replace: true });
+      }
     }
-  }, []);
+  }, [searchParams]);
 
   const handleStartTour = () => {
     setShowWelcomeModal(false);
