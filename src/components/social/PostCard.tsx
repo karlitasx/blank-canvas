@@ -118,12 +118,9 @@ export const PostCard = ({ post, onLike, onDelete }: PostCardProps) => {
               </div>
 
               {/* Post content */}
-              <div className="mt-2 flex items-start gap-2">
-                <span className="text-lg">{post.emoji}</span>
-                <p className="text-foreground whitespace-pre-wrap break-words">
-                  {post.content}
-                </p>
-              </div>
+              <p className="mt-2 text-foreground whitespace-pre-wrap break-words">
+                {post.content}
+              </p>
 
               {/* Actions */}
               <div className="mt-3 flex items-center gap-4">
