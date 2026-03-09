@@ -1,15 +1,19 @@
 import { useState } from "react";
-import { TrendingUp, TrendingDown, Wallet, Eye, EyeOff } from "lucide-react";
+import { TrendingUp, TrendingDown, Wallet, Eye, EyeOff, ChevronLeft, ChevronRight, PiggyBank } from "lucide-react";
+import { format, addMonths, subMonths } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 interface SummaryCardsProps {
   balance: number;
   income: number;
   expenses: number;
   investments?: number;
+  onMonthChange?: (date: Date) => void;
 }
 
-const SummaryCards = ({ balance, income, expenses, investments = 0 }: SummaryCardsProps) => {
+const SummaryCards = ({ balance, income, expenses, investments = 0, onMonthChange }: SummaryCardsProps) => {
   const [hidden, setHidden] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const formatCurrency = (value: number) => {
     if (hidden) return "R$ ••••";
@@ -19,33 +23,96 @@ const SummaryCards = ({ balance, income, expenses, investments = 0 }: SummaryCar
     });
   };
 
+  const handlePrevMonth = () => {
+    const prev = subMonths(currentMonth, 1);
+    setCurrentMonth(prev);
+    onMonthChange?.(prev);
+  };
+
+  const handleNextMonth = () => {
+    const next = addMonths(currentMonth, 1);
+    setCurrentMonth(next);
+    onMonthChange?.(next);
+  };
+
+  const monthLabel = format(currentMonth, "MMMM yyyy", { locale: ptBR });
+
   return (
     <div className="space-y-3">
-      {/* Main Balance Card */}
-      <div className="glass-card p-6 text-center relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <span className="text-sm font-medium text-muted-foreground">Saldo Atual</span>
-          <div className="p-1.5 rounded-lg bg-primary/10">
-            <Wallet className="w-4 h-4 text-primary" />
+      {/* Main Balance Card with gradient */}
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-secondary p-6">
+        {/* Decorative circles */}
+        <div className="absolute top-0 right-0 w-40 h-40 bg-primary-foreground/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-28 h-28 bg-primary-foreground/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+
+        <div className="relative z-10">
+          {/* Month Selector */}
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <button
+              onClick={handlePrevMonth}
+              className="p-1 rounded-lg hover:bg-primary-foreground/10 transition-colors text-primary-foreground/70 hover:text-primary-foreground"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <span className="px-4 py-1 rounded-full bg-primary-foreground/15 text-primary-foreground text-sm font-medium capitalize backdrop-blur-sm">
+              📅 {monthLabel}
+            </span>
+            <button
+              onClick={handleNextMonth}
+              className="p-1 rounded-lg hover:bg-primary-foreground/10 transition-colors text-primary-foreground/70 hover:text-primary-foreground"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Balance */}
+          <div className="text-center mb-4">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <Wallet className="w-4 h-4 text-primary-foreground/60" />
+              <span className="text-sm text-primary-foreground/70">Saldo do mês</span>
+            </div>
+            <p className="text-3xl md:text-4xl font-extrabold text-primary-foreground mb-1">
+              {formatCurrency(balance)}
+            </p>
+            <button
+              onClick={() => setHidden(!hidden)}
+              className="p-1.5 rounded-full hover:bg-primary-foreground/10 transition-colors text-primary-foreground/50 hover:text-primary-foreground"
+              aria-label={hidden ? "Mostrar valores" : "Ocultar valores"}
+            >
+              {hidden ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+          </div>
+
+          {/* Breakdown row */}
+          <div className="flex items-center justify-center gap-6 text-primary-foreground">
+            <div className="text-center">
+              <div className="flex items-center gap-1 mb-0.5">
+                <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                <span className="text-xs text-primary-foreground/70">Entradas</span>
+              </div>
+              <p className="text-sm font-bold">{formatCurrency(income)}</p>
+            </div>
+            <div className="w-px h-8 bg-primary-foreground/15" />
+            <div className="text-center">
+              <div className="flex items-center gap-1 mb-0.5">
+                <div className="w-2 h-2 rounded-full bg-red-400" />
+                <span className="text-xs text-primary-foreground/70">Saídas</span>
+              </div>
+              <p className="text-sm font-bold">{formatCurrency(expenses)}</p>
+            </div>
+            <div className="w-px h-8 bg-primary-foreground/15" />
+            <div className="text-center">
+              <div className="flex items-center gap-1 mb-0.5">
+                <div className="w-2 h-2 rounded-full bg-blue-400" />
+                <span className="text-xs text-primary-foreground/70">Investido</span>
+              </div>
+              <p className="text-sm font-bold">{formatCurrency(investments)}</p>
+            </div>
           </div>
         </div>
-        <p className={`text-3xl md:text-4xl font-extrabold mb-1 ${balance >= 0 ? "text-primary" : "text-destructive"}`}>
-          {formatCurrency(balance)}
-        </p>
-        <p className="text-xs text-muted-foreground mb-3">
-          {balance >= 0 ? "Resultado positivo" : "Resultado negativo"}
-        </p>
-        <button
-          onClick={() => setHidden(!hidden)}
-          className="p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
-          aria-label={hidden ? "Mostrar valores" : "Ocultar valores"}
-        >
-          {hidden ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-        </button>
       </div>
 
-      {/* Income & Expenses Row */}
+      {/* Income & Expenses mini cards */}
       <div className="grid grid-cols-2 gap-3">
         <div className="glass-card p-4 flex flex-col gap-2">
           <div className="flex items-center gap-2">
