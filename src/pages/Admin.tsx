@@ -132,6 +132,10 @@ const Admin = () => {
           <TabsContent value="novidades">
             <AdminNovidadesSection />
           </TabsContent>
+
+          <TabsContent value="haircare">
+            <AdminHairCareSection />
+          </TabsContent>
         </Tabs>
 
         {/* Back link */}

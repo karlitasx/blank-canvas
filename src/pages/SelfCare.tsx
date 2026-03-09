@@ -257,6 +257,9 @@ const SelfCare = () => {
           })}
         </div>
 
+        {/* Hair Care Module */}
+        <HairCareModule />
+
         {/* GymRats-style Challenges */}
         <GymRatsChallenges className="mb-6 animate-slide-up" />
       </div>
