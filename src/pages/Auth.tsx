@@ -112,7 +112,7 @@ const Auth = () => {
         } else {
           toast({
             title: "Conta criada! 🌱",
-            description: "Sua jornada no VidaFlow começou",
+            description: "Sua jornada no Vertice começou",
           });
         }
       }
