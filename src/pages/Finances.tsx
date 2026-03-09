@@ -322,7 +322,28 @@ const Finances = () => {
         </TabsContent>
       </Tabs>
 
-      <AddTransactionModal
+      {/* Filters Section */}
+      <div className="mt-6">
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-3"
+        >
+          <Filter className="w-4 h-4" />
+          <span>{showFilters ? "Ocultar filtros" : "Mostrar filtros"}</span>
+        </button>
+        {showFilters && (
+          <div className="animate-fade-in">
+            <FinanceFilters
+              selectedPeriod={selectedPeriod}
+              selectedType={selectedType}
+              onPeriodChange={setSelectedPeriod}
+              onTypeChange={setSelectedType}
+              onClearFilters={handleClearFilters}
+            />
+          </div>
+        )}
+      </div>
+
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onAdd={handleAddTransaction}
