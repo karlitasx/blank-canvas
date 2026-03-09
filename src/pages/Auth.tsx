@@ -162,9 +162,8 @@ const Auth = () => {
             <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-lg shadow-primary/25">
               <Sparkles className="w-6 h-6 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-bold">
-              <span className="text-foreground">Vida</span>
-              <span className="text-gradient">Flow</span>
+            <h1 className="text-2xl font-bold text-foreground">
+              Vertice
             </h1>
           </div>
 
