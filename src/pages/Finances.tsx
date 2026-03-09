@@ -22,26 +22,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { useSupabaseFinances } from "@/hooks/useSupabaseFinances";
 
-const financeTabs = [
-  { value: "overview", label: "Visão Geral", icon: LayoutGrid },
-  { value: "expenses", label: "Saídas", icon: TrendingDown },
-  { value: "transactions", label: "Transações", icon: FileText },
-  { value: "investments", label: "Investimentos", icon: BarChart3 },
-  { value: "goals", label: "Metas", icon: Target },
-  { value: "debts", label: "Dívidas", icon: CreditCard },
-  { value: "organization", label: "Organização", icon: FolderKanban },
-];
-
 const Finances = () => {
   const [financeType, setFinanceType] = useState<FinanceType | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedPeriod, setSelectedPeriod] = useState("month");
   const [selectedType, setSelectedType] = useState<"all" | "income" | "expense">("all");
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("summary");
   const [showSecurityBanner, setShowSecurityBanner] = useState(true);
   const [veveOpen, setVeveOpen] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
 
   const { transactions, isLoaded, stats, addTransaction, deleteTransaction, filterTransactions, getCategoryData } =
     useSupabaseFinances(financeType || undefined);
@@ -83,17 +72,6 @@ const Finances = () => {
     setSelectedCategory(null);
   };
 
-  const handleSavingsTransaction = async (amount: number, wishName: string) => {
-    await addTransaction({
-      description: `Economia: ${wishName}`,
-      category: "Investimento / Objetivo",
-      amount,
-      type: "expense",
-      date: new Date(),
-      finance_type: financeType || "personal",
-    });
-  };
-
   // Show type selector if not chosen
   if (!financeType) {
     return (
@@ -112,12 +90,9 @@ const Finances = () => {
     return (
       <DashboardLayout activeNav="/finance">
         <div className="space-y-6">
-          <Skeleton className="h-40 rounded-2xl" />
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map(i => (
-              <Skeleton key={i} className="h-32 rounded-2xl" />
-            ))}
-          </div>
+          <Skeleton className="h-10 w-40" />
+          <Skeleton className="h-56 rounded-2xl" />
+          <Skeleton className="h-12 rounded-xl" />
           <Skeleton className="h-64 rounded-2xl" />
         </div>
       </DashboardLayout>
@@ -126,133 +101,92 @@ const Finances = () => {
 
   return (
     <DashboardLayout activeNav="/finance">
-      {/* Hero Banner */}
-      <div className="relative rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-primary via-secondary to-accent">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-primary-foreground/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-36 h-36 bg-primary-foreground/5 rounded-full translate-y-1/2 -translate-x-1/2" />
-        <div className="relative z-10 p-6 md:p-8">
-          <div className="flex items-center gap-3 mb-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setFinanceType(null)}
-              className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0 -ml-2"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-primary-foreground/20 backdrop-blur-sm">
-                <TypeIcon className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <div>
-                <h1 className="text-xl md:text-2xl font-extrabold text-primary-foreground">
-                  Finanças {typeLabel}
-                </h1>
-                <p className="text-primary-foreground/70 text-sm">
-                  {isBusiness
-                    ? "Gerencie o fluxo de caixa do seu negócio"
-                    : "Controle total da sua vida financeira"}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Centered Action Row */}
-      <div className="flex flex-col items-center gap-3 mb-6">
-        {/* Filters Button */}
-        <button
-          onClick={() => setShowFilters(!showFilters)}
-          className="w-full max-w-md py-3 px-5 rounded-xl border border-border bg-card text-foreground flex items-center justify-center gap-2 hover:bg-muted transition-colors"
-        >
-          <Filter className="w-4 h-4 text-muted-foreground" />
-          <span className="text-sm font-medium">Filtros</span>
-        </button>
-
-        {/* Veve Button */}
-        <button
-          onClick={() => setVeveOpen(true)}
-          className="w-full max-w-md py-3 px-5 rounded-xl border border-primary/30 text-primary flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors"
-        >
-          <Sparkles className="w-4 h-4" />
-          <span className="text-sm font-medium">Veve</span>
-        </button>
-
-        {/* Add Transaction - Central CTA */}
+      {/* Page Header */}
+      <div className="flex items-center gap-3 mb-5">
         <Button
-          onClick={() => setIsModalOpen(true)}
-          className="btn-gradient gap-2 px-8 py-5 text-sm font-semibold rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
+          variant="ghost"
+          size="icon"
+          onClick={() => setFinanceType(null)}
+          className="shrink-0 -ml-1"
         >
-          <Plus className="w-5 h-5" />
-          Adicionar transação
+          <ArrowLeft className="w-5 h-5" />
         </Button>
-
-        <LgpdNotice />
+        <div>
+          <h1 className="text-xl font-extrabold text-foreground">Finanças {typeLabel}</h1>
+          <p className="text-muted-foreground text-sm">
+            {isBusiness ? "Controle do seu negócio" : "Controle total da sua vida financeira"}
+          </p>
+        </div>
       </div>
 
-      {/* Collapsible Filters */}
-      {showFilters && (
-        <div className="mb-6 animate-fade-in">
-          <FinanceFilters
-            selectedPeriod={selectedPeriod}
-            selectedType={selectedType}
-            onPeriodChange={setSelectedPeriod}
-            onTypeChange={setSelectedType}
-            onClearFilters={handleClearFilters}
-          />
-        </div>
-      )}
-
-      {/* Security Banner */}
-      {showSecurityBanner && (
-        <div className="mb-4 p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 flex gap-3 items-start">
-          <Shield className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-          <div className="flex-1">
-            <p className="text-sm text-foreground">
-              <strong>Seus dados estão seguros:</strong>{" "}
-              <span className="text-muted-foreground">
-                Utilizamos criptografia de ponta e não compartilhamos suas informações financeiras com terceiros.
-              </span>
-            </p>
-          </div>
-          <button onClick={() => setShowSecurityBanner(false)} className="text-muted-foreground hover:text-foreground flex-shrink-0">
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      )}
-
-      {/* Summary Cards */}
+      {/* Summary Card with gradient + month nav */}
       <SummaryCards balance={stats.balance} income={stats.income} expenses={stats.expenses} />
 
-      {/* Tabs */}
+      {/* Main Tabs: Resumo | Transações | IA */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-6">
-        <TabsList className="w-full justify-start bg-muted/50 rounded-xl p-1 h-auto flex-wrap gap-0.5">
-          {financeTabs.map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <TabsTrigger
-                key={tab.value}
-                value={tab.value}
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg gap-1.5 text-sm px-3 py-2"
-              >
-                <Icon className="w-4 h-4" />
-                <span className="hidden sm:inline">{tab.label}</span>
-              </TabsTrigger>
-            );
-          })}
-        </TabsList>
+        <TabsList className="w-full grid grid-cols-3 bg-muted/50 rounded-xl p-1 h-auto">
+          <TabsTrigger
+            value="summary"
+            className="data-[state=active]:bg-card data-[state=active]:shadow-sm rounded-lg py-2.5 text-sm font-medium"
+          >
+            Resumo
+          </TabsTrigger>
+          <TabsTrigger
+            value="transactions"
+            className="data-[state=active]:bg-card data-[state=active]:shadow-sm rounded-lg py-2.5 text-sm font-medium"
+          >
+            Transações
+          </TabsTrigger>
+          <TabsTrigger
+            value="ia"
+            className="data-[state=active]:bg-card data-[state=active]:shadow-sm rounded-lg py-2.5 text-sm font-medium"
+          >
+            IA
+          </TabsTrigger>
+        </Tabs>
 
-        {/* Visão Geral */}
-        <TabsContent value="overview" className="space-y-6 animate-fade-in mt-6">
+        {/* Resumo */}
+        <TabsContent value="summary" className="space-y-6 animate-fade-in mt-5">
+          {/* Centered Add Transaction */}
+          <div className="flex flex-col items-center gap-3">
+            <Button
+              onClick={() => setIsModalOpen(true)}
+              className="btn-gradient gap-2 px-8 py-5 text-sm font-semibold rounded-xl shadow-lg shadow-primary/20"
+            >
+              <Plus className="w-5 h-5" />
+              Adicionar transação
+            </Button>
+            <div className="flex items-center gap-3">
+              <LgpdNotice />
+            </div>
+          </div>
+
+          {/* Security Banner */}
+          {showSecurityBanner && (
+            <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 flex gap-3 items-start">
+              <Shield className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm text-foreground">
+                  <strong>Seus dados estão seguros.</strong>{" "}
+                  <span className="text-muted-foreground">
+                    Não compartilhamos suas informações financeiras com terceiros.
+                  </span>
+                </p>
+              </div>
+              <button onClick={() => setShowSecurityBanner(false)} className="text-muted-foreground hover:text-foreground flex-shrink-0">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+
           {transactions.length === 0 ? (
             <EmptyState
               icon={Wallet}
               title="Nenhuma transação ainda"
               description={
                 isBusiness
-                  ? "Registre a primeira transação empresarial para acompanhar seu fluxo de caixa."
-                  : "Registre sua primeira receita ou despesa para começar a acompanhar suas finanças."
+                  ? "Registre a primeira transação empresarial."
+                  : "Registre sua primeira receita ou despesa."
               }
               action={{
                 label: "Adicionar Transação",
@@ -290,16 +224,28 @@ const Finances = () => {
           )}
         </TabsContent>
 
-        {/* Saídas */}
-        <TabsContent value="expenses" className="animate-fade-in mt-6">
-          <ExpenseOverview
-            transactions={transactions}
-            onAddExpense={() => setIsModalOpen(true)}
-          />
-        </TabsContent>
-
         {/* Transações */}
-        <TabsContent value="transactions" className="animate-fade-in mt-6">
+        <TabsContent value="transactions" className="animate-fade-in mt-5 space-y-4">
+          {/* Filters */}
+          <FinanceFilters
+            selectedPeriod={selectedPeriod}
+            selectedType={selectedType}
+            onPeriodChange={setSelectedPeriod}
+            onTypeChange={setSelectedType}
+            onClearFilters={handleClearFilters}
+          />
+
+          {/* Add Transaction inline */}
+          <div className="flex justify-center">
+            <Button
+              onClick={() => setIsModalOpen(true)}
+              className="btn-gradient gap-2 px-6 py-4 text-sm font-semibold rounded-xl shadow-lg shadow-primary/20"
+            >
+              <Plus className="w-4 h-4" />
+              Adicionar transação
+            </Button>
+          </div>
+
           <TransactionsList
             transactions={filteredTransactions.map(t => ({ ...t, date: t.date }))}
             onDelete={handleDeleteTransaction}
@@ -307,29 +253,9 @@ const Finances = () => {
           />
         </TabsContent>
 
-        {/* Investimentos */}
-        <TabsContent value="investments" className="animate-fade-in mt-6 space-y-8">
-          <EmergencyFundCalculator />
-          <BudgetMethods />
-        </TabsContent>
-
-        {/* Metas */}
-        <TabsContent value="goals" className="animate-fade-in mt-6">
-          <MetasKanban />
-        </TabsContent>
-
-        {/* Dívidas */}
-        <TabsContent value="debts" className="animate-fade-in mt-6">
-          <EmptyState
-            icon={CreditCard}
-            title="Controle de dívidas em breve"
-            description="Organize suas dívidas, parcelas e acompanhe sua quitação. Disponível em breve!"
-          />
-        </TabsContent>
-
-        {/* Organização */}
-        <TabsContent value="organization" className="animate-fade-in mt-6">
-          <OrganizationTab financeType={financeType} />
+        {/* IA */}
+        <TabsContent value="ia" className="animate-fade-in mt-5">
+          <VeveAssistant externalOpen={true} onExternalOpenChange={() => {}} embedded />
         </TabsContent>
       </Tabs>
 
