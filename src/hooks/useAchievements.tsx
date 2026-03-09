@@ -323,48 +323,58 @@ export const useAchievements = () => {
     
     switch (requirement.type) {
       case 'habits_completed':
-        current = stats.habitsCompleted;
-        break;
+        current = stats.habitsCompleted; break;
       case 'habits_created':
-        current = stats.habitsCreated;
-        break;
+        current = stats.habitsCreated; break;
       case 'streak_days':
       case 'total_streak':
-        current = stats.longestStreak;
-        break;
+        current = stats.longestStreak; break;
       case 'perfect_day':
-        current = stats.perfectDays;
-        break;
+        current = stats.perfectDays; break;
       case 'weekly_goal':
-        current = stats.perfectWeeks;
-        break;
+        current = stats.perfectWeeks; break;
       case 'transactions_logged':
-        current = stats.transactionsLogged;
-        break;
+        current = stats.transactionsLogged; break;
       case 'savings_goal_reached':
-        current = stats.savingsGoalPercent;
-        break;
+        current = stats.savingsGoalPercent; break;
       case 'budget_under':
-        current = stats.budgetUnderDays;
-        break;
+        current = stats.budgetUnderDays; break;
       case 'selfcare_checkins':
-        current = stats.selfcareCheckins;
-        break;
+        current = stats.selfcareCheckins; break;
       case 'mood_streak':
-        current = stats.moodStreak;
-        break;
+        current = stats.moodStreak; break;
       case 'gratitude_entries':
-        current = stats.gratitudeEntries;
-        break;
+        current = stats.gratitudeEntries; break;
       case 'community_points':
-        current = stats.communityPoints;
-        break;
+        current = stats.communityPoints; break;
       case 'wishes_completed':
-        current = stats.wishesCompleted;
-        break;
+        current = stats.wishesCompleted; break;
+      case 'routine_completed':
+        current = stats.routineCompleted; break;
+      case 'events_created':
+        current = stats.eventsCreated; break;
+      case 'challenges_joined':
+        current = stats.challengesJoined; break;
+      case 'posts_created':
+        current = stats.postsCreated; break;
+      case 'likes_given':
+        current = stats.likesGiven; break;
+      case 'comments_made':
+        current = stats.commentsMade; break;
+      case 'followers_gained':
+        current = stats.followersGained; break;
+      case 'goals_created':
+        current = stats.goalsCreated; break;
+      case 'goals_completed':
+        current = stats.goalsCompleted; break;
+      case 'cards_created':
+        current = stats.cardsCreated; break;
+      case 'categories_created':
+        current = stats.categoriesCreated; break;
+      case 'investments_made':
+        current = stats.investmentsMade; break;
       case 'category_master':
-        current = stats.categoryCompletions[requirement.category || ''] || 0;
-        break;
+        current = stats.categoryCompletions[requirement.category || ''] || 0; break;
       default:
         current = 0;
     }
