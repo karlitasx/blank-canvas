@@ -23,6 +23,7 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Ranking from "./pages/Ranking";
 import PublicProfile from "./pages/PublicProfile";
+import GymRats from "./pages/GymRats";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +60,7 @@ const App = () => (
                 <Route path="/user/:userId" element={<PublicProfile />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/ranking" element={<Ranking />} />
+                <Route path="/gymrats" element={<GymRats />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
