@@ -154,6 +154,7 @@ const Finances = () => {
                 : "Gerencie suas receitas e despesas pessoais"}
             </p>
           </div>
+          <LgpdNotice />
         </div>
 
         {(activeTab === "overview" || activeTab === "transactions") && (
