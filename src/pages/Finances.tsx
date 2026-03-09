@@ -158,17 +158,17 @@ const Finances = () => {
     if (!businessSettings && !bizLoading) {
       return (
         <DashboardLayout activeNav="/finance">
-          <div className="relative rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-primary via-secondary to-accent">
-            <div className="relative z-10 p-6 md:p-8">
-              <div className="flex items-center gap-3">
-                <Button variant="ghost" size="icon" onClick={() => setFinanceType(null)} className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0 -ml-2">
-                  <ArrowLeft className="w-5 h-5" />
+          <div className="relative rounded-2xl overflow-hidden mb-4 md:mb-6 bg-gradient-to-br from-primary via-secondary to-accent">
+            <div className="relative z-10 p-4 md:p-8">
+              <div className="flex items-center gap-2 md:gap-3">
+                <Button variant="ghost" size="icon" onClick={() => setFinanceType(null)} className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0 -ml-1 h-8 w-8 md:h-10 md:w-10">
+                  <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
                 </Button>
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-primary-foreground/20 backdrop-blur-sm">
-                    <Building2 className="w-5 h-5 text-primary-foreground" />
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="p-2 md:p-2.5 rounded-xl bg-primary-foreground/20 backdrop-blur-sm">
+                    <Building2 className="w-4 h-4 md:w-5 md:h-5 text-primary-foreground" />
                   </div>
-                  <h1 className="text-xl md:text-2xl font-extrabold text-primary-foreground">Configurar Empresa</h1>
+                  <h1 className="text-lg md:text-2xl font-extrabold text-primary-foreground">Configurar Empresa</h1>
                 </div>
               </div>
             </div>
