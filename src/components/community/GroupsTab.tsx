@@ -165,11 +165,10 @@ const GroupCard = ({ group, index, onSelect }: { group: Group; index: number; on
 
   return (
     <div
-      className="group relative bg-card rounded-2xl border border-border overflow-hidden flex flex-col transition-all duration-500 hover:shadow-xl hover:-translate-y-1 animate-fade-in cursor-pointer"
+      className="group relative bg-card rounded-2xl border border-border overflow-hidden flex flex-col transition-all duration-500 hover:shadow-xl hover:-translate-y-1 animate-fade-in"
       style={{ animationDelay: `${index * 80}ms`, animationFillMode: "both" }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={() => onSelect(group)}
     >
       {/* Banner Image */}
       <div className="relative h-32 sm:h-36 overflow-hidden">
