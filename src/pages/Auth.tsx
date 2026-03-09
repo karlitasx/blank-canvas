@@ -191,7 +191,7 @@ const Auth = () => {
         </div>
 
         <p className="text-muted-foreground/50 text-sm relative z-10">
-          © {new Date().getFullYear()} VidaFlow · Todos os direitos reservados
+          © {new Date().getFullYear()} Vertice · Todos os direitos reservados
         </p>
       </div>
 

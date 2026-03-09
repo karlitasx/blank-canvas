@@ -34,7 +34,7 @@ const LgpdNotice = () => {
               <ul className="mt-3 space-y-2">
                 <li>• A Veve utiliza inteligência artificial avançada para auxiliar nas suas finanças.</li>
                 <li>• A inteligência artificial não possui acesso a dados financeiros pessoais.</li>
-                <li>• O VidaFlow não acessa, coleta dados financeiros sensíveis das usuárias.</li>
+                <li>• O Vertice não acessa, coleta dados financeiros sensíveis das usuárias.</li>
               </ul>
             </div>
 

@@ -79,7 +79,7 @@ const AchievementUnlockModal = ({ achievement, onClose }: AchievementUnlockModal
   const handleShare = () => {
     if (!achievement) return;
     
-    const shareText = `🏆 Desbloqueei a conquista "${achievement.name}" no VidaFlow! ${achievement.emoji}`;
+    const shareText = `🏆 Desbloqueei a conquista "${achievement.name}" no Vertice! ${achievement.emoji}`;
     
     if (navigator.share) {
       navigator.share({
