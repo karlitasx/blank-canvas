@@ -8,39 +8,42 @@ import QuickNavigation from "@/components/dashboard/QuickNavigation";
 import WeeklySummary from "@/components/dashboard/WeeklySummary";
 import RecentAchievements from "@/components/dashboard/RecentAchievements";
 import OnboardingTour from "@/components/onboarding/OnboardingTour";
-import FirstStepsCard from "@/components/onboarding/FirstStepsCard";
+import WelcomeModal from "@/components/onboarding/WelcomeModal";
 
 const Dashboard = () => {
   const [runTour, setRunTour] = useState(false);
-  const [showFirstStepsCard, setShowFirstStepsCard] = useState(false);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
   useEffect(() => {
     const hasSeenTour = localStorage.getItem("hasSeenOnboardingTour");
     if (!hasSeenTour) {
-      setShowFirstStepsCard(true);
+      setShowWelcomeModal(true);
     }
   }, []);
 
   const handleStartTour = () => {
+    setShowWelcomeModal(false);
     setRunTour(true);
+  };
+
+  const handleExplore = () => {
+    setShowWelcomeModal(false);
+    localStorage.setItem("hasSeenOnboardingTour", "true");
   };
 
   const handleFinishTour = () => {
     setRunTour(false);
-    setShowFirstStepsCard(false);
     localStorage.setItem("hasSeenOnboardingTour", "true");
   };
 
   return (
     <DashboardLayout activeNav="/">
+      <WelcomeModal 
+        open={showWelcomeModal} 
+        onStartTour={handleStartTour} 
+        onExplore={handleExplore} 
+      />
       <OnboardingTour run={runTour} onFinish={handleFinishTour} />
-      
-      {/* First Steps Card */}
-      {showFirstStepsCard && (
-        <div className="mb-6">
-          <FirstStepsCard onStart={handleStartTour} />
-        </div>
-      )}
 
       {/* Hero Section */}
       <div data-tour="hero">
