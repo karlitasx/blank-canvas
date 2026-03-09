@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { GroupDetailView } from "./GroupDetailView";
 
 interface Group {
   id: string;
@@ -111,7 +112,7 @@ const mockGroups: Group[] = [
   },
 ];
 
-const GroupCard = ({ group, index }: { group: Group; index: number }) => {
+const GroupCard = ({ group, index, onSelect }: { group: Group; index: number; onSelect: (group: Group) => void }) => {
   const [hovered, setHovered] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [bannerUrl, setBannerUrl] = useState(() => {
@@ -121,6 +122,7 @@ const GroupCard = ({ group, index }: { group: Group; index: number }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -163,10 +165,11 @@ const GroupCard = ({ group, index }: { group: Group; index: number }) => {
 
   return (
     <div
-      className="group relative bg-card rounded-2xl border border-border overflow-hidden flex flex-col transition-all duration-500 hover:shadow-xl hover:-translate-y-1 animate-fade-in"
+      className="group relative bg-card rounded-2xl border border-border overflow-hidden flex flex-col transition-all duration-500 hover:shadow-xl hover:-translate-y-1 animate-fade-in cursor-pointer"
       style={{ animationDelay: `${index * 80}ms`, animationFillMode: "both" }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={() => onSelect(group)}
     >
       {/* Banner Image */}
       <div className="relative h-32 sm:h-36 overflow-hidden">
@@ -181,7 +184,7 @@ const GroupCard = ({ group, index }: { group: Group; index: number }) => {
 
         {/* Edit banner button */}
         <button
-          onClick={() => fileInputRef.current?.click()}
+          onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
           disabled={uploading}
           className="absolute top-2.5 right-2.5 p-2 rounded-full bg-black/40 backdrop-blur-sm text-white/80 hover:text-white hover:bg-black/60 transition-all duration-300 opacity-0 group-hover:opacity-100"
           title="Alterar banner"
@@ -237,8 +240,8 @@ const GroupCard = ({ group, index }: { group: Group; index: number }) => {
         </p>
 
         {/* Footer */}
-        <div className="mt-auto pt-1 flex items-end justify-end">
-          <span className="text-xs text-muted-foreground italic">Disponível em breve 🎉</span>
+        <div className="mt-auto pt-1 flex items-end justify-between">
+          <span className="text-xs text-primary font-medium">Acessar grupo →</span>
         </div>
       </div>
     </div>
@@ -247,6 +250,7 @@ const GroupCard = ({ group, index }: { group: Group; index: number }) => {
 
 const GroupsTab = () => {
   const [subTab, setSubTab] = useState("all");
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
 
   const joinedGroups = mockGroups.filter((g) => g.isJoined);
   const availableGroups = mockGroups.filter((g) => !g.isJoined && !g.comingSoon);
@@ -264,6 +268,25 @@ const GroupsTab = () => {
   };
 
   const filteredGroups = getFilteredGroups();
+
+  // If a group is selected, show the detail view
+  if (selectedGroup) {
+    const storedBanners = getStoredBanners();
+    return (
+      <GroupDetailView
+        group={{
+          id: selectedGroup.id,
+          name: selectedGroup.name,
+          description: selectedGroup.description,
+          emoji: selectedGroup.emoji,
+          category: selectedGroup.category,
+          bannerUrl: storedBanners[selectedGroup.id] || selectedGroup.defaultBanner,
+        }}
+        onBack={() => setSelectedGroup(null)}
+        isSubscriber={false}
+      />
+    );
+  }
 
   return (
     <div className="space-y-5">
@@ -296,7 +319,7 @@ const GroupsTab = () => {
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {filteredGroups.map((group, i) => (
-          <GroupCard key={group.id} group={group} index={i} />
+          <GroupCard key={group.id} group={group} index={i} onSelect={setSelectedGroup} />
         ))}
       </div>
 
