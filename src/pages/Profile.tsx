@@ -51,9 +51,11 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import XPProgressBar from "@/components/achievements/XPProgressBar";
-import { LEVEL_EMOJIS } from "@/types/achievements";
+import { LEVEL_EMOJIS, RARITY_COLORS, RARITY_LABELS, Achievement } from "@/types/achievements";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { cn } from "@/lib/utils";
+import { Lock } from "lucide-react";
 
 interface UserPreferences {
   theme: 'dark' | 'light' | 'system';
@@ -179,6 +181,73 @@ const Profile = () => {
       </div>
     </div>
   );
+
+  // Achievements Grid Component for Profile
+  const ProfileAchievementsGrid = () => {
+    const { getAllAchievements, getAchievementProgress } = useAchievementsContext();
+    const achievements = getAllAchievements();
+    
+    // Show first 6 achievements, prioritizing unlocked ones
+    const sortedAchievements = [...achievements].sort((a, b) => {
+      if (a.isUnlocked && !b.isUnlocked) return -1;
+      if (!a.isUnlocked && b.isUnlocked) return 1;
+      return 0;
+    }).slice(0, 6);
+
+    return (
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {sortedAchievements.map((achievement) => (
+          <div
+            key={achievement.id}
+            className={cn(
+              "relative p-3 rounded-xl border transition-all",
+              achievement.isUnlocked
+                ? "bg-card border-primary/30 hover:shadow-md"
+                : "bg-muted/30 border-muted/20 opacity-60"
+            )}
+          >
+            {/* Rarity Badge */}
+            <div 
+              className={cn(
+                "absolute top-2 right-2 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase",
+                achievement.isUnlocked 
+                  ? `bg-gradient-to-r ${RARITY_COLORS[achievement.rarity]} text-white` 
+                  : "bg-muted text-muted-foreground"
+              )}
+            >
+              {RARITY_LABELS[achievement.rarity]}
+            </div>
+
+            <div className="flex flex-col items-center text-center">
+              <div 
+                className={cn(
+                  "w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-2",
+                  achievement.isUnlocked 
+                    ? `bg-gradient-to-br ${RARITY_COLORS[achievement.rarity]}` 
+                    : "bg-muted"
+                )}
+              >
+                {achievement.isUnlocked ? achievement.emoji : <Lock className="w-5 h-5 text-muted-foreground" />}
+              </div>
+              <p className={cn(
+                "text-xs font-semibold line-clamp-1",
+                achievement.isUnlocked ? "text-foreground" : "text-muted-foreground"
+              )}>
+                {achievement.name}
+              </p>
+              {achievement.isUnlocked ? (
+                <p className="text-[10px] text-accent font-medium mt-1">+{achievement.points} pts</p>
+              ) : (
+                <div className="w-full mt-1">
+                  <Progress value={getAchievementProgress(achievement.id)} className="h-1" />
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   if (isLoading) {
     return (
@@ -339,24 +408,28 @@ const Profile = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="overview" className="space-y-4">
+        <Tabs defaultValue="stats" className="space-y-4">
           <TabsList className="bg-card border border-border p-1 w-full">
-            <TabsTrigger value="overview" className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-              <Eye className="w-4 h-4 mr-1.5" />
-              Visão
+            <TabsTrigger value="stats" className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs sm:text-sm">
+              <BarChart3 className="w-4 h-4 mr-1" />
+              Estatísticas
             </TabsTrigger>
-            <TabsTrigger value="activity" className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-              <Activity className="w-4 h-4 mr-1.5" />
+            <TabsTrigger value="activity" className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs sm:text-sm">
+              <Activity className="w-4 h-4 mr-1" />
               Atividades
             </TabsTrigger>
-            <TabsTrigger value="saved" className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-              <Bookmark className="w-4 h-4 mr-1.5" />
-              Salvas
+            <TabsTrigger value="settings" className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs sm:text-sm">
+              <Settings className="w-4 h-4 mr-1" />
+              Config
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-xs sm:text-sm">
+              <Bell className="w-4 h-4 mr-1" />
+              Notificações
             </TabsTrigger>
           </TabsList>
 
-          {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-4 animate-fade-in">
+          {/* Statistics Tab */}
+          <TabsContent value="stats" className="space-y-4 animate-fade-in">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <ProfileStatCard 
                 icon={Target} 
@@ -413,38 +486,69 @@ const Profile = () => {
                     <span className="text-muted-foreground">Desbloqueadas</span>
                     <span className="font-medium">{achievementsUnlocked} de {totalAchievements}</span>
                   </div>
-                  <Progress value={(achievementsUnlocked / totalAchievements) * 100} className="h-2" />
+                  <Progress value={totalAchievements > 0 ? (achievementsUnlocked / totalAchievements) * 100 : 0} className="h-2" />
                   <p className="text-xs text-muted-foreground">
                     Complete ações para desbloquear conquistas!
                   </p>
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
 
-          {/* Saved Tab */}
-          <TabsContent value="saved" className="animate-fade-in">
+            {/* Achievements Gallery */}
             <Card className="bg-card border-border">
-              <CardContent className="pt-6">
-                <div className="text-center py-12">
-                  <Bookmark className="w-12 h-12 text-muted-foreground/40 mx-auto mb-3" />
-                  <p className="text-muted-foreground">Nenhum item salvo</p>
-                  <p className="text-muted-foreground/60 text-sm mt-1">
-                    Seus itens salvos aparecerão aqui
-                  </p>
-                </div>
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Trophy className="w-5 h-5 text-accent" />
+                  Minhas Conquistas
+                </CardTitle>
+                <p className="text-xs text-muted-foreground">{achievementsUnlocked} desbloqueadas de {totalAchievements}</p>
+              </CardHeader>
+              <CardContent>
+                <ProfileAchievementsGrid />
               </CardContent>
             </Card>
           </TabsContent>
 
-          {/* Activity Tab */}
+          {/* Activity Tab - History + Stats */}
           <TabsContent value="activity" className="space-y-4 animate-fade-in">
+            {/* Detailed Stats */}
+            <Card className="bg-card border-border">
+              <CardHeader>
+                <CardTitle className="text-lg font-bold flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-primary" />
+                  Estatísticas Detalhadas
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="divide-y divide-border">
+                  {[
+                    { label: "Total de curtidas", value: detailedStats.totalLikes, icon: Heart },
+                    { label: "Posts criados", value: detailedStats.postsCreated, icon: MessageSquare },
+                    { label: "Comentários feitos", value: detailedStats.commentsMade, icon: MessageSquare },
+                    { label: "Desafios participando", value: detailedStats.challengesJoined, icon: Trophy },
+                    { label: "Conexões", value: detailedStats.connections, icon: Users },
+                    { label: "Transações registradas", value: detailedStats.transactionsLogged, icon: Wallet },
+                    { label: "Eventos criados", value: detailedStats.eventsCreated, icon: CalendarDays },
+                    { label: "Itens na wishlist", value: detailedStats.wishlistItems, icon: Gift },
+                  ].map((stat) => (
+                    <div key={stat.label} className="flex items-center justify-between py-3">
+                      <div className="flex items-center gap-3">
+                        <stat.icon className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm text-foreground">{stat.label}</span>
+                      </div>
+                      <span className="text-sm font-bold text-foreground">{stat.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Activity History */}
             <Card className="bg-card border-border">
               <CardHeader>
                 <CardTitle className="text-lg font-bold flex items-center gap-2">
                   <Clock className="w-5 h-5 text-primary" />
-                  Histórico Completo de Atividades
+                  Histórico de Atividades
                 </CardTitle>
                 <p className="text-sm text-muted-foreground">Todas suas ações na plataforma</p>
               </CardHeader>
@@ -488,38 +592,6 @@ const Profile = () => {
                     ))}
                   </div>
                 )}
-              </CardContent>
-            </Card>
-
-            {/* Detailed Stats */}
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <CardTitle className="text-lg font-bold flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-primary" />
-                  Estatísticas Detalhadas
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="divide-y divide-border">
-                  {[
-                    { label: "Total de curtidas", value: detailedStats.totalLikes, icon: Heart },
-                    { label: "Posts criados", value: detailedStats.postsCreated, icon: MessageSquare },
-                    { label: "Comentários feitos", value: detailedStats.commentsMade, icon: MessageSquare },
-                    { label: "Desafios participando", value: detailedStats.challengesJoined, icon: Trophy },
-                    { label: "Conexões", value: detailedStats.connections, icon: Users },
-                    { label: "Transações registradas", value: detailedStats.transactionsLogged, icon: Wallet },
-                    { label: "Eventos criados", value: detailedStats.eventsCreated, icon: CalendarDays },
-                    { label: "Itens na wishlist", value: detailedStats.wishlistItems, icon: Gift },
-                  ].map((stat) => (
-                    <div key={stat.label} className="flex items-center justify-between py-3">
-                      <div className="flex items-center gap-3">
-                        <stat.icon className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm text-foreground">{stat.label}</span>
-                      </div>
-                      <span className="text-sm font-bold text-foreground">{stat.value}</span>
-                    </div>
-                  ))}
-                </div>
               </CardContent>
             </Card>
           </TabsContent>
