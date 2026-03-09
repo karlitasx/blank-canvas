@@ -158,17 +158,17 @@ const Finances = () => {
     if (!businessSettings && !bizLoading) {
       return (
         <DashboardLayout activeNav="/finance">
-          <div className="relative rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-primary via-secondary to-accent">
-            <div className="relative z-10 p-6 md:p-8">
-              <div className="flex items-center gap-3">
-                <Button variant="ghost" size="icon" onClick={() => setFinanceType(null)} className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0 -ml-2">
-                  <ArrowLeft className="w-5 h-5" />
+          <div className="relative rounded-2xl overflow-hidden mb-4 md:mb-6 bg-gradient-to-br from-primary via-secondary to-accent">
+            <div className="relative z-10 p-4 md:p-8">
+              <div className="flex items-center gap-2 md:gap-3">
+                <Button variant="ghost" size="icon" onClick={() => setFinanceType(null)} className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0 -ml-1 h-8 w-8 md:h-10 md:w-10">
+                  <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
                 </Button>
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-primary-foreground/20 backdrop-blur-sm">
-                    <Building2 className="w-5 h-5 text-primary-foreground" />
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="p-2 md:p-2.5 rounded-xl bg-primary-foreground/20 backdrop-blur-sm">
+                    <Building2 className="w-4 h-4 md:w-5 md:h-5 text-primary-foreground" />
                   </div>
-                  <h1 className="text-xl md:text-2xl font-extrabold text-primary-foreground">Configurar Empresa</h1>
+                  <h1 className="text-lg md:text-2xl font-extrabold text-primary-foreground">Configurar Empresa</h1>
                 </div>
               </div>
             </div>
@@ -183,23 +183,23 @@ const Finances = () => {
     return (
       <DashboardLayout activeNav="/finance">
         {/* Hero Banner */}
-        <div className="relative rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-primary via-secondary to-accent">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-primary-foreground/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-36 h-36 bg-primary-foreground/5 rounded-full translate-y-1/2 -translate-x-1/2" />
-          <div className="relative z-10 p-6 md:p-8">
-            <div className="flex items-center gap-3 mb-1">
-              <Button variant="ghost" size="icon" onClick={() => setFinanceType(null)} className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0 -ml-2">
-                <ArrowLeft className="w-5 h-5" />
+        <div className="relative rounded-2xl overflow-hidden mb-4 md:mb-6 bg-gradient-to-br from-primary via-secondary to-accent">
+          <div className="absolute top-0 right-0 w-32 md:w-48 h-32 md:h-48 bg-primary-foreground/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-24 md:w-36 h-24 md:h-36 bg-primary-foreground/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+          <div className="relative z-10 p-4 md:p-8">
+            <div className="flex items-center gap-2 md:gap-3 mb-1">
+              <Button variant="ghost" size="icon" onClick={() => setFinanceType(null)} className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0 -ml-1 md:-ml-2 h-8 w-8 md:h-10 md:w-10">
+                <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
               </Button>
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-primary-foreground/20 backdrop-blur-sm">
-                  <Building2 className="w-5 h-5 text-primary-foreground" />
+              <div className="flex items-center gap-2 md:gap-3 min-w-0">
+                <div className="p-2 md:p-2.5 rounded-xl bg-primary-foreground/20 backdrop-blur-sm shrink-0">
+                  <Building2 className="w-4 h-4 md:w-5 md:h-5 text-primary-foreground" />
                 </div>
-                <div>
-                  <h1 className="text-xl md:text-2xl font-extrabold text-primary-foreground">
+                <div className="min-w-0">
+                  <h1 className="text-lg md:text-2xl font-extrabold text-primary-foreground truncate">
                     Finanças Empresariais
                   </h1>
-                  <p className="text-primary-foreground/70 text-sm">
+                  <p className="text-primary-foreground/70 text-xs md:text-sm truncate">
                     {businessSettings?.company_name || "Gerencie seu negócio"} · {bType === "mei" ? "MEI" : bType === "simples" ? "Simples Nacional" : "Autônomo"}
                   </p>
                 </div>
@@ -208,8 +208,8 @@ const Finances = () => {
           </div>
         </div>
 
-        {/* Business Tabs */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-6">
+        {/* Business Tabs - Cards style for mobile */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 mb-6">
           {visibleBizTabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = bizActiveTab === tab.value;
@@ -217,14 +217,14 @@ const Finances = () => {
               <button
                 key={tab.value}
                 onClick={() => setBizActiveTab(tab.value)}
-                className={`flex items-center gap-2.5 p-3 rounded-xl border text-sm font-medium transition-all ${
+                className={`flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2.5 p-3 sm:p-3 rounded-xl border text-xs sm:text-sm font-medium transition-all ${
                   isActive
                     ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20"
                     : "bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground"
                 }`}
               >
-                <Icon className="w-4 h-4 shrink-0" />
-                <span className="truncate">{tab.label}</span>
+                <Icon className="w-5 h-5 sm:w-4 sm:h-4 shrink-0" />
+                <span className="truncate text-center sm:text-left">{tab.label}</span>
               </button>
             );
           })}
@@ -249,31 +249,29 @@ const Finances = () => {
   return (
     <DashboardLayout activeNav="/finance">
       {/* Hero Banner */}
-      <div className="relative rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-primary via-secondary to-accent">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-primary-foreground/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-36 h-36 bg-primary-foreground/5 rounded-full translate-y-1/2 -translate-x-1/2" />
-        <div className="relative z-10 p-6 md:p-8">
-          <div className="flex items-center gap-3 mb-1">
+      <div className="relative rounded-2xl overflow-hidden mb-4 md:mb-6 bg-gradient-to-br from-primary via-secondary to-accent">
+        <div className="absolute top-0 right-0 w-32 md:w-48 h-32 md:h-48 bg-primary-foreground/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-24 md:w-36 h-24 md:h-36 bg-primary-foreground/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+        <div className="relative z-10 p-4 md:p-8">
+          <div className="flex items-center gap-2 md:gap-3 mb-1">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setFinanceType(null)}
-              className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0 -ml-2"
+              className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0 -ml-1 md:-ml-2 h-8 w-8 md:h-10 md:w-10"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
             </Button>
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-primary-foreground/20 backdrop-blur-sm">
-                <TypeIcon className="w-5 h-5 text-primary-foreground" />
+            <div className="flex items-center gap-2 md:gap-3 min-w-0">
+              <div className="p-2 md:p-2.5 rounded-xl bg-primary-foreground/20 backdrop-blur-sm shrink-0">
+                <TypeIcon className="w-4 h-4 md:w-5 md:h-5 text-primary-foreground" />
               </div>
-              <div>
-                <h1 className="text-xl md:text-2xl font-extrabold text-primary-foreground">
+              <div className="min-w-0">
+                <h1 className="text-lg md:text-2xl font-extrabold text-primary-foreground truncate">
                   Finanças {typeLabel}
                 </h1>
-                <p className="text-primary-foreground/70 text-sm">
-                  {isBusiness
-                    ? "Gerencie o fluxo de caixa do seu negócio"
-                    : "Controle total da sua vida financeira"}
+                <p className="text-primary-foreground/70 text-xs md:text-sm">
+                  Controle total da sua vida financeira
                 </p>
               </div>
             </div>
@@ -282,13 +280,14 @@ const Finances = () => {
       </div>
 
       {/* Action Row */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4 md:mb-6 gap-2">
         <Button
           onClick={() => setIsModalOpen(true)}
-          className="btn-gradient gap-2 px-6 py-5 text-sm font-semibold rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
+          className="btn-gradient gap-2 px-4 md:px-6 py-4 md:py-5 text-xs md:text-sm font-semibold rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
         >
-          <Plus className="w-5 h-5" />
-          Adicionar transação
+          <Plus className="w-4 h-4 md:w-5 md:h-5" />
+          <span className="hidden sm:inline">Adicionar transação</span>
+          <span className="sm:hidden">Transação</span>
         </Button>
 
         <div className="flex items-center gap-2">
@@ -306,13 +305,13 @@ const Finances = () => {
 
       {/* Security Banner */}
       {showSecurityBanner && (
-        <div className="mb-4 p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 flex gap-3 items-start">
-          <Shield className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-          <div className="flex-1">
-            <p className="text-sm text-foreground">
-              <strong>Seus dados estão seguros:</strong>{" "}
-              <span className="text-muted-foreground">
-                Utilizamos criptografia de ponta e não compartilhamos suas informações financeiras com terceiros.
+        <div className="mb-4 p-3 md:p-4 rounded-xl border border-success/30 bg-success/5 flex gap-2 md:gap-3 items-start">
+          <Shield className="w-4 h-4 md:w-5 md:h-5 text-success flex-shrink-0 mt-0.5" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs md:text-sm text-foreground">
+              <strong>Dados seguros</strong>{" "}
+              <span className="text-muted-foreground hidden sm:inline">
+                — Utilizamos criptografia de ponta e não compartilhamos suas informações financeiras.
               </span>
             </p>
           </div>
@@ -347,9 +346,9 @@ const Finances = () => {
         )}
       </div>
 
-      {/* Tabs */}
+      {/* Tabs - Cards style for mobile */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-6">
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 mb-6">
           {financeTabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.value;
@@ -357,14 +356,14 @@ const Finances = () => {
               <button
                 key={tab.value}
                 onClick={() => setActiveTab(tab.value)}
-                className={`flex items-center gap-2.5 p-3 rounded-xl border text-sm font-medium transition-all ${
+                className={`flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2.5 p-3 rounded-xl border text-xs sm:text-sm font-medium transition-all ${
                   isActive
                     ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20"
                     : "bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground"
                 }`}
               >
-                <Icon className="w-4 h-4 shrink-0" />
-                <span className="truncate">{tab.label}</span>
+                <Icon className="w-5 h-5 sm:w-4 sm:h-4 shrink-0" />
+                <span className="truncate text-center sm:text-left">{tab.label}</span>
               </button>
             );
           })}
