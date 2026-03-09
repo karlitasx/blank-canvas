@@ -9,7 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { differenceInDays, parseISO, format, getDaysInMonth, startOfMonth, isSameMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Challenge, ChallengeParticipant } from "@/types/challenges";
+import { Challenge, ChallengeParticipant, DIFFICULTY_LEVELS } from "@/types/challenges";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -77,7 +77,12 @@ const GymRats = () => {
   const handleUploadCheckin = async () => {
     if (!selectedFile || !selectedChallenge) return;
 
-    const result = await uploadCheckinPhoto(selectedChallenge.id, selectedFile, caption);
+    const result = await uploadCheckinPhoto(
+      selectedChallenge.id,
+      selectedFile,
+      caption,
+      selectedChallenge.points_per_checkin
+    );
     if (result) {
       setShowUploadModal(false);
       setSelectedFile(null);
@@ -130,9 +135,19 @@ const GymRats = () => {
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <h3 className="font-semibold text-foreground truncate">{challenge.title}</h3>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {format(parseISO(challenge.start_date), "dd MMM", { locale: ptBR })} — {format(parseISO(challenge.end_date), "dd MMM", { locale: ptBR })}
-            </p>
+            <div className="flex items-center gap-2 mt-0.5">
+              <p className="text-xs text-muted-foreground">
+                {format(parseISO(challenge.start_date), "dd MMM", { locale: ptBR })} — {format(parseISO(challenge.end_date), "dd MMM", { locale: ptBR })}
+              </p>
+              {(() => {
+                const diff = DIFFICULTY_LEVELS.find(d => d.value === challenge.difficulty);
+                return diff ? (
+                  <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
+                    {diff.icon} {diff.points}pts
+                  </span>
+                ) : null;
+              })()}
+            </div>
           </div>
           <div className="flex flex-col items-end gap-1">
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -646,7 +661,7 @@ const GymRats = () => {
               disabled={!selectedFile || uploadLoading}
               className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
             >
-              {uploadLoading ? "Enviando..." : "Enviar Check-in (+10 pts)"}
+              {uploadLoading ? "Enviando..." : `Enviar Check-in (+${selectedChallenge?.points_per_checkin || 10} pts)`}
             </button>
           </div>
         </DialogContent>

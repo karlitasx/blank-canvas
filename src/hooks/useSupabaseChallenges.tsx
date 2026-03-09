@@ -66,6 +66,8 @@ export const useSupabaseChallenges = () => {
         created_by: user.id,
         emoji: input.emoji || '🏆',
         is_public: input.is_public ?? true,
+        difficulty: input.difficulty || 'medium',
+        points_per_checkin: input.points_per_checkin || 10,
       };
 
       const { data, error } = await supabase

@@ -19,13 +19,12 @@ export const useGymRatsChallenges = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  const uploadCheckinPhoto = async (challengeId: string, file: File, caption?: string) => {
+  const uploadCheckinPhoto = async (challengeId: string, file: File, caption?: string, pointsPerCheckin?: number) => {
     if (!user) return null;
 
     try {
       setLoading(true);
 
-      // Upload photo to storage
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/${Date.now()}.${fileExt}`;
       
@@ -38,12 +37,10 @@ export const useGymRatsChallenges = () => {
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
       const { data: { publicUrl } } = supabase.storage
         .from('challenge-photos')
         .getPublicUrl(fileName);
 
-      // Create check-in record
       const { data: checkin, error: checkinError } = await supabase
         .from('challenge_checkins')
         .insert({
@@ -73,10 +70,11 @@ export const useGymRatsChallenges = () => {
           .eq('user_id', user.id);
       }
 
-      // Award points for check-in
-      await awardCheckinPoints(checkin.id);
+      // Award points using challenge-defined value
+      const points = pointsPerCheckin || 10;
+      await awardCheckinPoints(checkin.id, points);
 
-      toast.success("Check-in enviado! +10 pontos 🔥");
+      toast.success(`Check-in enviado! +${points} pontos 🔥`);
       return checkin;
     } catch (error) {
       console.error("Error uploading check-in:", error);
@@ -87,11 +85,10 @@ export const useGymRatsChallenges = () => {
     }
   };
 
-  const awardCheckinPoints = async (checkinId: string) => {
+  const awardCheckinPoints = async (checkinId: string, points: number) => {
     if (!user) return;
 
     try {
-      // Check if already awarded for this checkin
       const { count } = await supabase
         .from("point_history")
         .select("*", { count: "exact", head: true })
@@ -101,7 +98,6 @@ export const useGymRatsChallenges = () => {
 
       if ((count || 0) > 0) return;
 
-      // Check daily limit (3 per day)
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       
@@ -114,19 +110,17 @@ export const useGymRatsChallenges = () => {
 
       if ((todayCount || 0) >= 3) return;
 
-      // Award 10 points
       const { error: historyError } = await supabase
         .from("point_history")
         .insert({
           user_id: user.id,
           action_type: "challenge_checkin",
           action_id: checkinId,
-          points: 10,
+          points,
         });
 
       if (historyError) throw historyError;
 
-      // Update user_stats
       const { data: currentStats } = await supabase
         .from("user_stats")
         .select("total_points")
@@ -135,7 +129,7 @@ export const useGymRatsChallenges = () => {
 
       await supabase
         .from("user_stats")
-        .update({ total_points: (currentStats?.total_points || 0) + 10 })
+        .update({ total_points: (currentStats?.total_points || 0) + points })
         .eq("user_id", user.id);
 
     } catch (error) {
