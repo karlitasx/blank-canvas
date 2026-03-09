@@ -299,6 +299,10 @@ const Finances = () => {
 
         {/* Investimentos */}
         <TabsContent value="investments" className="animate-fade-in mt-6 space-y-8">
+          <InvestmentsOverview
+            transactions={transactions.map(t => ({ ...t, date: t.date }))}
+            onAddInvestment={() => setIsModalOpen(true)}
+          />
           <EmergencyFundCalculator />
           <BudgetMethods />
         </TabsContent>
