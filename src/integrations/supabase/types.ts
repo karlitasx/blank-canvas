@@ -739,28 +739,95 @@ export type Database = {
         }
         Relationships: []
       }
-      introductions: {
+      introduction_comments: {
         Row: {
           content: string
           created_at: string
-          goals: string | null
           id: string
-          updated_at: string
+          introduction_id: string
           user_id: string
         }
         Insert: {
           content: string
           created_at?: string
-          goals?: string | null
           id?: string
-          updated_at?: string
+          introduction_id: string
           user_id: string
         }
         Update: {
           content?: string
           created_at?: string
+          id?: string
+          introduction_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "introduction_comments_introduction_id_fkey"
+            columns: ["introduction_id"]
+            isOneToOne: false
+            referencedRelation: "introductions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      introduction_likes: {
+        Row: {
+          created_at: string
+          id: string
+          introduction_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          introduction_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          introduction_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "introduction_likes_introduction_id_fkey"
+            columns: ["introduction_id"]
+            isOneToOne: false
+            referencedRelation: "introductions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      introductions: {
+        Row: {
+          comments_count: number
+          content: string
+          created_at: string
+          goals: string | null
+          id: string
+          likes_count: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comments_count?: number
+          content: string
+          created_at?: string
           goals?: string | null
           id?: string
+          likes_count?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comments_count?: number
+          content?: string
+          created_at?: string
+          goals?: string | null
+          id?: string
+          likes_count?: number
           updated_at?: string
           user_id?: string
         }
