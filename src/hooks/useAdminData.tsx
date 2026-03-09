@@ -352,14 +352,12 @@ export const useAdminData = () => {
     is_public: boolean;
   }) => {
     if (!user) return false;
-
     try {
       const { error } = await supabase.from("challenges").insert({
         ...challenge,
         created_by: user.id,
         challenge_type: "habits",
       });
-
       if (error) throw error;
       toast.success("Desafio criado");
       fetchChallenges();
@@ -372,19 +370,50 @@ export const useAdminData = () => {
     }
   };
 
+  const editChallenge = async (id: string, data: {
+    title: string;
+    description?: string;
+    emoji: string;
+    start_date: string;
+    end_date: string;
+    target_value: number;
+    is_public: boolean;
+  }) => {
+    try {
+      const { error } = await supabase.from("challenges").update(data).eq("id", id);
+      if (error) throw error;
+      toast.success("Desafio atualizado");
+      fetchChallenges();
+      return true;
+    } catch (error) {
+      console.error("Error editing challenge:", error);
+      toast.error("Erro ao editar desafio");
+      return false;
+    }
+  };
+
   const toggleChallengeVisibility = async (challengeId: string, isPublic: boolean) => {
     try {
-      const { error } = await supabase
-        .from("challenges")
-        .update({ is_public: isPublic })
-        .eq("id", challengeId);
-
+      const { error } = await supabase.from("challenges").update({ is_public: isPublic }).eq("id", challengeId);
       if (error) throw error;
       toast.success(isPublic ? "Desafio ativado" : "Desafio desativado");
       fetchChallenges();
     } catch (error) {
       console.error("Error toggling challenge:", error);
       toast.error("Erro ao alterar desafio");
+    }
+  };
+
+  const deleteChallenge = async (challengeId: string) => {
+    try {
+      const { error } = await supabase.from("challenges").delete().eq("id", challengeId);
+      if (error) throw error;
+      toast.success("Desafio excluído");
+      fetchChallenges();
+      fetchStats();
+    } catch (error) {
+      console.error("Error deleting challenge:", error);
+      toast.error("Erro ao excluir desafio");
     }
   };
 
@@ -401,7 +430,6 @@ export const useAdminData = () => {
   }) => {
     try {
       const { error } = await supabase.from("admin_achievements").insert(achievement);
-
       if (error) throw error;
       toast.success("Conquista criada");
       fetchAchievements();
@@ -413,19 +441,49 @@ export const useAdminData = () => {
     }
   };
 
+  const editAchievement = async (id: string, data: {
+    name: string;
+    description: string;
+    emoji: string;
+    xp_reward: number;
+    unlock_condition: string;
+    is_permanent: boolean;
+    expires_at?: string;
+  }) => {
+    try {
+      const { error } = await supabase.from("admin_achievements").update(data).eq("id", id);
+      if (error) throw error;
+      toast.success("Conquista atualizada");
+      fetchAchievements();
+      return true;
+    } catch (error) {
+      console.error("Error editing achievement:", error);
+      toast.error("Erro ao editar conquista");
+      return false;
+    }
+  };
+
   const toggleAchievementActive = async (achievementId: string, isActive: boolean) => {
     try {
-      const { error } = await supabase
-        .from("admin_achievements")
-        .update({ is_active: isActive })
-        .eq("id", achievementId);
-
+      const { error } = await supabase.from("admin_achievements").update({ is_active: isActive }).eq("id", achievementId);
       if (error) throw error;
       toast.success(isActive ? "Conquista ativada" : "Conquista desativada");
       fetchAchievements();
     } catch (error) {
       console.error("Error toggling achievement:", error);
       toast.error("Erro ao alterar conquista");
+    }
+  };
+
+  const deleteAchievement = async (achievementId: string) => {
+    try {
+      const { error } = await supabase.from("admin_achievements").delete().eq("id", achievementId);
+      if (error) throw error;
+      toast.success("Conquista excluída");
+      fetchAchievements();
+    } catch (error) {
+      console.error("Error deleting achievement:", error);
+      toast.error("Erro ao excluir conquista");
     }
   };
 
@@ -447,9 +505,13 @@ export const useAdminData = () => {
     reactivateUser,
     // Challenge actions
     createChallenge,
+    editChallenge,
     toggleChallengeVisibility,
+    deleteChallenge,
     // Achievement actions
     createAchievement,
+    editAchievement,
     toggleAchievementActive,
+    deleteAchievement,
   };
 };
