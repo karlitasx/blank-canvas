@@ -3,10 +3,12 @@ import { cn } from "@/lib/utils";
 import { navigationItems } from "@/lib/navigation";
 import { usePreferences } from "@/contexts/PreferencesContext";
 import { MoreHorizontal, X } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Dumbbell } from "lucide-react";
 
-const PRIMARY_COUNT = 4;
-const primaryItems = navigationItems.slice(0, PRIMARY_COUNT);
-const moreItems = navigationItems.slice(PRIMARY_COUNT);
+const PRIMARY_HREFS = ["/", "/routine", "/finance", "/gymrats"];
+const primaryItems = navigationItems.filter(i => PRIMARY_HREFS.includes(i.href));
+const moreItems = navigationItems.filter(i => !PRIMARY_HREFS.includes(i.href));
 
 interface BottomNavProps {
   activeItem?: string;
