@@ -19,13 +19,12 @@ export const useGymRatsChallenges = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  const uploadCheckinPhoto = async (challengeId: string, file: File, caption?: string) => {
+  const uploadCheckinPhoto = async (challengeId: string, file: File, caption?: string, pointsPerCheckin?: number) => {
     if (!user) return null;
 
     try {
       setLoading(true);
 
-      // Upload photo to storage
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/${Date.now()}.${fileExt}`;
       
@@ -38,12 +37,10 @@ export const useGymRatsChallenges = () => {
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
       const { data: { publicUrl } } = supabase.storage
         .from('challenge-photos')
         .getPublicUrl(fileName);
 
-      // Create check-in record
       const { data: checkin, error: checkinError } = await supabase
         .from('challenge_checkins')
         .insert({
@@ -73,10 +70,11 @@ export const useGymRatsChallenges = () => {
           .eq('user_id', user.id);
       }
 
-      // Award points for check-in
-      await awardCheckinPoints(checkin.id);
+      // Award points using challenge-defined value
+      const points = pointsPerCheckin || 10;
+      await awardCheckinPoints(checkin.id, points);
 
-      toast.success("Check-in enviado! +10 pontos 🔥");
+      toast.success(`Check-in enviado! +${points} pontos 🔥`);
       return checkin;
     } catch (error) {
       console.error("Error uploading check-in:", error);
