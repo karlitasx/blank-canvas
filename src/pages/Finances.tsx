@@ -49,6 +49,7 @@ const businessTabs = [
   { value: "biz-expenses", label: "Despesas", icon: Package },
   { value: "biz-mei", label: "MEI", icon: Store, onlyFor: "mei" as const },
   { value: "biz-simples", label: "Simples", icon: Calculator, onlyFor: "simples" as const },
+  { value: "biz-autonomo", label: "Autônomo", icon: User, onlyFor: "autonomo" as const },
   { value: "biz-fiscal", label: "Agenda Fiscal", icon: CalendarCheck },
   { value: "biz-settings", label: "Config.", icon: Settings },
 ];
