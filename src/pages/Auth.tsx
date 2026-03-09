@@ -112,7 +112,7 @@ const Auth = () => {
         } else {
           toast({
             title: "Conta criada! 🌱",
-            description: "Sua jornada no VidaFlow começou",
+            description: "Sua jornada no Vertice começou",
           });
         }
       }
@@ -162,9 +162,8 @@ const Auth = () => {
             <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-lg shadow-primary/25">
               <Sparkles className="w-6 h-6 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-bold">
-              <span className="text-foreground">Vida</span>
-              <span className="text-gradient">Flow</span>
+            <h1 className="text-2xl font-bold text-foreground">
+              Vertice
             </h1>
           </div>
 
@@ -192,7 +191,7 @@ const Auth = () => {
         </div>
 
         <p className="text-muted-foreground/50 text-sm relative z-10">
-          © {new Date().getFullYear()} VidaFlow · Todos os direitos reservados
+          © {new Date().getFullYear()} Vertice · Todos os direitos reservados
         </p>
       </div>
 
@@ -204,9 +203,8 @@ const Auth = () => {
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl gradient-primary mb-4 shadow-lg shadow-primary/25">
               <Sparkles className="w-7 h-7 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-bold">
-              <span className="text-foreground">Vida</span>
-              <span className="text-gradient">Flow</span>
+            <h1 className="text-2xl font-bold text-foreground">
+              Vertice
             </h1>
             <p className="text-muted-foreground text-sm mt-1">Sua jornada começa aqui</p>
           </div>

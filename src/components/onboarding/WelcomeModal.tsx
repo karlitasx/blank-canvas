@@ -30,7 +30,7 @@ const WelcomeModal = ({ open, onStartTour, onExplore }: WelcomeModalProps) => {
             </div>
             
             <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/20 text-primary-foreground text-sm font-medium mb-4 backdrop-blur-sm">
-              Bem-vinda ao VidaFlow
+              Bem-vinda ao Vertice
             </span>
             
             <h2 className="text-2xl font-extrabold text-primary-foreground mb-2">
