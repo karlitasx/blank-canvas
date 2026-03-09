@@ -77,7 +77,12 @@ const GymRats = () => {
   const handleUploadCheckin = async () => {
     if (!selectedFile || !selectedChallenge) return;
 
-    const result = await uploadCheckinPhoto(selectedChallenge.id, selectedFile, caption);
+    const result = await uploadCheckinPhoto(
+      selectedChallenge.id,
+      selectedFile,
+      caption,
+      selectedChallenge.points_per_checkin
+    );
     if (result) {
       setShowUploadModal(false);
       setSelectedFile(null);
