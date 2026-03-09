@@ -309,6 +309,11 @@ const Finances = () => {
           />
         </TabsContent>
 
+        {/* IA - Assistente Veve */}
+        <TabsContent value="ai" className="animate-fade-in mt-6">
+          <VeveInlineAssistant />
+        </TabsContent>
+
         {/* Investimentos */}
         <TabsContent value="investments" className="animate-fade-in mt-6 space-y-8">
           <EmergencyFundCalculator />
