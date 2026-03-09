@@ -344,6 +344,7 @@ const Finances = () => {
         )}
       </div>
 
+      <AddTransactionModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onAdd={handleAddTransaction}
