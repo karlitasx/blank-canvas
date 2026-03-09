@@ -203,9 +203,8 @@ const Auth = () => {
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl gradient-primary mb-4 shadow-lg shadow-primary/25">
               <Sparkles className="w-7 h-7 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-bold">
-              <span className="text-foreground">Vida</span>
-              <span className="text-gradient">Flow</span>
+            <h1 className="text-2xl font-bold text-foreground">
+              Vertice
             </h1>
             <p className="text-muted-foreground text-sm mt-1">Sua jornada começa aqui</p>
           </div>
