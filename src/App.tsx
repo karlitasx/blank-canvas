@@ -26,6 +26,7 @@ import PublicProfile from "./pages/PublicProfile";
 import GymRats from "./pages/GymRats";
 import FirstSteps from "./pages/FirstSteps";
 import Rules from "./pages/Rules";
+import Novidades from "./pages/Novidades";
 const queryClient = new QueryClient();
 
 function AuthRoute({ children }: { children: React.ReactNode }) {
