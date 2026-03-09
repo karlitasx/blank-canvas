@@ -139,7 +139,7 @@ const Admin = () => {
           </a>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 
