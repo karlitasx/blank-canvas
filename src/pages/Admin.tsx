@@ -40,7 +40,7 @@ const Admin = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <DashboardLayout activeNav="/admin">
         <div className="max-w-6xl mx-auto space-y-6">
           <Skeleton className="h-10 w-48" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
