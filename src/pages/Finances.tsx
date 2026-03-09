@@ -228,7 +228,7 @@ const Finances = () => {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-6">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-6">
           {financeTabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.value;
