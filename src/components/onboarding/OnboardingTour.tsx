@@ -9,32 +9,39 @@ const OnboardingTour = ({ run, onFinish }: OnboardingTourProps) => {
   const steps: Step[] = [
     {
       target: '[data-tour="hero"]',
-      content: '👋 Bem-vindo! Aqui você acompanha seu progresso diário e motivação.',
+      content: '✨ Bem-vinda! Conheça a comunidade e tudo que preparamos para você.',
       disableBeacon: true,
+      title: '✨ Bem-vinda!',
     },
     {
       target: '[data-tour="quick-stats"]',
-      content: '📊 Suas estatísticas principais: pontos, nível, sequências e conquistas desbloqueadas.',
+      content: 'Aqui ficam suas estatísticas: pontos, nível, sequências e conquistas.',
+      title: '📊 Estatísticas',
     },
     {
       target: '[data-tour="daily-progress"]',
-      content: '✅ Acompanhe seus hábitos do dia e marque como concluídos.',
+      content: 'Acompanhe seus hábitos do dia e marque como concluídos.',
+      title: '✅ Progresso Diário',
     },
     {
       target: '[data-tour="virtual-plant"]',
-      content: '🌱 Sua planta virtual cresce conforme você completa seus hábitos!',
+      content: 'Sua planta virtual cresce conforme você completa seus hábitos!',
+      title: '🌱 Planta Virtual',
     },
     {
       target: '[data-tour="quick-nav"]',
-      content: '🚀 Acesso rápido para todas as seções: Hábitos, Finanças, Autocuidado e mais.',
+      content: 'Acesso rápido para Hábitos, Finanças, Autocuidado e mais.',
+      title: '🚀 Navegação Rápida',
     },
     {
       target: '[data-tour="sidebar"]',
-      content: '📱 Use o menu lateral (ou inferior no celular) para navegar entre as páginas.',
+      content: 'Use o menu lateral (ou inferior no celular) para navegar entre as páginas.',
+      title: '📱 Menu',
     },
     {
       target: '[data-tour="achievements"]',
-      content: '🏆 Suas conquistas recentes aparecem aqui. Complete desafios para ganhar mais!',
+      content: 'Suas conquistas recentes aparecem aqui. Complete desafios para ganhar mais!',
+      title: '🏆 Conquistas',
     },
   ];
 
