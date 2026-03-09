@@ -117,8 +117,8 @@ const Profile = () => {
   const longestStreak = dbStats?.longest_streak || 0;
   const habitsCompleted = dbStats?.habits_completed || 0;
   const memberSince = user?.created_at 
-    ? new Date(user.created_at).toLocaleDateString('pt-BR') 
-    : 'Recentemente';
+    ? format(new Date(user.created_at), "MMMM 'de' yyyy", { locale: ptBR })
+    : 'recentemente';
 
   // Update edited name when profile loads
   useEffect(() => {
