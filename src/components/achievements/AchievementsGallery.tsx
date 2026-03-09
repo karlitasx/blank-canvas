@@ -258,37 +258,39 @@ const AchievementsGallery = () => {
       </div>
 
       {/* Achievements Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {sortedAchievements.map((achievement, index) => {
-          const isTemp = (achievement as any)._isTemporary;
-          const expiresAt = (achievement as any)._expiresAt;
-          return (
-            <div
-              key={achievement.id}
-              className="animate-fade-in"
-              style={{ animationDelay: `${index * 50}ms` }}
-            >
-              {isTemp && (
-                <div className="flex items-center gap-1.5 mb-1 ml-1">
-                  <Badge variant="outline" className="text-xs gap-1 border-accent text-accent">
-                    <Clock className="h-3 w-3" />
-                    Temporária
-                  </Badge>
-                  {expiresAt && (
-                    <span className="text-xs text-muted-foreground">
-                      até {new Date(expiresAt).toLocaleDateString("pt-BR")}
-                    </span>
-                  )}
-                </div>
-              )}
-              <AchievementCard
-                achievement={achievement}
-                progress={getAchievementProgress(achievement.id)}
-                onShare={achievement.isUnlocked ? handleShare : undefined}
-              />
-            </div>
-          );
-        })}
+      <div className="max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {sortedAchievements.map((achievement, index) => {
+            const isTemp = (achievement as any)._isTemporary;
+            const expiresAt = (achievement as any)._expiresAt;
+            return (
+              <div
+                key={achievement.id}
+                className="animate-fade-in"
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
+                {isTemp && (
+                  <div className="flex items-center gap-1.5 mb-1 ml-1">
+                    <Badge variant="outline" className="text-xs gap-1 border-accent text-accent">
+                      <Clock className="h-3 w-3" />
+                      Temporária
+                    </Badge>
+                    {expiresAt && (
+                      <span className="text-xs text-muted-foreground">
+                        até {new Date(expiresAt).toLocaleDateString("pt-BR")}
+                      </span>
+                    )}
+                  </div>
+                )}
+                <AchievementCard
+                  achievement={achievement}
+                  progress={getAchievementProgress(achievement.id)}
+                  onShare={achievement.isUnlocked ? handleShare : undefined}
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Empty state */}
