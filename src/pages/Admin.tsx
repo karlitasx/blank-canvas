@@ -1,4 +1,5 @@
 import { Shield, RefreshCw } from "lucide-react";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -39,7 +40,7 @@ const Admin = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <DashboardLayout activeNav="/admin">
         <div className="max-w-6xl mx-auto space-y-6">
           <Skeleton className="h-10 w-48" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -49,12 +50,12 @@ const Admin = () => {
           </div>
           <Skeleton className="h-96" />
         </div>
-      </div>
+      </DashboardLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6">
+    <DashboardLayout activeNav="/admin">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -138,7 +139,7 @@ const Admin = () => {
           </a>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 
