@@ -347,9 +347,9 @@ const Finances = () => {
         )}
       </div>
 
-      {/* Tabs */}
+      {/* Tabs - Cards style for mobile */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-6">
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 mb-6">
           {financeTabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.value;
@@ -357,14 +357,14 @@ const Finances = () => {
               <button
                 key={tab.value}
                 onClick={() => setActiveTab(tab.value)}
-                className={`flex items-center gap-2.5 p-3 rounded-xl border text-sm font-medium transition-all ${
+                className={`flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2.5 p-3 rounded-xl border text-xs sm:text-sm font-medium transition-all ${
                   isActive
                     ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20"
                     : "bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground"
                 }`}
               >
-                <Icon className="w-4 h-4 shrink-0" />
-                <span className="truncate">{tab.label}</span>
+                <Icon className="w-5 h-5 sm:w-4 sm:h-4 shrink-0" />
+                <span className="truncate text-center sm:text-left">{tab.label}</span>
               </button>
             );
           })}
