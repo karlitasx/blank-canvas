@@ -182,6 +182,73 @@ const Profile = () => {
     </div>
   );
 
+  // Achievements Grid Component for Profile
+  const ProfileAchievementsGrid = () => {
+    const { getAllAchievements, getAchievementProgress } = useAchievementsContext();
+    const achievements = getAllAchievements();
+    
+    // Show first 6 achievements, prioritizing unlocked ones
+    const sortedAchievements = [...achievements].sort((a, b) => {
+      if (a.isUnlocked && !b.isUnlocked) return -1;
+      if (!a.isUnlocked && b.isUnlocked) return 1;
+      return 0;
+    }).slice(0, 6);
+
+    return (
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {sortedAchievements.map((achievement) => (
+          <div
+            key={achievement.id}
+            className={cn(
+              "relative p-3 rounded-xl border transition-all",
+              achievement.isUnlocked
+                ? "bg-card border-primary/30 hover:shadow-md"
+                : "bg-muted/30 border-muted/20 opacity-60"
+            )}
+          >
+            {/* Rarity Badge */}
+            <div 
+              className={cn(
+                "absolute top-2 right-2 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase",
+                achievement.isUnlocked 
+                  ? `bg-gradient-to-r ${RARITY_COLORS[achievement.rarity]} text-white` 
+                  : "bg-muted text-muted-foreground"
+              )}
+            >
+              {RARITY_LABELS[achievement.rarity]}
+            </div>
+
+            <div className="flex flex-col items-center text-center">
+              <div 
+                className={cn(
+                  "w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-2",
+                  achievement.isUnlocked 
+                    ? `bg-gradient-to-br ${RARITY_COLORS[achievement.rarity]}` 
+                    : "bg-muted"
+                )}
+              >
+                {achievement.isUnlocked ? achievement.emoji : <Lock className="w-5 h-5 text-muted-foreground" />}
+              </div>
+              <p className={cn(
+                "text-xs font-semibold line-clamp-1",
+                achievement.isUnlocked ? "text-foreground" : "text-muted-foreground"
+              )}>
+                {achievement.name}
+              </p>
+              {achievement.isUnlocked ? (
+                <p className="text-[10px] text-accent font-medium mt-1">+{achievement.points} pts</p>
+              ) : (
+                <div className="w-full mt-1">
+                  <Progress value={getAchievementProgress(achievement.id)} className="h-1" />
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   if (isLoading) {
     return (
       <DashboardLayout activeNav="/profile">
