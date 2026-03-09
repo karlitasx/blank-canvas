@@ -239,8 +239,8 @@ const GroupCard = ({ group, index, onSelect }: { group: Group; index: number; on
         </p>
 
         {/* Footer */}
-        <div className="mt-auto pt-1 flex items-end justify-between">
-          <span className="text-xs text-primary font-medium">Acessar grupo →</span>
+        <div className="mt-auto pt-1 flex items-end justify-end">
+          <span className="text-xs text-muted-foreground italic">🔒 Grupo fechado</span>
         </div>
       </div>
     </div>
