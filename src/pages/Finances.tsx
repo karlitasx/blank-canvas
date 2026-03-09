@@ -160,50 +160,28 @@ const Finances = () => {
         </div>
       </div>
 
-      {/* Centered Action Row */}
-      <div className="flex flex-col items-center gap-3 mb-6">
-        {/* Filters Button */}
-        <button
-          onClick={() => setShowFilters(!showFilters)}
-          className="w-full max-w-md py-3 px-5 rounded-xl border border-border bg-card text-foreground flex items-center justify-center gap-2 hover:bg-muted transition-colors"
-        >
-          <Filter className="w-4 h-4 text-muted-foreground" />
-          <span className="text-sm font-medium">Filtros</span>
-        </button>
-
-        {/* Veve Button */}
-        <button
-          onClick={() => setVeveOpen(true)}
-          className="w-full max-w-md py-3 px-5 rounded-xl border border-primary/30 text-primary flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors"
-        >
-          <Sparkles className="w-4 h-4" />
-          <span className="text-sm font-medium">Veve</span>
-        </button>
-
-        {/* Add Transaction - Central CTA */}
+      {/* Action Row */}
+      <div className="flex items-center justify-between mb-6">
         <Button
           onClick={() => setIsModalOpen(true)}
-          className="btn-gradient gap-2 px-8 py-5 text-sm font-semibold rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
+          className="btn-gradient gap-2 px-6 py-5 text-sm font-semibold rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
         >
           <Plus className="w-5 h-5" />
           Adicionar transação
         </Button>
 
-        <LgpdNotice />
-      </div>
-
-      {/* Collapsible Filters */}
-      {showFilters && (
-        <div className="mb-6 animate-fade-in">
-          <FinanceFilters
-            selectedPeriod={selectedPeriod}
-            selectedType={selectedType}
-            onPeriodChange={setSelectedPeriod}
-            onTypeChange={setSelectedType}
-            onClearFilters={handleClearFilters}
-          />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setVeveOpen(true)}
+            className="p-2 rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors"
+            aria-label="Assistente Veve"
+            title="Assistente Veve"
+          >
+            <Sparkles className="w-5 h-5 text-primary" />
+          </button>
+          <LgpdNotice />
         </div>
-      )}
+      </div>
 
       {/* Security Banner */}
       {showSecurityBanner && (
