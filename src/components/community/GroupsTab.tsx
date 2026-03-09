@@ -268,25 +268,6 @@ const GroupsTab = () => {
 
   const filteredGroups = getFilteredGroups();
 
-  // If a group is selected, show the detail view
-  if (selectedGroup) {
-    const storedBanners = getStoredBanners();
-    return (
-      <GroupDetailView
-        group={{
-          id: selectedGroup.id,
-          name: selectedGroup.name,
-          description: selectedGroup.description,
-          emoji: selectedGroup.emoji,
-          category: selectedGroup.category,
-          bannerUrl: storedBanners[selectedGroup.id] || selectedGroup.defaultBanner,
-        }}
-        onBack={() => setSelectedGroup(null)}
-        isSubscriber={false}
-      />
-    );
-  }
-
   return (
     <div className="space-y-5">
       {/* Sub-tabs */}
@@ -302,11 +283,6 @@ const GroupsTab = () => {
           <TabsTrigger value="joined" className="text-xs sm:text-sm rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-300">
             <Crown className="w-3.5 h-3.5 sm:mr-1.5" />
             <span>Meus Grupos</span>
-            {joinedGroups.length > 0 && (
-              <Badge variant="secondary" className="ml-1.5 text-[10px] px-1.5 py-0 hidden sm:inline-flex">
-                {joinedGroups.length}
-              </Badge>
-            )}
           </TabsTrigger>
           <TabsTrigger value="discover" className="text-xs sm:text-sm rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-300">
             <Sparkles className="w-3.5 h-3.5 sm:mr-1.5" />
@@ -318,7 +294,7 @@ const GroupsTab = () => {
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {filteredGroups.map((group, i) => (
-          <GroupCard key={group.id} group={group} index={i} onSelect={setSelectedGroup} />
+          <GroupCard key={group.id} group={group} index={i} />
         ))}
       </div>
 
