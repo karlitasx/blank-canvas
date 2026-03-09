@@ -112,7 +112,7 @@ const mockGroups: Group[] = [
   },
 ];
 
-const GroupCard = ({ group, index, onSelect }: { group: Group; index: number; onSelect: (group: Group) => void }) => {
+const GroupCard = ({ group, index }: { group: Group; index: number }) => {
   const [hovered, setHovered] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [bannerUrl, setBannerUrl] = useState(() => {
