@@ -324,7 +324,7 @@ const Finances = () => {
         financeType={financeType}
       />
 
-      <VeveAssistant />
+      <VeveAssistant externalOpen={veveOpen} onExternalOpenChange={setVeveOpen} />
     </DashboardLayout>
   );
 };
