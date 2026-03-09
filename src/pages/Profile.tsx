@@ -42,6 +42,12 @@ import {
   Wallet,
   CalendarDays,
   Gift,
+  Crown,
+  CreditCard,
+  Bookmark,
+  Settings,
+  Activity,
+  Eye,
 } from "lucide-react";
 import { toast } from "sonner";
 import XPProgressBar from "@/components/achievements/XPProgressBar";
