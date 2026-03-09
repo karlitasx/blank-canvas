@@ -10,7 +10,7 @@ interface Transaction {
   category: string;
   amount: number;
   type: "income" | "expense";
-  date: string;
+  date: string | Date;
 }
 
 interface InvestmentsOverviewProps {
