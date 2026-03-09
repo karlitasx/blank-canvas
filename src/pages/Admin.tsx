@@ -50,12 +50,12 @@ const Admin = () => {
           </div>
           <Skeleton className="h-96" />
         </div>
-      </div>
+      </DashboardLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6">
+    <DashboardLayout activeNav="/admin">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
