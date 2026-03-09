@@ -24,7 +24,7 @@ import NotFound from "./pages/NotFound";
 import Ranking from "./pages/Ranking";
 import PublicProfile from "./pages/PublicProfile";
 import GymRats from "./pages/GymRats";
-
+import FirstSteps from "./pages/FirstSteps";
 const queryClient = new QueryClient();
 
 function AuthRoute({ children }: { children: React.ReactNode }) {
@@ -61,6 +61,7 @@ const App = () => (
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/ranking" element={<Ranking />} />
                 <Route path="/gymrats" element={<GymRats />} />
+                <Route path="/primeiros-passos" element={<FirstSteps />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

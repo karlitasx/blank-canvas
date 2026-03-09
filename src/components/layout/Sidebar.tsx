@@ -14,7 +14,7 @@ const sections = [
   {
     titleKey: "Comece aqui!",
     items: [
-      { icon: Sparkles, label: "Primeiros Passos", href: "/?tour=welcome", highlight: true },
+      { icon: Sparkles, label: "Primeiros Passos", href: "/primeiros-passos", highlight: true },
       { icon: UserPlus, label: "Apresente-se", href: "/social?tab=introductions" },
       { icon: BookOpen, label: "Regras da Comunidade", href: "/social?tab=rules" },
     ],
@@ -65,14 +65,6 @@ const Sidebar = ({ activeItem = "/" }: SidebarProps) => {
   const { profile } = useProfile();
 
   const handleNavigate = (href: string) => {
-    if (href === "/?tour=welcome") {
-      if (location.pathname === "/") {
-        // Already on dashboard, just trigger via search param
-        navigate("/?tour=welcome", { replace: true });
-        window.location.search = "?tour=welcome";
-        return;
-      }
-    }
     navigate(href);
   };
 
