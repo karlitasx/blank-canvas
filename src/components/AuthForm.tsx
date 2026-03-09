@@ -39,9 +39,8 @@ const AuthForm = ({ onSuccess }: AuthFormProps) => {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full logo-gradient mb-4 shadow-lg shadow-primary/30">
             <Sparkles className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold">
-            <span className="text-foreground">Vida</span>
-            <span className="text-gradient">Flow</span>
+          <h1 className="text-3xl font-bold text-foreground">
+            Vertice
           </h1>
         </div>
 
