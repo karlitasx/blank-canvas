@@ -57,12 +57,17 @@ const WEIGHTS = {
 };
 
 const VirtualPlant = () => {
+  const { getDayProgress } = useRoutine();
+  
+  // Get today's routine progress
+  const todayRoutineProgress = getDayProgress(new Date());
+  
   // These would come from real data/context
   const [progressData] = useState({
     habitsCompleted: 75,    // percentage of habits done today
     goalsAchieved: 60,      // percentage of goals met
     streakDays: 7,          // consecutive days (max 30 for 100%)
-    tasksCompleted: 80,     // percentage of tasks done
+    tasksCompleted: todayRoutineProgress.percentage,     // NOW COMING FROM ROUTINE
     selfCareScore: 50,      // self-care check-in score
   });
 
