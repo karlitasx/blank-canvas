@@ -65,6 +65,7 @@ const App = () => (
                 <Route path="/gymrats" element={<GymRats />} />
                 <Route path="/primeiros-passos" element={<FirstSteps />} />
                 <Route path="/regras" element={<Rules />} />
+                <Route path="/novidades" element={<Novidades />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

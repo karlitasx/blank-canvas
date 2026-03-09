@@ -33,7 +33,7 @@ const sections = [
       { icon: Rss, label: "Feed", href: "/social" },
       { icon: Users, label: "Grupos e Temas", href: "/social?tab=groups" },
       { icon: Calendar, label: "Eventos", href: "/calendar" },
-      { icon: Bell, label: "Novidades", href: "/social?tab=news" },
+      { icon: Bell, label: "Novidades", href: "/novidades" },
     ],
   },
   {
