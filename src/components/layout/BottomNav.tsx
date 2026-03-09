@@ -5,7 +5,7 @@ import { usePreferences } from "@/contexts/PreferencesContext";
 import { MoreHorizontal, X } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const PRIMARY_HREFS = ["/", "/routine", "/finance", "/gymrats"];
+const PRIMARY_HREFS = ["/", "/routine", "/finance", "/social"];
 const primaryItems = navigationItems.filter(i => PRIMARY_HREFS.includes(i.href));
 const moreItems = navigationItems.filter(i => !PRIMARY_HREFS.includes(i.href));
 

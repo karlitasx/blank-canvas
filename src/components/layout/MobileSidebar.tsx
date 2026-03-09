@@ -6,7 +6,7 @@ import { toast } from "@/hooks/use-toast";
 import {
   Home, User, LogOut, HelpCircle, Calendar,
   Wallet, Target, Heart, Award, Trophy,
-  Sparkles, UserPlus, BookOpen, Users, Bell, Rss,
+  Sparkles, UserPlus, BookOpen, Users, Bell, Rss, Dumbbell,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
@@ -41,7 +41,9 @@ const sections = [
     items: [
       { icon: Target, label: "Rotina & Hábitos", href: "/routine" },
       { icon: Heart, label: "Autocuidado", href: "/selfcare" },
-      { icon: Award, label: "Conquistas", href: "/challenges" },
+      { icon: Dumbbell, label: "GymRats", href: "/gymrats" },
+      { icon: Target, label: "Desafios", href: "/challenges" },
+      { icon: Award, label: "Conquistas", href: "/achievements" },
       { icon: Trophy, label: "Ranking", href: "/ranking" },
     ],
   },

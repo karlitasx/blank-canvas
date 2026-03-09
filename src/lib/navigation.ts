@@ -1,4 +1,4 @@
-import { Home, DollarSign, User, Trophy, Heart, Award, Medal, CalendarDays, Dumbbell, LucideIcon } from "lucide-react";
+import { Home, DollarSign, User, Trophy, Heart, Award, Medal, CalendarDays, Calendar, Dumbbell, Target, LucideIcon } from "lucide-react";
 
 export interface NavItem {
   icon: LucideIcon;
@@ -13,11 +13,13 @@ export interface NavItem {
 export const navigationItems: NavItem[] = [
   { icon: Home, label: "Home", labelKey: "nav.dashboard", href: "/" },
   { icon: CalendarDays, label: "Rotina", labelKey: "nav.routine", href: "/routine" },
+  { icon: Calendar, label: "Calendário", labelKey: "nav.calendar", href: "/calendar" },
   { icon: DollarSign, label: "Finanças", labelKey: "nav.finances", href: "/finance" },
   { icon: Heart, label: "Autocuidado", labelKey: "nav.selfcare", href: "/selfcare" },
   { icon: Dumbbell, label: "GymRats", labelKey: "nav.gymrats", href: "/gymrats" },
+  { icon: Target, label: "Desafios", labelKey: "nav.challenges", href: "/challenges" },
+  { icon: Award, label: "Conquistas", labelKey: "nav.achievements", href: "/achievements" },
   { icon: Medal, label: "Ranking", labelKey: "nav.ranking", href: "/ranking" },
-  { icon: Award, label: "Conquistas", labelKey: "nav.achievements", href: "/challenges" },
   { icon: Trophy, label: "Social", labelKey: "nav.community", href: "/social" },
   { icon: User, label: "Perfil", labelKey: "nav.profile", href: "/profile" },
 ];
