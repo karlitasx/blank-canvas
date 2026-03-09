@@ -173,8 +173,32 @@ export const useAchievements = () => {
         return currentStats.communityPoints >= requirement.value;
       case 'wishes_completed':
         return currentStats.wishesCompleted >= requirement.value;
+      case 'routine_completed':
+        return currentStats.routineCompleted >= requirement.value;
+      case 'events_created':
+        return currentStats.eventsCreated >= requirement.value;
+      case 'challenges_joined':
+        return currentStats.challengesJoined >= requirement.value;
+      case 'posts_created':
+        return currentStats.postsCreated >= requirement.value;
+      case 'likes_given':
+        return currentStats.likesGiven >= requirement.value;
+      case 'comments_made':
+        return currentStats.commentsMade >= requirement.value;
+      case 'followers_gained':
+        return currentStats.followersGained >= requirement.value;
+      case 'goals_created':
+        return currentStats.goalsCreated >= requirement.value;
+      case 'goals_completed':
+        return currentStats.goalsCompleted >= requirement.value;
+      case 'cards_created':
+        return currentStats.cardsCreated >= requirement.value;
+      case 'categories_created':
+        return currentStats.categoriesCreated >= requirement.value;
+      case 'investments_made':
+        return currentStats.investmentsMade >= requirement.value;
       case 'first_action':
-        return true; // Unlocked on first use
+        return true;
       case 'category_master':
         const category = requirement.category || '';
         return (currentStats.categoryCompletions[category] || 0) >= requirement.value;
