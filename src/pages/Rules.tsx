@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import {
   Heart, Shield, Ban, Users, MessageCircle, Share2, HelpCircle,
-  Rss, Wallet, Calendar, Diamond,
+  Rss, Wallet, Calendar, Diamond, Target, HeartPulse, Dumbbell, Trophy,
 } from "lucide-react";
 
 const rules = [
