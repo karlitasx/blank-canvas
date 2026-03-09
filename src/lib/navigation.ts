@@ -1,4 +1,4 @@
-import { Home, Target, DollarSign, User, Trophy, Heart, Award, Medal, LucideIcon } from "lucide-react";
+import { Home, Target, DollarSign, User, Trophy, Heart, Award, Medal, CalendarDays, LucideIcon } from "lucide-react";
 
 export interface NavItem {
   icon: LucideIcon;
@@ -13,6 +13,7 @@ export interface NavItem {
 export const navigationItems: NavItem[] = [
   { icon: Home, label: "Home", labelKey: "nav.dashboard", href: "/" },
   { icon: Target, label: "Hábitos", labelKey: "nav.habits", href: "/habits" },
+  { icon: CalendarDays, label: "Rotina", labelKey: "nav.routine", href: "/routine" },
   { icon: DollarSign, label: "Finanças", labelKey: "nav.finances", href: "/finance" },
   { icon: Heart, label: "Autocuidado", labelKey: "nav.selfcare", href: "/selfcare" },
   { icon: Medal, label: "Ranking", labelKey: "nav.ranking", href: "/ranking" },

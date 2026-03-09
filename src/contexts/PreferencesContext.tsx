@@ -32,6 +32,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Navigation
     'nav.dashboard': 'Dashboard',
     'nav.habits': 'Hábitos',
+    'nav.routine': 'Rotina',
     'nav.agenda': 'Agenda',
     'nav.finances': 'Finanças',
     'nav.community': 'Comunidade',
@@ -117,6 +118,7 @@ const translations: Record<Language, Record<string, string>> = {
   'en-US': {
     'nav.dashboard': 'Dashboard',
     'nav.habits': 'Habits',
+    'nav.routine': 'Routine',
     'nav.agenda': 'Agenda',
     'nav.finances': 'Finances',
     'nav.community': 'Community',
@@ -196,6 +198,7 @@ const translations: Record<Language, Record<string, string>> = {
   'es': {
     'nav.dashboard': 'Panel',
     'nav.habits': 'Hábitos',
+    'nav.routine': 'Rutina',
     'nav.agenda': 'Agenda',
     'nav.finances': 'Finanzas',
     'nav.community': 'Comunidad',
