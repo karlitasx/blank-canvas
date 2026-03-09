@@ -25,6 +25,18 @@ export interface UserStats {
   gratitudeEntries: number;
   communityPoints: number;
   wishesCompleted: number;
+  routineCompleted: number;
+  eventsCreated: number;
+  challengesJoined: number;
+  postsCreated: number;
+  likesGiven: number;
+  commentsMade: number;
+  followersGained: number;
+  goalsCreated: number;
+  goalsCompleted: number;
+  cardsCreated: number;
+  categoriesCreated: number;
+  investmentsMade: number;
   categoryCompletions: Record<string, number>;
 }
 
@@ -43,6 +55,18 @@ const defaultStats: UserStats = {
   gratitudeEntries: 0,
   communityPoints: 0,
   wishesCompleted: 0,
+  routineCompleted: 0,
+  eventsCreated: 0,
+  challengesJoined: 0,
+  postsCreated: 0,
+  likesGiven: 0,
+  commentsMade: 0,
+  followersGained: 0,
+  goalsCreated: 0,
+  goalsCompleted: 0,
+  cardsCreated: 0,
+  categoriesCreated: 0,
+  investmentsMade: 0,
   categoryCompletions: {},
 };
 
@@ -149,8 +173,32 @@ export const useAchievements = () => {
         return currentStats.communityPoints >= requirement.value;
       case 'wishes_completed':
         return currentStats.wishesCompleted >= requirement.value;
+      case 'routine_completed':
+        return currentStats.routineCompleted >= requirement.value;
+      case 'events_created':
+        return currentStats.eventsCreated >= requirement.value;
+      case 'challenges_joined':
+        return currentStats.challengesJoined >= requirement.value;
+      case 'posts_created':
+        return currentStats.postsCreated >= requirement.value;
+      case 'likes_given':
+        return currentStats.likesGiven >= requirement.value;
+      case 'comments_made':
+        return currentStats.commentsMade >= requirement.value;
+      case 'followers_gained':
+        return currentStats.followersGained >= requirement.value;
+      case 'goals_created':
+        return currentStats.goalsCreated >= requirement.value;
+      case 'goals_completed':
+        return currentStats.goalsCompleted >= requirement.value;
+      case 'cards_created':
+        return currentStats.cardsCreated >= requirement.value;
+      case 'categories_created':
+        return currentStats.categoriesCreated >= requirement.value;
+      case 'investments_made':
+        return currentStats.investmentsMade >= requirement.value;
       case 'first_action':
-        return true; // Unlocked on first use
+        return true;
       case 'category_master':
         const category = requirement.category || '';
         return (currentStats.categoryCompletions[category] || 0) >= requirement.value;
@@ -275,48 +323,58 @@ export const useAchievements = () => {
     
     switch (requirement.type) {
       case 'habits_completed':
-        current = stats.habitsCompleted;
-        break;
+        current = stats.habitsCompleted; break;
       case 'habits_created':
-        current = stats.habitsCreated;
-        break;
+        current = stats.habitsCreated; break;
       case 'streak_days':
       case 'total_streak':
-        current = stats.longestStreak;
-        break;
+        current = stats.longestStreak; break;
       case 'perfect_day':
-        current = stats.perfectDays;
-        break;
+        current = stats.perfectDays; break;
       case 'weekly_goal':
-        current = stats.perfectWeeks;
-        break;
+        current = stats.perfectWeeks; break;
       case 'transactions_logged':
-        current = stats.transactionsLogged;
-        break;
+        current = stats.transactionsLogged; break;
       case 'savings_goal_reached':
-        current = stats.savingsGoalPercent;
-        break;
+        current = stats.savingsGoalPercent; break;
       case 'budget_under':
-        current = stats.budgetUnderDays;
-        break;
+        current = stats.budgetUnderDays; break;
       case 'selfcare_checkins':
-        current = stats.selfcareCheckins;
-        break;
+        current = stats.selfcareCheckins; break;
       case 'mood_streak':
-        current = stats.moodStreak;
-        break;
+        current = stats.moodStreak; break;
       case 'gratitude_entries':
-        current = stats.gratitudeEntries;
-        break;
+        current = stats.gratitudeEntries; break;
       case 'community_points':
-        current = stats.communityPoints;
-        break;
+        current = stats.communityPoints; break;
       case 'wishes_completed':
-        current = stats.wishesCompleted;
-        break;
+        current = stats.wishesCompleted; break;
+      case 'routine_completed':
+        current = stats.routineCompleted; break;
+      case 'events_created':
+        current = stats.eventsCreated; break;
+      case 'challenges_joined':
+        current = stats.challengesJoined; break;
+      case 'posts_created':
+        current = stats.postsCreated; break;
+      case 'likes_given':
+        current = stats.likesGiven; break;
+      case 'comments_made':
+        current = stats.commentsMade; break;
+      case 'followers_gained':
+        current = stats.followersGained; break;
+      case 'goals_created':
+        current = stats.goalsCreated; break;
+      case 'goals_completed':
+        current = stats.goalsCompleted; break;
+      case 'cards_created':
+        current = stats.cardsCreated; break;
+      case 'categories_created':
+        current = stats.categoriesCreated; break;
+      case 'investments_made':
+        current = stats.investmentsMade; break;
       case 'category_master':
-        current = stats.categoryCompletions[requirement.category || ''] || 0;
-        break;
+        current = stats.categoryCompletions[requirement.category || ''] || 0; break;
       default:
         current = 0;
     }
