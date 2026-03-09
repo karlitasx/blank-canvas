@@ -9,6 +9,8 @@ import AdminUsersTable from "@/components/admin/AdminUsersTable";
 import AdminChallengesSection from "@/components/admin/AdminChallengesSection";
 import AdminAchievementsSection from "@/components/admin/AdminAchievementsSection";
 import AdminEventsSection from "@/components/admin/AdminEventsSection";
+import AdminGroupsSection from "@/components/admin/AdminGroupsSection";
+import AdminNovidadesSection from "@/components/admin/AdminNovidadesSection";
 
 const Admin = () => {
   const {
@@ -26,9 +28,13 @@ const Admin = () => {
     suspendUser,
     reactivateUser,
     createChallenge,
+    editChallenge,
     toggleChallengeVisibility,
+    deleteChallenge,
     createAchievement,
+    editAchievement,
     toggleAchievementActive,
+    deleteAchievement,
   } = useAdminData();
 
   if (loading) {
@@ -59,7 +65,7 @@ const Admin = () => {
             <div>
               <h1 className="text-2xl font-bold text-foreground">Painel Admin</h1>
               <p className="text-sm text-muted-foreground">
-                Controle e moderação do aplicativo
+                Controle total do aplicativo
               </p>
             </div>
           </div>
@@ -74,36 +80,31 @@ const Admin = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="posts" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-flex">
-            <TabsTrigger value="posts">Moderação</TabsTrigger>
-            <TabsTrigger value="users">Usuários</TabsTrigger>
-            <TabsTrigger value="challenges">Desafios</TabsTrigger>
-            <TabsTrigger value="achievements">Conquistas</TabsTrigger>
-            <TabsTrigger value="events">Eventos</TabsTrigger>
+          <TabsList className="flex w-full overflow-x-auto no-scrollbar lg:w-auto lg:inline-flex">
+            <TabsTrigger value="posts" className="text-xs sm:text-sm">Moderação</TabsTrigger>
+            <TabsTrigger value="users" className="text-xs sm:text-sm">Usuários</TabsTrigger>
+            <TabsTrigger value="challenges" className="text-xs sm:text-sm">Desafios</TabsTrigger>
+            <TabsTrigger value="achievements" className="text-xs sm:text-sm">Conquistas</TabsTrigger>
+            <TabsTrigger value="events" className="text-xs sm:text-sm">Eventos</TabsTrigger>
+            <TabsTrigger value="groups" className="text-xs sm:text-sm">Grupos</TabsTrigger>
+            <TabsTrigger value="novidades" className="text-xs sm:text-sm">Novidades</TabsTrigger>
           </TabsList>
 
           <TabsContent value="posts">
-            <AdminPostsTable
-              posts={posts}
-              onHide={hidePost}
-              onUnhide={unhidePost}
-              onDelete={deletePost}
-            />
+            <AdminPostsTable posts={posts} onHide={hidePost} onUnhide={unhidePost} onDelete={deletePost} />
           </TabsContent>
 
           <TabsContent value="users">
-            <AdminUsersTable
-              users={users}
-              onSuspend={suspendUser}
-              onReactivate={reactivateUser}
-            />
+            <AdminUsersTable users={users} onSuspend={suspendUser} onReactivate={reactivateUser} />
           </TabsContent>
 
           <TabsContent value="challenges">
             <AdminChallengesSection
               challenges={challenges}
               onCreate={createChallenge}
+              onEdit={editChallenge}
               onToggleVisibility={toggleChallengeVisibility}
+              onDelete={deleteChallenge}
             />
           </TabsContent>
 
@@ -111,21 +112,28 @@ const Admin = () => {
             <AdminAchievementsSection
               achievements={achievements}
               onCreate={createAchievement}
+              onEdit={editAchievement}
               onToggleActive={toggleAchievementActive}
+              onDelete={deleteAchievement}
             />
           </TabsContent>
 
           <TabsContent value="events">
             <AdminEventsSection events={publicEvents} onRefetch={refetch} />
           </TabsContent>
+
+          <TabsContent value="groups">
+            <AdminGroupsSection />
+          </TabsContent>
+
+          <TabsContent value="novidades">
+            <AdminNovidadesSection />
+          </TabsContent>
         </Tabs>
 
         {/* Back link */}
         <div className="text-center pt-4">
-          <a
-            href="/"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
+          <a href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             ← Voltar ao Dashboard
           </a>
         </div>
