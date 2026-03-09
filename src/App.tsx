@@ -54,6 +54,7 @@ const App = () => (
                 <Route path="/challenges" element={<Challenges />} />
                 <Route path="/calendar" element={<CalendarPage />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/user/:userId" element={<PublicProfile />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/ranking" element={<Ranking />} />
               </Route>
