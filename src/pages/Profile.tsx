@@ -42,6 +42,12 @@ import {
   Wallet,
   CalendarDays,
   Gift,
+  Crown,
+  CreditCard,
+  Bookmark,
+  Settings,
+  Activity,
+  Eye,
 } from "lucide-react";
 import { toast } from "sonner";
 import XPProgressBar from "@/components/achievements/XPProgressBar";
@@ -262,13 +268,13 @@ const Profile = () => {
                 )}
               </div>
               <p className="text-muted-foreground text-sm">{user?.email}</p>
-              <div className="flex items-center gap-3 mt-2">
-                <span className="px-2.5 py-1 rounded-md bg-primary/15 text-primary text-sm font-medium">
-                  {LEVEL_EMOJIS[currentLevel]} {currentLevel}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  Membro desde {memberSince}
-                </span>
+              
+              {/* Subscription Badge */}
+              <div className="mt-3">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-primary to-accent text-white text-sm font-medium shadow-md">
+                  <Crown className="w-4 h-4" />
+                  Período de teste
+                </div>
               </div>
             </div>
           </CardContent>
@@ -285,33 +291,72 @@ const Profile = () => {
           </CardContent>
         </Card>
 
+        {/* Quick Navigation Cards */}
+        <div className="grid grid-cols-3 gap-3">
+          <Button 
+            variant="outline" 
+            className="h-auto py-4 flex flex-col items-center gap-2 bg-card hover:bg-muted border-border"
+          >
+            <CreditCard className="w-5 h-5 text-primary" />
+            <span className="text-xs font-medium">Assinatura</span>
+          </Button>
+          <Button 
+            variant="outline" 
+            className="h-auto py-4 flex flex-col items-center gap-2 bg-card hover:bg-muted border-border"
+          >
+            <Trophy className="w-5 h-5 text-accent" />
+            <span className="text-xs font-medium">Conquistas</span>
+          </Button>
+          <Button 
+            variant="outline" 
+            className="h-auto py-4 flex flex-col items-center gap-2 bg-card hover:bg-muted border-border"
+          >
+            <Settings className="w-5 h-5 text-muted-foreground" />
+            <span className="text-xs font-medium">Config</span>
+          </Button>
+        </div>
+
+        {/* Social Stats Cards */}
+        <div className="grid grid-cols-2 gap-4">
+          <Card className="bg-card border-border">
+            <CardContent className="pt-6 text-center">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                <Users className="w-6 h-6 text-primary" />
+              </div>
+              <p className="text-3xl font-bold text-foreground mb-1">0</p>
+              <p className="text-sm text-muted-foreground">Grupos</p>
+            </CardContent>
+          </Card>
+          <Card className="bg-card border-border">
+            <CardContent className="pt-6 text-center">
+              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-3">
+                <Heart className="w-6 h-6 text-accent" />
+              </div>
+              <p className="text-3xl font-bold text-foreground mb-1">0</p>
+              <p className="text-sm text-muted-foreground">Curtidas recebidas</p>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Tabs */}
-        <Tabs defaultValue="stats" className="space-y-4">
-          <TabsList className="bg-card border border-border p-1 w-full overflow-x-auto">
-            <TabsTrigger value="stats" className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-              <TrendingUp className="w-4 h-4 mr-1.5" />
-              <span className="hidden sm:inline">{t('profile.stats')}</span>
-              <span className="sm:hidden text-xs">Stats</span>
+        <Tabs defaultValue="overview" className="space-y-4">
+          <TabsList className="bg-card border border-border p-1 w-full">
+            <TabsTrigger value="overview" className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Eye className="w-4 h-4 mr-1.5" />
+              Visão
             </TabsTrigger>
             <TabsTrigger value="activity" className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-              <Clock className="w-4 h-4 mr-1.5" />
-              <span className="hidden sm:inline">Atividades</span>
-              <span className="sm:hidden text-xs">Atividades</span>
+              <Activity className="w-4 h-4 mr-1.5" />
+              Atividades
             </TabsTrigger>
-            <TabsTrigger value="settings" className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-              <User className="w-4 h-4 mr-1.5" />
-              <span className="hidden sm:inline">{t('profile.settings')}</span>
-              <span className="sm:hidden text-xs">Config</span>
-            </TabsTrigger>
-            <TabsTrigger value="notifications" className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-              <Bell className="w-4 h-4 mr-1.5" />
-              <span className="hidden sm:inline">{t('profile.notifications')}</span>
-              <span className="sm:hidden text-xs">Alertas</span>
+            <TabsTrigger value="saved" className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Bookmark className="w-4 h-4 mr-1.5" />
+              Salvas
             </TabsTrigger>
           </TabsList>
 
-          {/* Stats Tab */}
-          <TabsContent value="stats" className="space-y-4 animate-fade-in">
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="space-y-4 animate-fade-in">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <ProfileStatCard 
                 icon={Target} 
@@ -375,6 +420,21 @@ const Profile = () => {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          {/* Saved Tab */}
+          <TabsContent value="saved" className="animate-fade-in">
+            <Card className="bg-card border-border">
+              <CardContent className="pt-6">
+                <div className="text-center py-12">
+                  <Bookmark className="w-12 h-12 text-muted-foreground/40 mx-auto mb-3" />
+                  <p className="text-muted-foreground">Nenhum item salvo</p>
+                  <p className="text-muted-foreground/60 text-sm mt-1">
+                    Seus itens salvos aparecerão aqui
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Activity Tab */}
