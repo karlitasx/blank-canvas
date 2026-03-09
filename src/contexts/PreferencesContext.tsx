@@ -32,6 +32,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Navigation
     'nav.dashboard': 'Dashboard',
     'nav.habits': 'Hábitos',
+    'nav.routine': 'Rotina',
     'nav.agenda': 'Agenda',
     'nav.finances': 'Finanças',
     'nav.community': 'Comunidade',
