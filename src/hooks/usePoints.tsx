@@ -17,6 +17,10 @@ const POINT_VALUES = {
   selfcare_checkin: 10,
   selfcare_ritual: 5,
   selfcare_pillar: 3,
+  introduction_create: 15,
+  introduction_like: 2,
+  introduction_comment: 5,
+  connection_made: 10,
 } as const;
 
 // Daily limits for each action type
