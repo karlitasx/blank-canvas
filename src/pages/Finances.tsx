@@ -205,6 +205,28 @@ const Finances = () => {
       {/* Summary Cards */}
       <SummaryCards balance={stats.balance} income={stats.income} expenses={stats.expenses} />
 
+      {/* Filters Section */}
+      <div className="mt-4 mb-2">
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-3"
+        >
+          <Filter className="w-4 h-4" />
+          <span>{showFilters ? "Ocultar filtros" : "Mostrar filtros"}</span>
+        </button>
+        {showFilters && (
+          <div className="animate-fade-in">
+            <FinanceFilters
+              selectedPeriod={selectedPeriod}
+              selectedType={selectedType}
+              onPeriodChange={setSelectedPeriod}
+              onTypeChange={setSelectedType}
+              onClearFilters={handleClearFilters}
+            />
+          </div>
+        )}
+      </div>
+
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-6">
         <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-6">
@@ -327,27 +349,8 @@ const Finances = () => {
         </TabsContent>
       </Tabs>
 
-      {/* Filters Section */}
-      <div className="mt-6">
-        <button
-          onClick={() => setShowFilters(!showFilters)}
-          className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-3"
-        >
-          <Filter className="w-4 h-4" />
-          <span>{showFilters ? "Ocultar filtros" : "Mostrar filtros"}</span>
-        </button>
-        {showFilters && (
-          <div className="animate-fade-in">
-            <FinanceFilters
-              selectedPeriod={selectedPeriod}
-              selectedType={selectedType}
-              onPeriodChange={setSelectedPeriod}
-              onTypeChange={setSelectedType}
-              onClearFilters={handleClearFilters}
-            />
-          </div>
-        )}
-      </div>
+
+
 
       <AddTransactionModal
         isOpen={isModalOpen}
