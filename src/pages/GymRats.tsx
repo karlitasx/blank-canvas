@@ -624,6 +624,10 @@ const GymRats = () => {
       <CreateChallengeModal
         open={showCreateModal}
         onOpenChange={setShowCreateModal}
+        onSubmit={async (input) => {
+          const { createChallenge } = useSupabaseChallengesRef;
+          return createChallenge(input);
+        }}
       />
     </div>
   );
