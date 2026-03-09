@@ -12,6 +12,7 @@ import PillarBalance from "@/components/selfcare/PillarBalance";
 import ShareRitual from "@/components/selfcare/ShareRitual";
 import WeeklyEvolution from "@/components/selfcare/WeeklyEvolution";
 import GymRatsChallenges from "@/components/selfcare/GymRatsChallenges";
+import HairCareModule from "@/components/haircare/HairCareModule";
 
 // Self-care tips array
 const selfCareTips = [
