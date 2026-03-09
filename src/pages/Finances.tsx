@@ -228,23 +228,21 @@ const Finances = () => {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-6">
-        <div className="overflow-x-auto -mx-4 px-4 pb-1">
-          <TabsList className="inline-flex w-max bg-muted/50 rounded-xl p-1 h-auto gap-0.5">
-            {financeTabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <TabsTrigger
-                  key={tab.value}
-                  value={tab.value}
-                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg gap-1.5 text-xs sm:text-sm px-2.5 sm:px-3 py-2 whitespace-nowrap"
-                >
-                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                  <span>{tab.label}</span>
-                </TabsTrigger>
-              );
-            })}
-          </TabsList>
-        </div>
+        <TabsList className="flex flex-col sm:flex-row sm:flex-wrap w-full bg-muted/50 rounded-xl p-1.5 h-auto gap-1">
+          {financeTabs.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className="w-full sm:w-auto justify-start sm:justify-center data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg gap-2 text-sm px-3 py-2.5"
+              >
+                <Icon className="w-4 h-4 shrink-0" />
+                <span>{tab.label}</span>
+              </TabsTrigger>
+            );
+          })}
+        </TabsList>
 
         {/* Visão Geral */}
         <TabsContent value="overview" className="space-y-6 animate-fade-in mt-6">
