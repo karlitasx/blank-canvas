@@ -9,7 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { differenceInDays, parseISO, format, getDaysInMonth, startOfMonth, isSameMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Challenge, ChallengeParticipant } from "@/types/challenges";
+import { Challenge, ChallengeParticipant, DIFFICULTY_LEVELS } from "@/types/challenges";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
