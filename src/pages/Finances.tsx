@@ -156,18 +156,7 @@ const Finances = () => {
                 : "Gerencie suas receitas e despesas pessoais"}
             </p>
           </div>
-          <LgpdNotice />
         </div>
-
-        {(activeTab === "overview" || activeTab === "transactions") && (
-          <Button
-            onClick={() => setIsModalOpen(true)}
-            className="btn-gradient gap-2"
-          >
-            <Plus className="w-5 h-5" />
-            Nova Transação
-          </Button>
-        )}
       </div>
 
       {/* Action Row */}

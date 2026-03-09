@@ -17,8 +17,18 @@ const fallbackQuestions = [
   "📋 Explique o método 50/30/20",
 ];
 
-const VeveAssistant = () => {
-  const [isOpen, setIsOpen] = useState(false);
+interface VeveAssistantProps {
+  externalOpen?: boolean;
+  onExternalOpenChange?: (open: boolean) => void;
+}
+
+const VeveAssistant = ({ externalOpen, onExternalOpenChange }: VeveAssistantProps) => {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isOpen = externalOpen !== undefined ? externalOpen : internalOpen;
+  const setIsOpen = (v: boolean) => {
+    if (onExternalOpenChange) onExternalOpenChange(v);
+    setInternalOpen(v);
+  };
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
