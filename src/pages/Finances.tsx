@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, DollarSign, Wallet, ArrowLeft, Building2, User, LayoutGrid, BarChart3, FileText, Target, CreditCard, FolderKanban, TrendingDown, Sparkles, Shield, X, Filter, Bot } from "lucide-react";
+import { Plus, DollarSign, Wallet, ArrowLeft, Building2, User, LayoutGrid, BarChart3, FileText, Target, CreditCard, FolderKanban, TrendingDown, Sparkles, Shield, X, Filter, Bot, ShoppingCart, Package, Store, Calculator, CalendarCheck, Settings } from "lucide-react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SummaryCards from "@/components/finances/SummaryCards";
 import FinanceBarChart from "@/components/finances/FinanceBarChart";
@@ -18,11 +18,19 @@ import ExpenseOverview from "@/components/finances/ExpenseOverview";
 import InvestmentsOverview from "@/components/finances/InvestmentsOverview";
 import LgpdNotice from "@/components/finances/LgpdNotice";
 import VeveInlineAssistant from "@/components/finances/VeveInlineAssistant";
+import BusinessSettingsForm from "@/components/finances/BusinessSettingsForm";
+import BusinessDashboard from "@/components/finances/BusinessDashboard";
+import SalesControl from "@/components/finances/SalesControl";
+import BusinessExpensesTab from "@/components/finances/BusinessExpensesTab";
+import MeiFeatures from "@/components/finances/MeiFeatures";
+import SimplesCalculator from "@/components/finances/SimplesCalculator";
+import FiscalAgenda from "@/components/finances/FiscalAgenda";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { useSupabaseFinances } from "@/hooks/useSupabaseFinances";
+import { useBusinessSettings } from "@/hooks/useBusinessSettings";
 
 const financeTabs = [
   { value: "overview", label: "Resumo", icon: LayoutGrid },
@@ -32,6 +40,16 @@ const financeTabs = [
   { value: "goals", label: "Metas", icon: Target },
   { value: "debts", label: "Dívidas", icon: CreditCard },
   { value: "organization", label: "Organização", icon: FolderKanban },
+];
+
+const businessTabs = [
+  { value: "biz-dashboard", label: "Painel", icon: LayoutGrid },
+  { value: "biz-sales", label: "Faturamento", icon: ShoppingCart },
+  { value: "biz-expenses", label: "Despesas", icon: Package },
+  { value: "biz-mei", label: "MEI", icon: Store, onlyFor: "mei" as const },
+  { value: "biz-simples", label: "Simples", icon: Calculator, onlyFor: "simples" as const },
+  { value: "biz-fiscal", label: "Agenda Fiscal", icon: CalendarCheck },
+  { value: "biz-settings", label: "Config.", icon: Settings },
 ];
 
 const Finances = () => {
