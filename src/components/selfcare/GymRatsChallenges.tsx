@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Trophy, Calendar, Users, Flame, Zap, Crown, Medal, ChevronDown, ChevronUp, LogIn, LogOut } from "lucide-react";
+import { Trophy, Calendar, Users, Flame, Zap, Crown, Medal, ChevronDown, ChevronUp, Camera, Plus, X } from "lucide-react";
 import { useSupabaseChallenges } from "@/hooks/useSupabaseChallenges";
+import { useGymRatsChallenges } from "@/hooks/useGymRatsChallenges";
 import { useAuth } from "@/hooks/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { differenceInDays, parseISO, format } from "date-fns";
+import { differenceInDays, parseISO, format, getDaysInMonth, startOfMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Challenge, ChallengeParticipant, CHALLENGE_TYPES } from "@/types/challenges";
+import { Challenge, ChallengeParticipant } from "@/types/challenges";
 import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface Props {
   className?: string;
