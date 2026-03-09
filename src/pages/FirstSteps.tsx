@@ -78,7 +78,7 @@ const FirstSteps = () => {
             👉 Leia nossas regras antes de começar
           </p>
           <button
-            onClick={() => navigate("/social?tab=rules")}
+            onClick={() => navigate("/regras")}
             className="text-primary font-semibold text-sm hover:underline mt-2 inline-block"
           >
             Leia nossas regras antes de começar

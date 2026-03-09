@@ -16,7 +16,7 @@ const sections = [
     items: [
       { icon: Sparkles, label: "Primeiros Passos", href: "/primeiros-passos", highlight: true },
       { icon: UserPlus, label: "Apresente-se", href: "/social?tab=introductions" },
-      { icon: BookOpen, label: "Regras da Comunidade", href: "/social?tab=rules" },
+      { icon: BookOpen, label: "Regras da Comunidade", href: "/regras" },
     ],
   },
   {
