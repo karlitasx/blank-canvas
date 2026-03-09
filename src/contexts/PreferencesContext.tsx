@@ -197,6 +197,7 @@ const translations: Record<Language, Record<string, string>> = {
   'es': {
     'nav.dashboard': 'Panel',
     'nav.habits': 'Hábitos',
+    'nav.routine': 'Rutina',
     'nav.agenda': 'Agenda',
     'nav.finances': 'Finanzas',
     'nav.community': 'Comunidad',
