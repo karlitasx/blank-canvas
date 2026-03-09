@@ -325,28 +325,6 @@ const GymRatsChallenges = ({ className }: Props) => {
 
               {expandedSections.ranking && (
                 <div className="px-4 pb-4 animate-fade-in">
-                  {/* Tabs */}
-                  <div className="flex bg-muted/50 rounded-lg p-1 mb-3">
-                    <button
-                      onClick={() => setRankingTab("constancy")}
-                      className={cn(
-                        "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-xs font-medium transition-all",
-                        rankingTab === "constancy" ? "bg-card shadow-sm text-foreground" : "text-muted-foreground"
-                      )}
-                    >
-                      <Flame className="w-3.5 h-3.5" /> Constância
-                    </button>
-                    <button
-                      onClick={() => setRankingTab("performance")}
-                      className={cn(
-                        "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-xs font-medium transition-all",
-                        rankingTab === "performance" ? "bg-card shadow-sm text-foreground" : "text-muted-foreground"
-                      )}
-                    >
-                      <Zap className="w-3.5 h-3.5" /> Performance
-                    </button>
-                  </div>
-
                   {/* Participants List */}
                   <div className="space-y-1.5">
                     {loadingParticipants ? (
@@ -357,10 +335,7 @@ const GymRatsChallenges = ({ className }: Props) => {
                       <p className="text-xs text-muted-foreground text-center py-4">Nenhum participante ainda</p>
                     ) : (
                       participants
-                        .sort((a, b) => rankingTab === "constancy"
-                          ? b.current_progress - a.current_progress
-                          : b.current_progress - a.current_progress
-                        )
+                        .sort((a, b) => b.current_progress - a.current_progress)
                         .map((p, i) => {
                           const isMe = p.user_id === user?.id;
                           return (
@@ -380,7 +355,7 @@ const GymRatsChallenges = ({ className }: Props) => {
                               </Avatar>
                               <div className="flex-1 min-w-0">
                                 <p className={cn("text-sm font-medium truncate", isMe && "text-primary")}>
-                                  {p.display_name || "Usuário"}
+                                  {p.display_name || "Usuária"}
                                 </p>
                                 <p className="text-[10px] text-muted-foreground">
                                   {p.current_progress} check-ins
@@ -400,19 +375,85 @@ const GymRatsChallenges = ({ className }: Props) => {
             </div>
           </div>
 
-          {/* Join/Leave */}
-          {!selectedChallenge.is_joined && (
-            <div className="p-4 border-t border-border">
+          {/* Action Buttons */}
+          <div className="p-4 border-t border-border flex gap-2">
+            {selectedChallenge.is_joined ? (
               <button
-                onClick={() => joinChallenge(selectedChallenge.id)}
-                className="w-full btn-accent py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2"
+                onClick={() => setShowUploadModal(true)}
+                className="flex-1 btn-accent py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2"
               >
-                <LogIn className="w-4 h-4" /> Participar do Desafio
+                <Camera className="w-4 h-4" /> Enviar Check-in
               </button>
-            </div>
-          )}
+            ) : (
+              <button
+                onClick={async () => {
+                  await joinChallenge(selectedChallenge.id);
+                  await refetch();
+                }}
+                className="flex-1 btn-accent py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2"
+              >
+                <Plus className="w-4 h-4" /> Participar do Desafio
+              </button>
+            )}
+          </div>
         </div>
       )}
+
+      {/* Upload Modal */}
+      <Dialog open={showUploadModal} onOpenChange={setShowUploadModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Enviar Check-in 📸</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {!previewUrl ? (
+              <label className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/30 transition-colors">
+                <Camera className="w-12 h-12 text-muted-foreground mb-3" />
+                <p className="text-sm text-muted-foreground mb-1">Clique para tirar foto</p>
+                <p className="text-xs text-muted-foreground">ou selecionar da galeria</p>
+                <input
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+              </label>
+            ) : (
+              <div className="relative">
+                <img
+                  src={previewUrl}
+                  alt="Preview"
+                  className="w-full aspect-square object-cover rounded-lg"
+                />
+                <button
+                  onClick={() => {
+                    setPreviewUrl(null);
+                    setSelectedFile(null);
+                  }}
+                  className="absolute top-2 right-2 p-1.5 bg-black/50 hover:bg-black/70 rounded-full transition-colors"
+                >
+                  <X className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            )}
+
+            <Input
+              placeholder="Adicione uma legenda (opcional)"
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+            />
+
+            <button
+              onClick={handleUploadCheckin}
+              disabled={!selectedFile || uploadLoading}
+              className="w-full btn-accent py-2.5 rounded-lg text-sm font-medium disabled:opacity-50"
+            >
+              {uploadLoading ? "Enviando..." : "Enviar Check-in"}
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Challenge Selector (if multiple) */}
       {(activeChallenges.length + availableChallenges.length) > 1 && (
