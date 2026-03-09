@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Trophy, Calendar, Users, Flame, Zap, Crown, Medal, ChevronDown, ChevronUp, LogIn, LogOut } from "lucide-react";
+import { Trophy, Calendar, Users, Flame, Zap, Crown, Medal, ChevronDown, ChevronUp, Camera, Plus, X } from "lucide-react";
 import { useSupabaseChallenges } from "@/hooks/useSupabaseChallenges";
+import { useGymRatsChallenges } from "@/hooks/useGymRatsChallenges";
 import { useAuth } from "@/hooks/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { differenceInDays, parseISO, format } from "date-fns";
+import { differenceInDays, parseISO, format, getDaysInMonth, startOfMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Challenge, ChallengeParticipant, CHALLENGE_TYPES } from "@/types/challenges";
+import { Challenge, ChallengeParticipant } from "@/types/challenges";
 import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface Props {
   className?: string;
@@ -15,12 +18,20 @@ interface Props {
 
 const GymRatsChallenges = ({ className }: Props) => {
   const { user } = useAuth();
-  const { challenges, loading, joinChallenge, leaveChallenge, getParticipants, getActiveChallenges, getAvailableChallenges } = useSupabaseChallenges();
+  const { challenges, loading, joinChallenge, leaveChallenge, getParticipants, getActiveChallenges, getAvailableChallenges, refetch } = useSupabaseChallenges();
+  const { uploadCheckinPhoto, getChallengeCheckins, getUserMonthlyCheckins, loading: uploadLoading } = useGymRatsChallenges();
+  
   const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null);
   const [participants, setParticipants] = useState<ChallengeParticipant[]>([]);
   const [loadingParticipants, setLoadingParticipants] = useState(false);
-  const [rankingTab, setRankingTab] = useState<"constancy" | "performance">("constancy");
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({ calendar: true });
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [caption, setCaption] = useState("");
+  const [monthlyCheckins, setMonthlyCheckins] = useState<any[]>([]);
+  const [recentCheckins, setRecentCheckins] = useState<any[]>([]);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const activeChallenges = getActiveChallenges();
   const availableChallenges = getAvailableChallenges();
@@ -38,6 +49,46 @@ const GymRatsChallenges = ({ className }: Props) => {
     const data = await getParticipants(challenge.id);
     setParticipants(data);
     setLoadingParticipants(false);
+    
+    // Load check-ins
+    loadMonthlyCheckins(challenge.id);
+    loadRecentCheckins(challenge.id);
+  };
+
+  const loadMonthlyCheckins = async (challengeId: string) => {
+    const checkins = await getUserMonthlyCheckins(
+      challengeId,
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() + 1
+    );
+    setMonthlyCheckins(checkins);
+  };
+
+  const loadRecentCheckins = async (challengeId: string) => {
+    const checkins = await getChallengeCheckins(challengeId);
+    setRecentCheckins(checkins.slice(0, 6));
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleUploadCheckin = async () => {
+    if (!selectedFile || !selectedChallenge) return;
+
+    const result = await uploadCheckinPhoto(selectedChallenge.id, selectedFile, caption);
+    if (result) {
+      setShowUploadModal(false);
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      setCaption("");
+      await handleSelectChallenge(selectedChallenge);
+      await refetch();
+    }
   };
 
   const toggleSection = (key: string) => {
@@ -143,24 +194,121 @@ const GymRatsChallenges = ({ className }: Props) => {
             )}
           </div>
 
-          {/* Expandable Sections */}
+            {/* Expandable Sections */}
           <div className="divide-y divide-border">
             {/* Rules */}
             {selectedChallenge.description && (
-              <button
-                onClick={() => toggleSection("rules")}
-                className="w-full flex items-center justify-between p-4 text-sm text-muted-foreground hover:bg-muted/30 transition-colors"
-              >
-                <span className="flex items-center gap-2">
-                  <span className="text-xs">ℹ️</span> Regras do Desafio
-                </span>
-                {expandedSections.rules ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              </button>
+              <>
+                <button
+                  onClick={() => toggleSection("rules")}
+                  className="w-full flex items-center justify-between p-4 text-sm text-muted-foreground hover:bg-muted/30 transition-colors"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="text-xs">ℹ️</span> Regras do Desafio
+                  </span>
+                  {expandedSections.rules ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </button>
+                {expandedSections.rules && (
+                  <div className="px-4 pb-4 text-sm text-muted-foreground animate-fade-in">
+                    {selectedChallenge.description}
+                  </div>
+                )}
+              </>
             )}
-            {expandedSections.rules && selectedChallenge.description && (
-              <div className="px-4 pb-4 text-sm text-muted-foreground animate-fade-in">
-                {selectedChallenge.description}
-              </div>
+
+            {/* Calendar */}
+            {selectedChallenge.is_joined && (
+              <>
+                <button
+                  onClick={() => toggleSection("calendar")}
+                  className="w-full flex items-center justify-between p-4 text-sm hover:bg-muted/30 transition-colors"
+                >
+                  <span className="flex items-center gap-2 text-foreground font-medium">
+                    <Calendar className="w-4 h-4 text-primary" /> {format(currentMonth, "MMMM yyyy", { locale: ptBR })}
+                  </span>
+                  {expandedSections.calendar ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+                </button>
+
+                {expandedSections.calendar && (
+                  <div className="px-4 pb-4 animate-fade-in">
+                    {/* Calendar Grid */}
+                    <div className="grid grid-cols-7 gap-1 mb-4">
+                      {['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'].map((day) => (
+                        <div key={day} className="text-center text-[10px] text-muted-foreground font-medium py-1">
+                          {day}
+                        </div>
+                      ))}
+                      {(() => {
+                        const year = currentMonth.getFullYear();
+                        const month = currentMonth.getMonth();
+                        const firstDay = startOfMonth(currentMonth).getDay();
+                        const daysInMonth = getDaysInMonth(currentMonth);
+                        const days = [];
+
+                        // Empty cells before first day
+                        for (let i = 0; i < firstDay; i++) {
+                          days.push(<div key={`empty-${i}`} className="aspect-square" />);
+                        }
+
+                        // Days of month
+                        for (let day = 1; day <= daysInMonth; day++) {
+                          const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                          const checkin = monthlyCheckins.find(c => c.checkin_date === dateStr);
+                          const isToday = new Date().toISOString().split('T')[0] === dateStr;
+
+                          days.push(
+                            <div
+                              key={day}
+                              className={cn(
+                                "aspect-square rounded-lg flex items-center justify-center text-xs relative",
+                                isToday && "ring-2 ring-primary",
+                                checkin ? "bg-primary/10" : "hover:bg-muted/30"
+                              )}
+                            >
+                              {checkin ? (
+                                <img
+                                  src={checkin.photo_url}
+                                  alt={`Check-in ${day}`}
+                                  className="w-full h-full object-cover rounded-lg"
+                                />
+                              ) : (
+                                <span className={cn("text-foreground", isToday && "font-bold")}>{day}</span>
+                              )}
+                            </div>
+                          );
+                        }
+
+                        return days;
+                      })()}
+                    </div>
+
+                    {/* Recent Check-ins Feed */}
+                    {recentCheckins.length > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-xs font-medium text-muted-foreground mb-2">Check-ins Recentes</p>
+                        <div className="grid grid-cols-3 gap-2">
+                          {recentCheckins.map((checkin) => (
+                            <div key={checkin.id} className="aspect-square rounded-lg overflow-hidden relative group">
+                              <img
+                                src={checkin.photo_url}
+                                alt="Check-in"
+                                className="w-full h-full object-cover"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="absolute bottom-1 left-1 right-1">
+                                  <p className="text-[10px] text-white font-medium truncate">
+                                    {checkin.display_name}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
             )}
 
             {/* Ranking */}
@@ -177,28 +325,6 @@ const GymRatsChallenges = ({ className }: Props) => {
 
               {expandedSections.ranking && (
                 <div className="px-4 pb-4 animate-fade-in">
-                  {/* Tabs */}
-                  <div className="flex bg-muted/50 rounded-lg p-1 mb-3">
-                    <button
-                      onClick={() => setRankingTab("constancy")}
-                      className={cn(
-                        "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-xs font-medium transition-all",
-                        rankingTab === "constancy" ? "bg-card shadow-sm text-foreground" : "text-muted-foreground"
-                      )}
-                    >
-                      <Flame className="w-3.5 h-3.5" /> Constância
-                    </button>
-                    <button
-                      onClick={() => setRankingTab("performance")}
-                      className={cn(
-                        "flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-xs font-medium transition-all",
-                        rankingTab === "performance" ? "bg-card shadow-sm text-foreground" : "text-muted-foreground"
-                      )}
-                    >
-                      <Zap className="w-3.5 h-3.5" /> Performance
-                    </button>
-                  </div>
-
                   {/* Participants List */}
                   <div className="space-y-1.5">
                     {loadingParticipants ? (
@@ -209,10 +335,7 @@ const GymRatsChallenges = ({ className }: Props) => {
                       <p className="text-xs text-muted-foreground text-center py-4">Nenhum participante ainda</p>
                     ) : (
                       participants
-                        .sort((a, b) => rankingTab === "constancy"
-                          ? b.current_progress - a.current_progress
-                          : b.current_progress - a.current_progress
-                        )
+                        .sort((a, b) => b.current_progress - a.current_progress)
                         .map((p, i) => {
                           const isMe = p.user_id === user?.id;
                           return (
@@ -232,7 +355,7 @@ const GymRatsChallenges = ({ className }: Props) => {
                               </Avatar>
                               <div className="flex-1 min-w-0">
                                 <p className={cn("text-sm font-medium truncate", isMe && "text-primary")}>
-                                  {p.display_name || "Usuário"}
+                                  {p.display_name || "Usuária"}
                                 </p>
                                 <p className="text-[10px] text-muted-foreground">
                                   {p.current_progress} check-ins
@@ -252,19 +375,85 @@ const GymRatsChallenges = ({ className }: Props) => {
             </div>
           </div>
 
-          {/* Join/Leave */}
-          {!selectedChallenge.is_joined && (
-            <div className="p-4 border-t border-border">
+          {/* Action Buttons */}
+          <div className="p-4 border-t border-border flex gap-2">
+            {selectedChallenge.is_joined ? (
               <button
-                onClick={() => joinChallenge(selectedChallenge.id)}
-                className="w-full btn-accent py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2"
+                onClick={() => setShowUploadModal(true)}
+                className="flex-1 btn-accent py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2"
               >
-                <LogIn className="w-4 h-4" /> Participar do Desafio
+                <Camera className="w-4 h-4" /> Enviar Check-in
               </button>
-            </div>
-          )}
+            ) : (
+              <button
+                onClick={async () => {
+                  await joinChallenge(selectedChallenge.id);
+                  await refetch();
+                }}
+                className="flex-1 btn-accent py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2"
+              >
+                <Plus className="w-4 h-4" /> Participar do Desafio
+              </button>
+            )}
+          </div>
         </div>
       )}
+
+      {/* Upload Modal */}
+      <Dialog open={showUploadModal} onOpenChange={setShowUploadModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Enviar Check-in 📸</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {!previewUrl ? (
+              <label className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/30 transition-colors">
+                <Camera className="w-12 h-12 text-muted-foreground mb-3" />
+                <p className="text-sm text-muted-foreground mb-1">Clique para tirar foto</p>
+                <p className="text-xs text-muted-foreground">ou selecionar da galeria</p>
+                <input
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+              </label>
+            ) : (
+              <div className="relative">
+                <img
+                  src={previewUrl}
+                  alt="Preview"
+                  className="w-full aspect-square object-cover rounded-lg"
+                />
+                <button
+                  onClick={() => {
+                    setPreviewUrl(null);
+                    setSelectedFile(null);
+                  }}
+                  className="absolute top-2 right-2 p-1.5 bg-black/50 hover:bg-black/70 rounded-full transition-colors"
+                >
+                  <X className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            )}
+
+            <Input
+              placeholder="Adicione uma legenda (opcional)"
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+            />
+
+            <button
+              onClick={handleUploadCheckin}
+              disabled={!selectedFile || uploadLoading}
+              className="w-full btn-accent py-2.5 rounded-lg text-sm font-medium disabled:opacity-50"
+            >
+              {uploadLoading ? "Enviando..." : "Enviar Check-in"}
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Challenge Selector (if multiple) */}
       {(activeChallenges.length + availableChallenges.length) > 1 && (
