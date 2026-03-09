@@ -18,7 +18,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 const GymRats = () => {
   const { user } = useAuth();
-  const { challenges, loading, joinChallenge, leaveChallenge, getParticipants, refetch } = useSupabaseChallenges();
+  const { challenges, loading, createChallenge, joinChallenge, leaveChallenge, getParticipants, refetch } = useSupabaseChallenges();
   const { uploadCheckinPhoto, getChallengeCheckins, getUserMonthlyCheckins, loading: uploadLoading } = useGymRatsChallenges();
   
   const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null);
