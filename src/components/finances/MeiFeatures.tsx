@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertTriangle, CheckCircle2, Clock, Plus, Receipt } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Clock, Plus, Receipt, Info, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,33 +8,52 @@ import { useBusinessSales } from "@/hooks/useBusinessSales";
 import { useDasPayments } from "@/hooks/useDasPayments";
 import { format } from "date-fns";
 
-const MEI_ANNUAL_LIMIT = 81000;
+// Valores atualizados para 2026
+const MEI_ANNUAL_LIMIT = 81000; // Limite MEI 2026
+const DAS_MEI_2026 = 75.90; // DAS MEI 2026 = 5% do salário mínimo (R$ 1.518)
 
 const MeiFeatures = () => {
   const { yearlyTotal } = useBusinessSales();
   const { payments, addPayment, markAsPaid } = useDasPayments();
   const [open, setOpen] = useState(false);
   const [month, setMonth] = useState(format(new Date(), "yyyy-MM"));
-  const [amount, setAmount] = useState("71.60");
+  const [amount, setAmount] = useState(DAS_MEI_2026.toFixed(2));
 
   const percentage = (yearlyTotal / MEI_ANNUAL_LIMIT) * 100;
   const remaining = MEI_ANNUAL_LIMIT - yearlyTotal;
 
   const handleAdd = async () => {
     if (!month) return;
-    await addPayment(month, Number(amount) || 71.6);
+    await addPayment(month, Number(amount) || DAS_MEI_2026);
     setOpen(false);
   };
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <h3 className="text-lg font-bold text-foreground">Recursos MEI</h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-bold text-foreground">Recursos MEI</h3>
+        <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-lg">Valores 2026</span>
+      </div>
+
+      {/* Info Card */}
+      <div className="glass-card p-4 rounded-xl bg-blue-500/5 border border-blue-500/20">
+        <div className="flex items-start gap-3">
+          <Info className="w-5 h-5 text-blue-500 mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-foreground">DAS MEI 2026</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Valor mensal: <strong>R$ {DAS_MEI_2026.toFixed(2)}</strong> (5% do salário mínimo de R$ 1.518,00). 
+              Vencimento: dia 20 de cada mês.
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Annual Limit */}
       <div className="glass-card p-5 rounded-xl">
         <div className="flex items-center gap-2 mb-3">
           {percentage > 80 ? <AlertTriangle className="w-5 h-5 text-red-500" /> : <CheckCircle2 className="w-5 h-5 text-emerald-500" />}
-          <h4 className="font-semibold text-foreground">Limite Anual de Faturamento</h4>
+          <h4 className="font-semibold text-foreground">Limite Anual de Faturamento 2026</h4>
         </div>
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div>
@@ -74,7 +93,10 @@ const MeiFeatures = () => {
               <DialogHeader><DialogTitle>Adicionar DAS</DialogTitle></DialogHeader>
               <div className="space-y-4 mt-2">
                 <div><Label>Mês de Referência</Label><Input type="month" value={month} onChange={e => setMonth(e.target.value)} className="mt-1" /></div>
-                <div><Label>Valor</Label><Input type="number" step="0.01" value={amount} onChange={e => setAmount(e.target.value)} className="mt-1" /></div>
+                <div>
+                  <Label>Valor (padrão 2026: R$ {DAS_MEI_2026.toFixed(2)})</Label>
+                  <Input type="number" step="0.01" value={amount} onChange={e => setAmount(e.target.value)} className="mt-1" />
+                </div>
                 <Button onClick={handleAdd} className="w-full btn-gradient rounded-xl">Adicionar</Button>
               </div>
             </DialogContent>
@@ -105,6 +127,24 @@ const MeiFeatures = () => {
             ))}
           </div>
         )}
+      </div>
+
+      {/* Datas Importantes */}
+      <div className="glass-card p-5 rounded-xl">
+        <div className="flex items-center gap-2 mb-3">
+          <Calendar className="w-5 h-5 text-primary" />
+          <h4 className="font-semibold text-foreground">Datas Importantes MEI 2026</h4>
+        </div>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
+            <span className="text-sm text-foreground">Vencimento DAS mensal</span>
+            <span className="text-sm font-medium text-primary">Dia 20</span>
+          </div>
+          <div className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
+            <span className="text-sm text-foreground">DASN-SIMEI (Declaração Anual)</span>
+            <span className="text-sm font-medium text-primary">Até 31/05/2026</span>
+          </div>
+        </div>
       </div>
     </div>
   );
