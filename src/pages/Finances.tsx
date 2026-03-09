@@ -16,6 +16,7 @@ import BudgetMethods from "@/components/finances/BudgetMethods";
 import FinanceTypeSelector, { type FinanceType } from "@/components/finances/FinanceTypeSelector";
 import VeveAssistant from "@/components/finances/VeveAssistant";
 import ExpenseOverview from "@/components/finances/ExpenseOverview";
+import LgpdNotice from "@/components/finances/LgpdNotice";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -153,6 +154,7 @@ const Finances = () => {
                 : "Gerencie suas receitas e despesas pessoais"}
             </p>
           </div>
+          <LgpdNotice />
         </div>
 
         {(activeTab === "overview" || activeTab === "transactions") && (
