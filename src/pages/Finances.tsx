@@ -143,7 +143,7 @@ const Finances = () => {
           >
             IA
           </TabsTrigger>
-        </Tabs>
+        </TabsList>
 
         {/* Resumo */}
         <TabsContent value="summary" className="space-y-6 animate-fade-in mt-5">
