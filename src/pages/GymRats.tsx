@@ -135,9 +135,19 @@ const GymRats = () => {
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <h3 className="font-semibold text-foreground truncate">{challenge.title}</h3>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {format(parseISO(challenge.start_date), "dd MMM", { locale: ptBR })} — {format(parseISO(challenge.end_date), "dd MMM", { locale: ptBR })}
-            </p>
+            <div className="flex items-center gap-2 mt-0.5">
+              <p className="text-xs text-muted-foreground">
+                {format(parseISO(challenge.start_date), "dd MMM", { locale: ptBR })} — {format(parseISO(challenge.end_date), "dd MMM", { locale: ptBR })}
+              </p>
+              {(() => {
+                const diff = DIFFICULTY_LEVELS.find(d => d.value === challenge.difficulty);
+                return diff ? (
+                  <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
+                    {diff.icon} {diff.points}pts
+                  </span>
+                ) : null;
+              })()}
+            </div>
           </div>
           <div className="flex flex-col items-end gap-1">
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
