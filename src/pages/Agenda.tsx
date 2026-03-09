@@ -48,14 +48,20 @@ const Agenda = () => {
 
   return (
     <DashboardLayout activeNav="/agenda">
-      {/* Header */}
+      {/* Hero Banner */}
+      <div className="bg-gradient-to-br from-primary via-primary/80 to-accent rounded-2xl p-8 text-center mb-6">
+        <h1 className="text-3xl font-extrabold text-primary-foreground mb-2">
+          Agenda de Eventos
+        </h1>
+        <p className="text-primary-foreground/80 text-sm leading-relaxed max-w-md mx-auto">
+          Fique por dentro de todos os eventos da comunidade. Participe de workshops, lives, podcasts, aulas ao vivo, clube do livro e muito mais!
+        </p>
+      </div>
+
+      {/* Header Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-            <CalendarDays className="h-7 w-7 text-primary" />
-            Agenda
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
+          <p className="text-muted-foreground text-sm">
             Organize seus compromissos e eventos
           </p>
         </div>
