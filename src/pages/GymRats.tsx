@@ -651,7 +651,7 @@ const GymRats = () => {
               disabled={!selectedFile || uploadLoading}
               className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
             >
-              {uploadLoading ? "Enviando..." : "Enviar Check-in (+10 pts)"}
+              {uploadLoading ? "Enviando..." : `Enviar Check-in (+${selectedChallenge?.points_per_checkin || 10} pts)`}
             </button>
           </div>
         </DialogContent>
