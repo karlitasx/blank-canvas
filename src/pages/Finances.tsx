@@ -228,21 +228,26 @@ const Finances = () => {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-6">
-        <TabsList className="flex flex-col sm:flex-row sm:flex-wrap w-full bg-muted/50 rounded-xl p-1.5 h-auto gap-1">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
           {financeTabs.map((tab) => {
             const Icon = tab.icon;
+            const isActive = activeTab === tab.value;
             return (
-              <TabsTrigger
+              <button
                 key={tab.value}
-                value={tab.value}
-                className="w-full sm:w-auto justify-start sm:justify-center data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg gap-2 text-sm px-3 py-2.5"
+                onClick={() => setActiveTab(tab.value)}
+                className={`flex items-center gap-2.5 p-3 rounded-xl border text-sm font-medium transition-all ${
+                  isActive
+                    ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20"
+                    : "bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground"
+                }`}
               >
                 <Icon className="w-4 h-4 shrink-0" />
-                <span>{tab.label}</span>
-              </TabsTrigger>
+                <span className="truncate">{tab.label}</span>
+              </button>
             );
           })}
-        </TabsList>
+        </div>
 
         {/* Visão Geral */}
         <TabsContent value="overview" className="space-y-6 animate-fade-in mt-6">
