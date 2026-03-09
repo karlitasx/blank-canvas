@@ -21,6 +21,7 @@ import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Ranking from "./pages/Ranking";
+import PublicProfile from "./pages/PublicProfile";
 
 const queryClient = new QueryClient();
 
