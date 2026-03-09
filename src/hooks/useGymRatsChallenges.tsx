@@ -1,7 +1,6 @@
 import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Challenge, ChallengeParticipant } from "@/types/challenges";
 import { toast } from "sonner";
 
 interface CheckIn {
@@ -74,7 +73,10 @@ export const useGymRatsChallenges = () => {
           .eq('user_id', user.id);
       }
 
-      toast.success("Check-in enviado! 🔥");
+      // Award points for check-in
+      await awardCheckinPoints(checkin.id);
+
+      toast.success("Check-in enviado! +10 pontos 🔥");
       return checkin;
     } catch (error) {
       console.error("Error uploading check-in:", error);
@@ -82,6 +84,62 @@ export const useGymRatsChallenges = () => {
       return null;
     } finally {
       setLoading(false);
+    }
+  };
+
+  const awardCheckinPoints = async (checkinId: string) => {
+    if (!user) return;
+
+    try {
+      // Check if already awarded for this checkin
+      const { count } = await supabase
+        .from("point_history")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .eq("action_type", "challenge_checkin")
+        .eq("action_id", checkinId);
+
+      if ((count || 0) > 0) return;
+
+      // Check daily limit (3 per day)
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const { count: todayCount } = await supabase
+        .from("point_history")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .eq("action_type", "challenge_checkin")
+        .gte("created_at", today.toISOString());
+
+      if ((todayCount || 0) >= 3) return;
+
+      // Award 10 points
+      const { error: historyError } = await supabase
+        .from("point_history")
+        .insert({
+          user_id: user.id,
+          action_type: "challenge_checkin",
+          action_id: checkinId,
+          points: 10,
+        });
+
+      if (historyError) throw historyError;
+
+      // Update user_stats
+      const { data: currentStats } = await supabase
+        .from("user_stats")
+        .select("total_points")
+        .eq("user_id", user.id)
+        .single();
+
+      await supabase
+        .from("user_stats")
+        .update({ total_points: (currentStats?.total_points || 0) + 10 })
+        .eq("user_id", user.id);
+
+    } catch (error) {
+      console.error("Error awarding check-in points:", error);
     }
   };
 
