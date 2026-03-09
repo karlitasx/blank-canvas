@@ -147,6 +147,102 @@ const Finances = () => {
     );
   }
 
+  // Business-specific view
+  if (isBusiness) {
+    const bType = businessSettings?.business_type || "mei";
+    const visibleBizTabs = businessTabs.filter(t => !t.onlyFor || t.onlyFor === bType);
+
+    // If no settings yet, show setup
+    if (!businessSettings && !bizLoading) {
+      return (
+        <DashboardLayout activeNav="/finance">
+          <div className="relative rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-primary via-secondary to-accent">
+            <div className="relative z-10 p-6 md:p-8">
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" onClick={() => setFinanceType(null)} className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0 -ml-2">
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-primary-foreground/20 backdrop-blur-sm">
+                    <Building2 className="w-5 h-5 text-primary-foreground" />
+                  </div>
+                  <h1 className="text-xl md:text-2xl font-extrabold text-primary-foreground">Configurar Empresa</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="max-w-lg mx-auto">
+            <BusinessSettingsForm onComplete={() => window.location.reload()} />
+          </div>
+        </DashboardLayout>
+      );
+    }
+
+    return (
+      <DashboardLayout activeNav="/finance">
+        {/* Hero Banner */}
+        <div className="relative rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-primary via-secondary to-accent">
+          <div className="absolute top-0 right-0 w-48 h-48 bg-primary-foreground/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-36 h-36 bg-primary-foreground/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+          <div className="relative z-10 p-6 md:p-8">
+            <div className="flex items-center gap-3 mb-1">
+              <Button variant="ghost" size="icon" onClick={() => setFinanceType(null)} className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0 -ml-2">
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-primary-foreground/20 backdrop-blur-sm">
+                  <Building2 className="w-5 h-5 text-primary-foreground" />
+                </div>
+                <div>
+                  <h1 className="text-xl md:text-2xl font-extrabold text-primary-foreground">
+                    Finanças Empresariais
+                  </h1>
+                  <p className="text-primary-foreground/70 text-sm">
+                    {businessSettings?.company_name || "Gerencie seu negócio"} · {bType === "mei" ? "MEI" : bType === "simples" ? "Simples Nacional" : "Autônomo"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Business Tabs */}
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-6">
+          {visibleBizTabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = bizActiveTab === tab.value;
+            return (
+              <button
+                key={tab.value}
+                onClick={() => setBizActiveTab(tab.value)}
+                className={`flex items-center gap-2.5 p-3 rounded-xl border text-sm font-medium transition-all ${
+                  isActive
+                    ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/20"
+                    : "bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground"
+                }`}
+              >
+                <Icon className="w-4 h-4 shrink-0" />
+                <span className="truncate">{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mt-6">
+          {bizActiveTab === "biz-dashboard" && <BusinessDashboard businessType={bType} />}
+          {bizActiveTab === "biz-sales" && <SalesControl />}
+          {bizActiveTab === "biz-expenses" && <BusinessExpensesTab />}
+          {bizActiveTab === "biz-mei" && bType === "mei" && <MeiFeatures />}
+          {bizActiveTab === "biz-simples" && bType === "simples" && <SimplesCalculator />}
+          {bizActiveTab === "biz-fiscal" && <FiscalAgenda businessType={bType} />}
+          {bizActiveTab === "biz-settings" && <BusinessSettingsForm />}
+        </div>
+
+        <VeveAssistant externalOpen={veveOpen} onExternalOpenChange={setVeveOpen} />
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout activeNav="/finance">
       {/* Hero Banner */}
