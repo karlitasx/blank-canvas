@@ -67,8 +67,8 @@ export const useHairCare = () => {
         supabase.from("hair_treatment_logs" as any).select("*").eq("user_id", user.id).order("treatment_date", { ascending: false }),
       ]);
 
-      setHairProfile(profileRes.data as HairProfile | null);
-      setTreatmentLogs((logsRes.data as HairTreatmentLog[]) || []);
+      setHairProfile((profileRes.data as unknown as HairProfile) || null);
+      setTreatmentLogs((logsRes.data as unknown as HairTreatmentLog[]) || []);
 
       if (scheduleRes.data) {
         const { data: items } = await supabase
