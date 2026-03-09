@@ -13,7 +13,7 @@ import { Challenge, ChallengeParticipant } from "@/types/challenges";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CreateChallengeModal } from "@/components/challenges/CreateChallengeModal";
+import CreateChallengeModal from "@/components/challenges/CreateChallengeModal";
 import { Card, CardContent } from "@/components/ui/card";
 
 const GymRats = () => {
