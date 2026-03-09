@@ -4,8 +4,6 @@ import { CalendarDays } from "lucide-react";
 import { usePreferences } from "@/contexts/PreferencesContext";
 
 const Routine = () => {
-  const { theme } = usePreferences();
-
   return (
     <div className="w-full max-w-7xl mx-auto space-y-6 pb-20 md:pb-6 animate-fade-in">
       <PageHeader 

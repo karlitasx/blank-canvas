@@ -43,7 +43,7 @@ export const useRoutine = () => {
         .order("start_time", { ascending: true, nullsFirst: true });
 
       if (error) throw error;
-      setTasks(data || []);
+      setTasks((data as RoutineTask[]) || []);
     } catch (error) {
       console.error("Error fetching routine tasks:", error);
     }
