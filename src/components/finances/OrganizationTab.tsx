@@ -4,6 +4,7 @@ import {
   ShoppingBag, Utensils, Car, Home, Gamepad2, Heart, GraduationCap,
   Briefcase, Banknote, Gift, Truck, Users, FileText, Receipt, Landmark,
   Package, Wrench, Megaphone, Building2, Target, Wallet, Star, type LucideIcon,
+  Smartphone, QrCode, Building, CircleDollarSign, ArrowLeftRight, Coins,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ import {
 import { personalCategories, businessCategories, type FinanceCategory } from "@/lib/financeCategories";
 import { useFinanceCategories, type FinanceCategoryRecord } from "@/hooks/useFinanceCategories";
 import { useFinanceCards, type FinanceCard } from "@/hooks/useFinanceCards";
+import { usePaymentMethods, type PaymentMethod } from "@/hooks/usePaymentMethods";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
@@ -31,7 +33,8 @@ const iconMap: Record<string, LucideIcon> = {
   Tag, ShoppingBag, Utensils, Car, Home, Gamepad2, Heart, GraduationCap,
   Briefcase, Banknote, Gift, Truck, Users, FileText, Receipt, Landmark,
   Package, Wrench, Megaphone, Building2, Target, Wallet, Star, CreditCard,
-  DollarSign, Settings,
+  DollarSign, Settings, Smartphone, QrCode, Building, CircleDollarSign,
+  ArrowLeftRight, Coins,
 };
 
 const availableIcons = Object.keys(iconMap);
@@ -43,6 +46,16 @@ const availableColors = [
 ];
 
 const incomeCategories = ["Salário", "Investimento", "Presente", "Freelance", "Renda Extra", "Outros", "Receita de Vendas", "Serviços Prestados"];
+
+const paymentTypeOptions = [
+  { value: "pix", label: "Pix", icon: "QrCode" },
+  { value: "credit", label: "Cartão de Crédito", icon: "CreditCard" },
+  { value: "debit", label: "Cartão de Débito", icon: "CreditCard" },
+  { value: "cash", label: "Dinheiro", icon: "Coins" },
+  { value: "transfer", label: "Transferência", icon: "ArrowLeftRight" },
+  { value: "boleto", label: "Boleto", icon: "FileText" },
+  { value: "other", label: "Outro", icon: "Wallet" },
+];
 
 const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
   const [subTab, setSubTab] = useState("categories");
@@ -67,9 +80,18 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
   const [cardClosingDay, setCardClosingDay] = useState("1");
   const [cardDueDay, setCardDueDay] = useState("10");
 
+  // Payment method state
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [editingPayment, setEditingPayment] = useState<PaymentMethod | null>(null);
+  const [paymentName, setPaymentName] = useState("");
+  const [paymentType, setPaymentType] = useState("pix");
+  const [paymentIcon, setPaymentIcon] = useState("QrCode");
+  const [paymentColor, setPaymentColor] = useState("#3b82f6");
+
   const { categories: customCategories, isLoaded, addCategory, updateCategory, deleteCategory } =
     useFinanceCategories(financeType);
   const { cards, isLoaded: cardsLoaded, addCard, updateCard, deleteCard } = useFinanceCards();
+  const { methods: paymentMethods, isLoaded: paymentsLoaded, addMethod, updateMethod, deleteMethod } = usePaymentMethods();
 
   // Merge default + custom categories
   const defaultCats = financeType === "business" ? businessCategories : personalCategories;
@@ -189,6 +211,49 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
     toast.success("Categoria excluída!");
   };
 
+  // Payment method helpers
+  const openCreatePaymentModal = () => {
+    setEditingPayment(null);
+    setPaymentName("");
+    setPaymentType("pix");
+    setPaymentIcon("QrCode");
+    setPaymentColor("#3b82f6");
+    setIsPaymentModalOpen(true);
+  };
+
+  const openEditPaymentModal = (method: PaymentMethod) => {
+    setEditingPayment(method);
+    setPaymentName(method.name);
+    setPaymentType(method.type);
+    setPaymentIcon(method.icon_name);
+    setPaymentColor(method.color);
+    setIsPaymentModalOpen(true);
+  };
+
+  const handleSavePayment = async () => {
+    if (!paymentName.trim()) { toast.error("Nome é obrigatório"); return; }
+    const payload = {
+      name: paymentName.trim(),
+      type: paymentType,
+      icon_name: paymentIcon,
+      color: paymentColor,
+      is_active: true,
+    };
+    if (editingPayment) {
+      await updateMethod(editingPayment.id, payload);
+      toast.success("Forma de pagamento atualizada!");
+    } else {
+      await addMethod(payload);
+      toast.success("Forma de pagamento adicionada!");
+    }
+    setIsPaymentModalOpen(false);
+  };
+
+  const handleDeletePayment = async (id: string) => {
+    await deleteMethod(id);
+    toast.success("Forma de pagamento excluída!");
+  };
+
   if (!isLoaded) {
     return (
       <div className="space-y-6">
@@ -212,28 +277,36 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
         </div>
         <div>
           <h2 className="text-xl font-bold">Organização</h2>
-          <p className="text-sm text-muted-foreground">Gerencie suas categorias e cartões</p>
+          <p className="text-sm text-muted-foreground">Gerencie categorias, cartões e formas de pagamento</p>
         </div>
       </div>
 
       <Tabs value={subTab} onValueChange={setSubTab}>
-        <TabsList className="grid w-full grid-cols-2 bg-muted/50">
+        <TabsList className="grid w-full grid-cols-3 bg-muted/50">
           <TabsTrigger
             value="categories"
-            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-1.5"
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-1.5 text-xs sm:text-sm"
           >
             <Tag className="w-4 h-4" />
             Categorias
           </TabsTrigger>
           <TabsTrigger
             value="cards"
-            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-1.5"
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-1.5 text-xs sm:text-sm"
           >
             <CreditCard className="w-4 h-4" />
             Cartões
           </TabsTrigger>
+          <TabsTrigger
+            value="payments"
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-1.5 text-xs sm:text-sm"
+          >
+            <Wallet className="w-4 h-4" />
+            Pagamentos
+          </TabsTrigger>
         </TabsList>
 
+        {/* ===== CATEGORIAS ===== */}
         <TabsContent value="categories" className="space-y-6 mt-6">
           <div className="flex items-center justify-between">
             <div>
@@ -242,7 +315,8 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
             </div>
             <Button onClick={openCreateModal} className="btn-gradient gap-2 rounded-full">
               <Plus className="w-4 h-4" />
-              Nova Categoria
+              <span className="hidden sm:inline">Nova Categoria</span>
+              <span className="sm:hidden">Nova</span>
             </Button>
           </div>
 
@@ -265,6 +339,7 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
           />
         </TabsContent>
 
+        {/* ===== CARTÕES ===== */}
         <TabsContent value="cards" className="mt-6 space-y-6">
           <div className="flex items-center justify-between">
             <div>
@@ -273,7 +348,8 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
             </div>
             <Button onClick={openCreateCardModal} className="btn-gradient gap-2 rounded-full">
               <Plus className="w-4 h-4" />
-              Novo Cartão
+              <span className="hidden sm:inline">Novo Cartão</span>
+              <span className="sm:hidden">Novo</span>
             </Button>
           </div>
 
@@ -338,9 +414,91 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
             </div>
           )}
         </TabsContent>
+
+        {/* ===== FORMAS DE PAGAMENTO ===== */}
+        <TabsContent value="payments" className="mt-6 space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-bold">Formas de Pagamento</h3>
+              <p className="text-sm text-muted-foreground">Configure como você paga e recebe</p>
+            </div>
+            <Button onClick={openCreatePaymentModal} className="btn-gradient gap-2 rounded-full">
+              <Plus className="w-4 h-4" />
+              <span className="hidden sm:inline">Nova Forma</span>
+              <span className="sm:hidden">Nova</span>
+            </Button>
+          </div>
+
+          {/* Default payment types info */}
+          <div className="glass-card rounded-xl p-4">
+            <p className="text-sm text-muted-foreground mb-3 font-medium">Tipos disponíveis:</p>
+            <div className="flex flex-wrap gap-2">
+              {paymentTypeOptions.map((opt) => {
+                const Icon = iconMap[opt.icon] || Wallet;
+                return (
+                  <span key={opt.value} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted text-xs font-medium text-muted-foreground">
+                    <Icon className="w-3.5 h-3.5" />
+                    {opt.label}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+
+          {!paymentsLoaded ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {[1, 2, 3].map((i) => <Skeleton key={i} className="h-20 rounded-xl" />)}
+            </div>
+          ) : paymentMethods.length === 0 ? (
+            <EmptyState
+              icon={Wallet}
+              title="Nenhuma forma de pagamento"
+              description="Adicione suas formas de pagamento preferidas como Pix, cartão, dinheiro, etc."
+              action={{ label: "Adicionar Forma de Pagamento", onClick: openCreatePaymentModal }}
+            />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {paymentMethods.map((method) => {
+                const Icon = iconMap[method.icon_name] || Wallet;
+                const typeLabel = paymentTypeOptions.find((o) => o.value === method.type)?.label || method.type;
+                return (
+                  <div
+                    key={method.id}
+                    className="glass-card rounded-xl p-4 flex items-center gap-3 group hover:shadow-md transition-all"
+                    style={{ borderLeft: `3px solid ${method.color}` }}
+                  >
+                    <div className="p-2.5 rounded-full" style={{ backgroundColor: `${method.color}20` }}>
+                      <Icon className="w-5 h-5" style={{ color: method.color }} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm truncate">{method.name}</p>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded font-medium bg-muted text-muted-foreground">
+                        {typeLabel}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={() => openEditPaymentModal(method)}
+                        className="p-1.5 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeletePayment(method.id)}
+                        className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </TabsContent>
       </Tabs>
 
-      {/* Add/Edit Modal */}
+      {/* ===== CATEGORY MODAL ===== */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="bg-card border-border max-w-md">
           <DialogHeader>
@@ -348,7 +506,6 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
           </DialogHeader>
 
           <div className="space-y-5 pt-2">
-            {/* Name */}
             <div className="space-y-2">
               <Label>Nome</Label>
               <Input
@@ -359,7 +516,6 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
               />
             </div>
 
-            {/* Type */}
             <div className="space-y-2">
               <Label>Tipo</Label>
               <div className="flex gap-2">
@@ -386,7 +542,6 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
               </div>
             </div>
 
-            {/* Color */}
             <div className="space-y-2">
               <Label>Cor</Label>
               <div className="flex flex-wrap gap-2">
@@ -403,7 +558,6 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
               </div>
             </div>
 
-            {/* Icon */}
             <div className="space-y-2">
               <Label>Ícone</Label>
               <div className="grid grid-cols-8 gap-1.5 max-h-32 overflow-y-auto">
@@ -426,7 +580,6 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
               </div>
             </div>
 
-            {/* Preview */}
             <div className="space-y-2">
               <Label>Prévia</Label>
               <div
@@ -452,7 +605,6 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
               </div>
             </div>
 
-            {/* Actions */}
             <div className="flex gap-3 pt-2">
               <Button variant="ghost" onClick={() => setIsModalOpen(false)} className="flex-1">
                 Cancelar
@@ -466,7 +618,7 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Card Modal */}
+      {/* ===== CARD MODAL ===== */}
       <Dialog open={isCardModalOpen} onOpenChange={setIsCardModalOpen}>
         <DialogContent className="bg-card border-border max-w-md">
           <DialogHeader>
@@ -554,7 +706,6 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
               </div>
             </div>
 
-            {/* Preview */}
             <div className="rounded-2xl p-4 text-white text-sm" style={{ background: `linear-gradient(135deg, ${cardColor}, ${cardColor}cc)` }}>
               <div className="flex justify-between mb-3">
                 <span className="text-xs uppercase opacity-80">{cardType === "credit" ? "Crédito" : "Débito"}</span>
@@ -569,6 +720,110 @@ const OrganizationTab = ({ financeType }: OrganizationTabProps) => {
               <Button onClick={handleSaveCard} className="flex-1 btn-gradient" disabled={!cardName.trim()}>
                 <Check className="w-4 h-4 mr-1" />
                 {editingCard ? "Salvar" : "Criar"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* ===== PAYMENT METHOD MODAL ===== */}
+      <Dialog open={isPaymentModalOpen} onOpenChange={setIsPaymentModalOpen}>
+        <DialogContent className="bg-card border-border max-w-md">
+          <DialogHeader>
+            <DialogTitle>{editingPayment ? "Editar Forma de Pagamento" : "Nova Forma de Pagamento"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-5 pt-2">
+            <div className="space-y-2">
+              <Label>Nome</Label>
+              <Input
+                value={paymentName}
+                onChange={(e) => setPaymentName(e.target.value)}
+                placeholder="Ex: Pix Nubank, Dinheiro, etc."
+                maxLength={50}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Tipo</Label>
+              <Select value={paymentType} onValueChange={(v) => {
+                setPaymentType(v);
+                const opt = paymentTypeOptions.find((o) => o.value === v);
+                if (opt) setPaymentIcon(opt.icon);
+              }}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {paymentTypeOptions.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Cor</Label>
+              <div className="flex flex-wrap gap-2">
+                {availableColors.map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => setPaymentColor(color)}
+                    className={`w-8 h-8 rounded-full transition-all ${
+                      paymentColor === color ? "ring-2 ring-offset-2 ring-primary" : ""
+                    }`}
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Ícone</Label>
+              <div className="grid grid-cols-8 gap-1.5 max-h-32 overflow-y-auto">
+                {availableIcons.map((iconName) => {
+                  const Icon = iconMap[iconName];
+                  return (
+                    <button
+                      key={iconName}
+                      onClick={() => setPaymentIcon(iconName)}
+                      className={`p-2 rounded-lg transition-all ${
+                        paymentIcon === iconName
+                          ? "bg-primary/10 ring-2 ring-primary"
+                          : "bg-muted hover:bg-muted/80"
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" style={{ color: paymentColor }} />
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Preview */}
+            <div className="space-y-2">
+              <Label>Prévia</Label>
+              <div
+                className="glass-card rounded-xl p-4 flex items-center gap-3"
+                style={{ borderLeft: `3px solid ${paymentColor}` }}
+              >
+                <div className="p-2.5 rounded-full" style={{ backgroundColor: `${paymentColor}20` }}>
+                  {(() => {
+                    const PreviewIcon = iconMap[paymentIcon] || Wallet;
+                    return <PreviewIcon className="w-5 h-5" style={{ color: paymentColor }} />;
+                  })()}
+                </div>
+                <div>
+                  <p className="font-medium text-sm">{paymentName || "Nome da forma"}</p>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded font-medium bg-muted text-muted-foreground">
+                    {paymentTypeOptions.find((o) => o.value === paymentType)?.label || paymentType}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <Button variant="ghost" onClick={() => setIsPaymentModalOpen(false)} className="flex-1">Cancelar</Button>
+              <Button onClick={handleSavePayment} className="flex-1 btn-gradient" disabled={!paymentName.trim()}>
+                <Check className="w-4 h-4 mr-1" />
+                {editingPayment ? "Salvar" : "Criar"}
               </Button>
             </div>
           </div>
