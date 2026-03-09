@@ -112,7 +112,7 @@ const mockGroups: Group[] = [
   },
 ];
 
-const GroupCard = ({ group, index, onSelect }: { group: Group; index: number; onSelect: (group: Group) => void }) => {
+const GroupCard = ({ group, index }: { group: Group; index: number }) => {
   const [hovered, setHovered] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [bannerUrl, setBannerUrl] = useState(() => {
@@ -165,11 +165,10 @@ const GroupCard = ({ group, index, onSelect }: { group: Group; index: number; on
 
   return (
     <div
-      className="group relative bg-card rounded-2xl border border-border overflow-hidden flex flex-col transition-all duration-500 hover:shadow-xl hover:-translate-y-1 animate-fade-in cursor-pointer"
+      className="group relative bg-card rounded-2xl border border-border overflow-hidden flex flex-col transition-all duration-500 hover:shadow-xl hover:-translate-y-1 animate-fade-in"
       style={{ animationDelay: `${index * 80}ms`, animationFillMode: "both" }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={() => onSelect(group)}
     >
       {/* Banner Image */}
       <div className="relative h-32 sm:h-36 overflow-hidden">
@@ -240,8 +239,8 @@ const GroupCard = ({ group, index, onSelect }: { group: Group; index: number; on
         </p>
 
         {/* Footer */}
-        <div className="mt-auto pt-1 flex items-end justify-between">
-          <span className="text-xs text-primary font-medium">Acessar grupo →</span>
+        <div className="mt-auto pt-1 flex items-end justify-end">
+          <span className="text-xs text-muted-foreground italic">🔒 Grupo fechado</span>
         </div>
       </div>
     </div>
@@ -269,25 +268,6 @@ const GroupsTab = () => {
 
   const filteredGroups = getFilteredGroups();
 
-  // If a group is selected, show the detail view
-  if (selectedGroup) {
-    const storedBanners = getStoredBanners();
-    return (
-      <GroupDetailView
-        group={{
-          id: selectedGroup.id,
-          name: selectedGroup.name,
-          description: selectedGroup.description,
-          emoji: selectedGroup.emoji,
-          category: selectedGroup.category,
-          bannerUrl: storedBanners[selectedGroup.id] || selectedGroup.defaultBanner,
-        }}
-        onBack={() => setSelectedGroup(null)}
-        isSubscriber={false}
-      />
-    );
-  }
-
   return (
     <div className="space-y-5">
       {/* Sub-tabs */}
@@ -303,11 +283,6 @@ const GroupsTab = () => {
           <TabsTrigger value="joined" className="text-xs sm:text-sm rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-300">
             <Crown className="w-3.5 h-3.5 sm:mr-1.5" />
             <span>Meus Grupos</span>
-            {joinedGroups.length > 0 && (
-              <Badge variant="secondary" className="ml-1.5 text-[10px] px-1.5 py-0 hidden sm:inline-flex">
-                {joinedGroups.length}
-              </Badge>
-            )}
           </TabsTrigger>
           <TabsTrigger value="discover" className="text-xs sm:text-sm rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-300">
             <Sparkles className="w-3.5 h-3.5 sm:mr-1.5" />
@@ -319,7 +294,7 @@ const GroupsTab = () => {
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {filteredGroups.map((group, i) => (
-          <GroupCard key={group.id} group={group} index={i} onSelect={setSelectedGroup} />
+          <GroupCard key={group.id} group={group} index={i} />
         ))}
       </div>
 
