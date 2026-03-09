@@ -49,6 +49,46 @@ const GymRatsChallenges = ({ className }: Props) => {
     const data = await getParticipants(challenge.id);
     setParticipants(data);
     setLoadingParticipants(false);
+    
+    // Load check-ins
+    loadMonthlyCheckins(challenge.id);
+    loadRecentCheckins(challenge.id);
+  };
+
+  const loadMonthlyCheckins = async (challengeId: string) => {
+    const checkins = await getUserMonthlyCheckins(
+      challengeId,
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() + 1
+    );
+    setMonthlyCheckins(checkins);
+  };
+
+  const loadRecentCheckins = async (challengeId: string) => {
+    const checkins = await getChallengeCheckins(challengeId);
+    setRecentCheckins(checkins.slice(0, 6));
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleUploadCheckin = async () => {
+    if (!selectedFile || !selectedChallenge) return;
+
+    const result = await uploadCheckinPhoto(selectedChallenge.id, selectedFile, caption);
+    if (result) {
+      setShowUploadModal(false);
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      setCaption("");
+      await handleSelectChallenge(selectedChallenge);
+      await refetch();
+    }
   };
 
   const toggleSection = (key: string) => {
