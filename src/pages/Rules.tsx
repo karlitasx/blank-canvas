@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import {
   Heart, Shield, Ban, Users, MessageCircle, Share2, HelpCircle,
-  Rss, Wallet, Calendar, Diamond,
+  Rss, Wallet, Calendar, Diamond, Target, HeartPulse, Dumbbell, Trophy,
 } from "lucide-react";
 
 const rules = [
@@ -100,9 +100,37 @@ const features = [
   {
     icon: Wallet,
     title: "Minhas Finanças",
-    description: "Controle simples e prático da sua vida financeira. Sem complicação.",
+    description: "Controle simples e prático da sua vida financeira pessoal e empresarial.",
     link: "/finance",
     linkText: "Ver finanças >",
+  },
+  {
+    icon: Target,
+    title: "Rotina & Hábitos",
+    description: "Planeje sua rotina semanal e acompanhe seus hábitos diários com consistência.",
+    link: "/routine",
+    linkText: "Ver rotina >",
+  },
+  {
+    icon: HeartPulse,
+    title: "Autocuidado",
+    description: "Check-ins emocionais, micro rituais e equilíbrio dos pilares da sua vida.",
+    link: "/selfcare",
+    linkText: "Ver autocuidado >",
+  },
+  {
+    icon: Dumbbell,
+    title: "GymRats",
+    description: "Desafios fitness com check-in por foto. Mantenha a consistência e inspire outras.",
+    link: "/gymrats",
+    linkText: "Ver GymRats >",
+  },
+  {
+    icon: Trophy,
+    title: "Ranking & Conquistas",
+    description: "Ganhe pontos, suba de nível e desbloqueie conquistas conforme evolui na plataforma.",
+    link: "/ranking",
+    linkText: "Ver ranking >",
   },
 ];
 
