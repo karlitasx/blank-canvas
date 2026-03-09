@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, DollarSign, Star, Wallet, ArrowLeft, Building2, User, LayoutGrid, BarChart3, FileText, Target, CreditCard, FolderKanban, TrendingDown } from "lucide-react";
+import { Plus, DollarSign, Star, Wallet, ArrowLeft, Building2, User, LayoutGrid, BarChart3, FileText, Target, CreditCard, FolderKanban, TrendingDown, Sparkles, Shield, X } from "lucide-react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SummaryCards from "@/components/finances/SummaryCards";
 import FinanceBarChart from "@/components/finances/FinanceBarChart";
@@ -40,6 +40,8 @@ const Finances = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("month");
   const [selectedType, setSelectedType] = useState<"all" | "income" | "expense">("all");
   const [activeTab, setActiveTab] = useState("overview");
+  const [showSecurityBanner, setShowSecurityBanner] = useState(true);
+  const [veveOpen, setVeveOpen] = useState(false);
 
   const { transactions, isLoaded, stats, addTransaction, deleteTransaction, filterTransactions, getCategoryData } =
     useSupabaseFinances(financeType || undefined);
@@ -154,19 +156,48 @@ const Finances = () => {
                 : "Gerencie suas receitas e despesas pessoais"}
             </p>
           </div>
-          <LgpdNotice />
         </div>
-
-        {(activeTab === "overview" || activeTab === "transactions") && (
-          <Button
-            onClick={() => setIsModalOpen(true)}
-            className="btn-gradient gap-2"
-          >
-            <Plus className="w-5 h-5" />
-            Nova Transação
-          </Button>
-        )}
       </div>
+
+      {/* Action Row */}
+      <div className="flex items-center gap-3 mb-4 flex-wrap">
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          className="btn-gradient gap-2"
+        >
+          <Plus className="w-4 h-4" />
+          Adicionar transação
+        </Button>
+        <LgpdNotice />
+      </div>
+
+      {/* Veve Button */}
+      <Button
+        variant="outline"
+        onClick={() => setVeveOpen(true)}
+        className="w-full mb-4 border-primary/30 text-primary hover:bg-primary/5 gap-2 py-5"
+      >
+        <Sparkles className="w-5 h-5" />
+        Veve
+      </Button>
+
+      {/* Security Banner */}
+      {showSecurityBanner && (
+        <div className="mb-4 p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 flex gap-3 items-start">
+          <Shield className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm text-foreground">
+              <strong>Seus dados estão seguros:</strong>{" "}
+              <span className="text-muted-foreground">
+                Utilizamos criptografia de ponta e não compartilhamos suas informações financeiras com terceiros. Todos os dados são armazenados com segurança em nossos servidores protegidos.
+              </span>
+            </p>
+          </div>
+          <button onClick={() => setShowSecurityBanner(false)} className="text-muted-foreground hover:text-foreground flex-shrink-0">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
       {/* Summary Cards - always visible */}
       <SummaryCards balance={stats.balance} income={stats.income} expenses={stats.expenses} />
@@ -293,7 +324,7 @@ const Finances = () => {
         financeType={financeType}
       />
 
-      <VeveAssistant />
+      <VeveAssistant externalOpen={veveOpen} onExternalOpenChange={setVeveOpen} />
     </DashboardLayout>
   );
 };
