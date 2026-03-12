@@ -69,7 +69,7 @@ const AchievementCard = ({ achievement, progress, onClick, onShare }: Achievemen
     >
       {/* Legendary shimmer effect */}
       {isUnlocked && rarity === "legendary" && (
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/5 to-transparent animate-[shimmer_3s_ease-in-out_infinite] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent animate-[shimmer_3s_ease-in-out_infinite] pointer-events-none" />
       )}
 
       <div className="relative p-4">
