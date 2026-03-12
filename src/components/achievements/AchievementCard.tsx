@@ -12,31 +12,31 @@ interface AchievementCardProps {
 }
 
 const RARITY_BORDER: Record<string, string> = {
-  common: "border-gray-500/30",
-  rare: "border-blue-500/40",
-  epic: "border-purple-500/50",
-  legendary: "border-amber-400/60",
+  common: "border-muted-foreground/30",
+  rare: "border-secondary/40",
+  epic: "border-primary/50",
+  legendary: "border-accent/60",
 };
 
 const RARITY_GLOW: Record<string, string> = {
   common: "",
-  rare: "shadow-blue-500/10",
-  epic: "shadow-purple-500/15",
-  legendary: "shadow-amber-400/25",
+  rare: "shadow-secondary/10",
+  epic: "shadow-primary/15",
+  legendary: "shadow-accent/25",
 };
 
 const RARITY_BG: Record<string, string> = {
-  common: "from-gray-500/5 to-gray-600/5",
-  rare: "from-blue-500/8 to-cyan-500/5",
-  epic: "from-purple-500/10 to-pink-500/5",
-  legendary: "from-amber-400/12 to-orange-500/8",
+  common: "from-muted/10 to-muted/5",
+  rare: "from-secondary/10 to-secondary/5",
+  epic: "from-primary/10 to-primary/5",
+  legendary: "from-accent/12 to-accent/8",
 };
 
 const RARITY_TAG_BG: Record<string, string> = {
-  common: "bg-gray-500/20 text-gray-300",
-  rare: "bg-blue-500/20 text-blue-300",
-  epic: "bg-purple-500/20 text-purple-300",
-  legendary: "bg-gradient-to-r from-amber-400/30 to-orange-500/30 text-amber-200",
+  common: "bg-muted/30 text-muted-foreground",
+  rare: "bg-secondary/20 text-secondary",
+  epic: "bg-primary/20 text-primary",
+  legendary: "bg-gradient-to-r from-accent/30 to-accent/20 text-accent-foreground",
 };
 
 const AchievementCard = ({ achievement, progress, onClick, onShare }: AchievementCardProps) => {
@@ -69,7 +69,7 @@ const AchievementCard = ({ achievement, progress, onClick, onShare }: Achievemen
     >
       {/* Legendary shimmer effect */}
       {isUnlocked && rarity === "legendary" && (
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-400/5 to-transparent animate-[shimmer_3s_ease-in-out_infinite] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent animate-[shimmer_3s_ease-in-out_infinite] pointer-events-none" />
       )}
 
       <div className="relative p-4">
