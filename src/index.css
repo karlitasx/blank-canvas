@@ -180,7 +180,7 @@
 .geometric-bg::before {
   width: 280px;
   height: 280px;
-  background: hsl(330 80% 45%);
+  background: hsl(340 85% 28%);
   top: 15%;
   left: 5%;
   transform: rotate(-12deg);
@@ -189,7 +189,7 @@
 .geometric-bg::after {
   width: 320px;
   height: 320px;
-  background: hsl(220 70% 50%);
+  background: hsl(205 90% 15%);
   top: 5%;
   right: 10%;
   transform: rotate(8deg);
