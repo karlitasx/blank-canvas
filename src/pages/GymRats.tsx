@@ -692,6 +692,7 @@ const GymRats = () => {
         onSubmit={createChallenge}
       />
     </div>
+    </DashboardLayout>
   );
 };
 
