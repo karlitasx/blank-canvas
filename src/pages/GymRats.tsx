@@ -520,6 +520,7 @@ const GymRats = () => {
 
   if (loading) {
     return (
+      <DashboardLayout activeNav="/gymrats">
       <div className="space-y-6">
         <PageHeader icon={Dumbbell} title="GymRats" description="Desafios fitness com a comunidade" />
         <div className="animate-pulse space-y-4">
@@ -527,10 +528,12 @@ const GymRats = () => {
           <div className="h-48 bg-muted rounded-2xl" />
         </div>
       </div>
+      </DashboardLayout>
     );
   }
 
   return (
+    <DashboardLayout activeNav="/gymrats">
     <div className="space-y-6 animate-fade-in">
       <PageHeader icon={Dumbbell} title="GymRats" description="Desafios fitness com a comunidade">
         <button
