@@ -42,8 +42,9 @@ const sections = [
       { icon: Target, label: "Rotina & Hábitos", href: "/routine" },
       { icon: Heart, label: "Autocuidado", href: "/selfcare" },
       { icon: Dumbbell, label: "GymRats", href: "/gymrats" },
-      { icon: Award, label: "Conquistas", href: "/challenges" },
-      { icon: Trophy, label: "Ranking", href: "/ranking" },
+      { icon: Award, label: "Desafios", href: "/challenges" },
+      { icon: Trophy, label: "Conquistas", href: "/achievements" },
+      { icon: Medal, label: "Ranking", href: "/ranking" },
     ],
   },
   {
