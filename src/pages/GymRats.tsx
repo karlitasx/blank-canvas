@@ -15,6 +15,24 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import CreateChallengeModal from "@/components/challenges/CreateChallengeModal";
 
+import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
+import { Dumbbell, Trophy, Search, Archive, Calendar, Users, Flame, Zap, Crown, Medal, ChevronDown, ChevronUp, Camera, Plus, X, Check, Target } from "lucide-react";
+import { PageHeader } from "@/components/ui/page-header";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSupabaseChallenges } from "@/hooks/useSupabaseChallenges";
+import { useGymRatsChallenges } from "@/hooks/useGymRatsChallenges";
+import { useAuth } from "@/hooks/useAuth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { differenceInDays, parseISO, format, getDaysInMonth, startOfMonth, isSameMonth } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { Challenge, ChallengeParticipant, DIFFICULTY_LEVELS } from "@/types/challenges";
+import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import CreateChallengeModal from "@/components/challenges/CreateChallengeModal";
+import DashboardLayout from "@/components/layout/DashboardLayout";
+
 const GymRats = () => {
   const { user } = useAuth();
   const { challenges, loading, createChallenge, joinChallenge, leaveChallenge, getParticipants, refetch } = useSupabaseChallenges();
