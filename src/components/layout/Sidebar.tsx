@@ -5,7 +5,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { toast } from "@/hooks/use-toast";
 import {
   Home, User, LogOut, HelpCircle, Calendar,
-  Wallet, Target, Heart, Award, Trophy,
+  Wallet, Target, Heart, Award, Trophy, Medal,
   Sparkles, UserPlus, BookOpen, Newspaper, Users, Bell, Rss, Dumbbell,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
