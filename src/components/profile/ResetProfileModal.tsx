@@ -48,14 +48,18 @@ const ResetProfileModal = ({ isOpen, onClose }: ResetProfileModalProps) => {
 
       if (data?.success) {
         setShowSuccess(true);
-        // Clear local storage preferences
-        localStorage.removeItem("vidaflow_preferences");
-        localStorage.removeItem("hasSeenOnboardingTour");
-        localStorage.removeItem("hasSeenWelcome");
+        // Clear all local storage to reset cached state
+        const keysToKeep = ["supabase.auth.token"];
+        const allKeys = Object.keys(localStorage);
+        allKeys.forEach((key) => {
+          if (!keysToKeep.some((k) => key.includes(k)) && !key.startsWith("sb-")) {
+            localStorage.removeItem(key);
+          }
+        });
 
         setTimeout(() => {
-          handleClose();
-          navigate("/primeiros-passos");
+          // Full reload to clear all React state (achievements, XP, etc.)
+          window.location.href = "/primeiros-passos";
         }, 2500);
       } else {
         throw new Error(data?.error || "Erro ao resetar perfil");
