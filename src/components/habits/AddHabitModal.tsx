@@ -28,7 +28,7 @@ const categories = [
   { id: "spiritual", name: "Espiritual", emoji: "🧘" },
   { id: "financial", name: "Financeiro", emoji: "💰" },
   { id: "selfcare", name: "Autocuidado", emoji: "🌸" },
-  { id: "haircare", name: "Cronograma Capilar", emoji: "🧖🏽‍♀️" },
+  { id: "haircare", name: "Cronograma Capilar", emoji: "🧖‍♀️" },
 ];
 
 const frequencyOptions = [
@@ -48,7 +48,7 @@ const weekDays = [
   { id: "sun", name: "Dom" },
 ];
 
-const emojis = ["💧", "🏃", "📚", "🧘", "💰", "🎯", "💪", "🌙", "☀️", "🍎", "✍️", "🎨", "🌸", "💆", "🧠", "❤️", "🧖🏽‍♀️"];
+const emojis = ["💧", "🏃", "📚", "🧘", "💰", "🎯", "💪", "🌙", "☀️", "🍎", "✍️", "🎨", "🌸", "💆", "🧠", "❤️", "🧖‍♀️"];
 
 const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
   const [name, setName] = useState("");
