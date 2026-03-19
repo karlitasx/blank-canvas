@@ -69,7 +69,6 @@ const HabitCard = ({ habit, onToggle, onEdit, onDelete, onStats }: HabitCardProp
     spiritual: "text-purple-500 border-purple-500/30",
     financial: "text-accent border-accent/30",
     selfcare: "text-primary border-primary/30",
-    haircare: "text-yellow-500 border-yellow-500/30",
   };
 
   const categoryNames: Record<string, string> = {
@@ -78,7 +77,6 @@ const HabitCard = ({ habit, onToggle, onEdit, onDelete, onStats }: HabitCardProp
     spiritual: "Espiritual",
     financial: "Financeiro",
     selfcare: "Autocuidado",
-    haircare: "Cronograma Capilar",
   };
 
   const frequencyLabels: Record<string, string> = {
