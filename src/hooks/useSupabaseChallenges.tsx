@@ -208,6 +208,40 @@ export const useSupabaseChallenges = () => {
     return challenges.filter(c => c.end_date >= today && !c.is_joined);
   };
 
+  const deleteChallenge = async (challengeId: string) => {
+    if (!user) return false;
+
+    try {
+      // Delete participants first
+      await supabase
+        .from("challenge_participants")
+        .delete()
+        .eq("challenge_id", challengeId);
+
+      // Delete checkins
+      await supabase
+        .from("challenge_checkins")
+        .delete()
+        .eq("challenge_id", challengeId);
+
+      const { error } = await supabase
+        .from("challenges")
+        .delete()
+        .eq("id", challengeId)
+        .eq("created_by", user.id);
+
+      if (error) throw error;
+
+      toast.success("Desafio excluído com sucesso!");
+      await fetchChallenges();
+      return true;
+    } catch (error) {
+      console.error("Error deleting challenge:", error);
+      toast.error("Erro ao excluir desafio");
+      return false;
+    }
+  };
+
   return {
     challenges,
     loading,
@@ -215,6 +249,7 @@ export const useSupabaseChallenges = () => {
     joinChallenge,
     leaveChallenge,
     updateProgress,
+    deleteChallenge,
     getParticipants,
     getActiveChallenges,
     getAvailableChallenges,
