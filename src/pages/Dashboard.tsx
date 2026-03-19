@@ -61,17 +61,9 @@ const Dashboard = () => {
         <QuickStats />
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        {/* Daily Progress - Takes 2 columns */}
-        <div className="lg:col-span-2" data-tour="daily-progress">
-          <DailyProgress />
-        </div>
-        
-        {/* Virtual Plant */}
-        <div data-tour="virtual-plant">
-          <VirtualPlant />
-        </div>
+      {/* Daily Progress */}
+      <div className="mb-8" data-tour="daily-progress">
+        <DailyProgress />
       </div>
 
       {/* Achievements & Navigation Grid */}

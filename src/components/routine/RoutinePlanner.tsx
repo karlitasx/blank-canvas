@@ -157,9 +157,6 @@ export const RoutinePlanner = () => {
           </div>
         </div>
         
-        <div className="w-16 h-20 relative">
-          <AnimatedPlant stage={plantStage} isAnimating={false} />
-        </div>
       </div>
 
       {/* Controls */}
