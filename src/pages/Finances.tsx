@@ -248,34 +248,23 @@ const Finances = () => {
 
   return (
     <DashboardLayout activeNav="/finance">
-      {/* Hero Banner */}
-      <div className="relative rounded-2xl overflow-hidden mb-4 md:mb-6 bg-gradient-to-br from-primary via-secondary to-accent">
-        <div className="absolute top-0 right-0 w-32 md:w-48 h-32 md:h-48 bg-primary-foreground/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-24 md:w-36 h-24 md:h-36 bg-primary-foreground/5 rounded-full translate-y-1/2 -translate-x-1/2" />
-        <div className="relative z-10 p-4 md:p-8">
-          <div className="flex items-center gap-2 md:gap-3 mb-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setFinanceType(null)}
-              className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10 shrink-0 -ml-1 md:-ml-2 h-8 w-8 md:h-10 md:w-10"
-            >
-              <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
-            </Button>
-            <div className="flex items-center gap-2 md:gap-3 min-w-0">
-              <div className="p-2 md:p-2.5 rounded-xl bg-primary-foreground/20 backdrop-blur-sm shrink-0">
-                <TypeIcon className="w-4 h-4 md:w-5 md:h-5 text-primary-foreground" />
-              </div>
-              <div className="min-w-0">
-                <h1 className="text-lg md:text-2xl font-extrabold text-primary-foreground truncate">
-                  Finanças {typeLabel}
-                </h1>
-                <p className="text-primary-foreground/70 text-xs md:text-sm">
-                  Controle total da sua vida financeira
-                </p>
-              </div>
-            </div>
+      {/* Compact Header */}
+      <div className="flex items-center gap-2 mb-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setFinanceType(null)}
+          className="shrink-0 h-8 w-8 text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="w-4 h-4" />
+        </Button>
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="p-1.5 rounded-lg bg-primary/10 shrink-0">
+            <TypeIcon className="w-4 h-4 text-primary" />
           </div>
+          <h1 className="text-base md:text-xl font-bold text-foreground truncate">
+            Finanças {typeLabel}
+          </h1>
         </div>
       </div>
 
