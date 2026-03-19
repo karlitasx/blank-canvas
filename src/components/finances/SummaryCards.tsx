@@ -37,7 +37,7 @@ const SummaryCards = ({ balance, income, expenses, investments = 0, selectedMont
   return (
     <div className="space-y-3">
       {/* Main Balance Card - Gradient Style */}
-      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[hsl(var(--primary))] via-[hsl(var(--secondary))] to-[hsl(var(--gradient-purple))]">
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[hsl(var(--gradient-wine))] via-[hsl(var(--primary))] to-[hsl(var(--gradient-blue))]">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-28 h-28 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
