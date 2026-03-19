@@ -52,6 +52,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import XPProgressBar from "@/components/achievements/XPProgressBar";
+import ResetProfileModal from "@/components/profile/ResetProfileModal";
 import { LEVEL_EMOJIS, RARITY_COLORS, RARITY_LABELS, Achievement } from "@/types/achievements";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
