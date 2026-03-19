@@ -79,6 +79,7 @@ const SelfCare = () => {
   } = useSelfCare();
 
   const { awardPoints } = usePoints();
+  const { isAdmin } = useAdmin();
 
   // Load existing data
   useEffect(() => {
