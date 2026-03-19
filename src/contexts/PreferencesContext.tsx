@@ -40,6 +40,9 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.achievements': 'Conquistas',
     'nav.ranking': 'Ranking',
     'nav.profile': 'Perfil',
+    'nav.calendar': 'Calendário',
+    'nav.challenges': 'Desafios',
+    'nav.gymrats': 'GymRats',
     // Greeting
     'greeting.morning': 'Bom dia',
     'greeting.afternoon': 'Boa tarde',
