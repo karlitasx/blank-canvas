@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { AchievementsProvider } from "@/contexts/AchievementsContext";
+import { NotificationsProvider } from "@/contexts/NotificationsContext";
 import { PreferencesProvider } from "@/contexts/PreferencesContext";
 import { Layout } from "@/components/Layout";
 import { ThemeProvider } from "@/contexts/ThemeContext";
