@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight, Plus, CheckCircle2, Circle, LayoutGrid, List
 import { cn } from "@/lib/utils";
 import { AddRoutineTaskModal } from "./AddRoutineTaskModal";
 import { Progress } from "@/components/ui/progress";
-import AnimatedPlant from "@/components/dashboard/AnimatedPlant";
+
 
 type ViewMode = "horizontal" | "vertical";
 
@@ -27,7 +27,6 @@ export const RoutinePlanner = () => {
   const navigateNextWeek = () => setCurrentDate(addDays(currentDate, 7));
 
   const todayProgress = getDayProgress(new Date());
-  const plantStage = Math.floor((todayProgress.percentage / 100) * 4);
 
   const renderDayCard = (day: Date) => {
     const isCurrentDay = isToday(day);
@@ -158,9 +157,6 @@ export const RoutinePlanner = () => {
           </div>
         </div>
         
-        <div className="w-16 h-20 relative">
-          <AnimatedPlant stage={plantStage} isAnimating={false} />
-        </div>
       </div>
 
       {/* Controls */}
