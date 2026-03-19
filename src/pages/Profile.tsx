@@ -57,7 +57,7 @@ import { LEVEL_EMOJIS, RARITY_COLORS, RARITY_LABELS, Achievement } from "@/types
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
-import { Lock } from "lucide-react";
+import { Lock, RotateCcw } from "lucide-react";
 
 interface UserPreferences {
   theme: 'dark' | 'light' | 'system';
