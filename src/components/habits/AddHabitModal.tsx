@@ -48,7 +48,7 @@ const weekDays = [
   { id: "sun", name: "Dom" },
 ];
 
-const emojis = ["💧", "🏃", "📚", "🧘", "💰", "🎯", "💪", "🌙", "☀️", "🍎", "✍️", "🎨", "🌸", "💆", "🧠", "❤️", "🧖🏽‍♀️"];
+const emojis = ["💧", "🏃", "📚", "🧘", "💰", "🎯", "💪", "🌙", "☀️", "🍎", "✍️", "🎨", "🌸", "💆", "🧠", "❤️", "🧖‍♀️"];
 
 const AddHabitModal = ({ isOpen, onClose, onAdd }: AddHabitModalProps) => {
   const [name, setName] = useState("");
