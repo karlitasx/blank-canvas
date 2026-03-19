@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Heart, Sparkles, Brain, Palette, Activity, CheckCircle, Leaf } from "lucide-react";
+import { Heart, Sparkles, Brain, Palette, Activity, CheckCircle, Leaf, Scissors } from "lucide-react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import confetti from "canvas-confetti";
 import { useSelfCare } from "@/hooks/useSelfCare";
 import { usePoints } from "@/hooks/usePoints";
+import { useAdmin } from "@/hooks/useAdmin";
 import EmotionalCheckIn from "@/components/selfcare/EmotionalCheckIn";
 import MicroRitual from "@/components/selfcare/MicroRitual";
 import PillarBalance from "@/components/selfcare/PillarBalance";
@@ -13,6 +14,8 @@ import ShareRitual from "@/components/selfcare/ShareRitual";
 import WeeklyEvolution from "@/components/selfcare/WeeklyEvolution";
 import GymRatsChallenges from "@/components/selfcare/GymRatsChallenges";
 import HairCareModule from "@/components/haircare/HairCareModule";
+import AdminHairCareSection from "@/components/admin/AdminHairCareSection";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Self-care tips array
 const selfCareTips = [
