@@ -180,93 +180,126 @@ const SelfCare = () => {
           </div>
         </div>
 
-        {/* SECTION 1: Emotional Check-In */}
-        <div className="glass-card p-6 md:p-8 mb-6 animate-slide-up rounded-2xl">
-          <EmotionalCheckIn
-            selectedEmotion={selectedEmotion}
-            onSelectEmotion={setSelectedEmotion}
-            note={note}
-            onNoteChange={setNote}
-            energyLevel={energyLevel}
-            onEnergyChange={setEnergyLevel}
-            gratitudes={gratitudes}
-            onGratitudesChange={setGratitudes}
-            onSave={handleSaveCheckIn}
-            alreadySaved={checkInSaved}
-          />
-        </div>
-
-        {/* SECTION 2: Micro-Ritual (only after check-in) */}
-        {checkInSaved && selectedEmotion && (
-          <div className="glass-card p-6 md:p-8 mb-6 animate-slide-up animation-delay-100 rounded-2xl">
-            <MicroRitual
-              emotionalState={selectedEmotion}
-              ritualCompleted={todayCheckIn?.ritual_completed || false}
-              onCompleteRitual={handleCompleteRitual}
-            />
-            <ShareRitual ritualCompleted={todayCheckIn?.ritual_completed || false} />
-          </div>
-        )}
-
-        {/* SECTION 3: Pillar Balance */}
-        {checkInSaved && (
-          <div className="glass-card p-6 md:p-8 mb-6 animate-slide-up animation-delay-200 rounded-2xl">
-            <PillarBalance
-              todayActions={todayPillarActions}
-              weeklyActions={weeklyPillarActions}
-              onAddAction={handleAddPillarAction}
-            />
-          </div>
-        )}
-
-        {/* SECTION 4: Weekly Evolution */}
-        <div className="glass-card p-6 mb-6 animate-slide-up animation-delay-200 rounded-2xl">
-          <WeeklyEvolution weeklyCheckIns={weeklyCheckIns} />
-        </div>
-
-        {/* Daily Tip (kept) */}
-        <div className="glass-card p-6 mb-6 animate-slide-up rounded-2xl">
-          <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="w-5 h-5 text-warning" />
-            <h3 className="font-medium text-sm">Dica do Dia</h3>
-          </div>
-          <p className="text-sm mb-4 text-foreground/80">{currentTip}</p>
-          <div className="flex gap-3">
-            {!tipCompleted ? (
-              <button onClick={handleCompleteTip} className="btn-gradient px-4 py-2 rounded-lg flex items-center gap-2 text-sm hover:scale-105 transition-transform">
-                <CheckCircle className="w-4 h-4" />
-                Feito
-              </button>
-            ) : (
-              <span className="text-sm text-primary flex items-center gap-1"><CheckCircle className="w-4 h-4" /> Concluído!</span>
+        {/* Main Tabs */}
+        <Tabs value={activeMainTab} onValueChange={setActiveMainTab} className="mb-6">
+          <TabsList className="w-full bg-card border border-border">
+            <TabsTrigger value="autocuidado" className="flex-1 gap-1.5">
+              <Heart className="w-4 h-4" />
+              <span className="hidden sm:inline">Autocuidado</span>
+            </TabsTrigger>
+            <TabsTrigger value="capilar" className="flex-1 gap-1.5">
+              <Scissors className="w-4 h-4" />
+              <span className="hidden sm:inline">Cronograma Capilar</span>
+              <span className="sm:hidden">Capilar</span>
+            </TabsTrigger>
+            {isAdmin && (
+              <TabsTrigger value="admin-capilar" className="flex-1 gap-1.5">
+                <Scissors className="w-4 h-4" />
+                <span className="hidden sm:inline">Gestão (Yara)</span>
+                <span className="sm:hidden">Yara</span>
+              </TabsTrigger>
             )}
-            <button onClick={handleNewTip} className="px-4 py-2 rounded-lg bg-muted hover:bg-muted/80 text-sm transition-all">Nova dica</button>
-          </div>
-        </div>
+          </TabsList>
 
-        {/* Categories (kept) */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          {categories.map((cat, i) => {
-            const Icon = cat.icon;
-            return (
-              <div key={cat.id} className="glass-card p-4 animate-slide-up hover:scale-[1.02] transition-transform rounded-2xl" style={{ animationDelay: `${(i + 3) * 100}ms` }}>
-                <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${cat.color} flex items-center justify-center mb-2`}>
-                  <Icon className="w-5 h-5 text-white" />
-                </div>
-                <h4 className="font-medium text-sm mb-1">{cat.name}</h4>
-                <ul className="text-xs text-muted-foreground space-y-0.5">
-                  {cat.activities.map(a => <li key={a}>• {a}</li>)}
-                </ul>
+          <TabsContent value="autocuidado" className="mt-4 space-y-6">
+            {/* SECTION 1: Emotional Check-In */}
+            <div className="glass-card p-6 md:p-8 animate-slide-up rounded-2xl">
+              <EmotionalCheckIn
+                selectedEmotion={selectedEmotion}
+                onSelectEmotion={setSelectedEmotion}
+                note={note}
+                onNoteChange={setNote}
+                energyLevel={energyLevel}
+                onEnergyChange={setEnergyLevel}
+                gratitudes={gratitudes}
+                onGratitudesChange={setGratitudes}
+                onSave={handleSaveCheckIn}
+                alreadySaved={checkInSaved}
+              />
+            </div>
+
+            {/* SECTION 2: Micro-Ritual (only after check-in) */}
+            {checkInSaved && selectedEmotion && (
+              <div className="glass-card p-6 md:p-8 animate-slide-up animation-delay-100 rounded-2xl">
+                <MicroRitual
+                  emotionalState={selectedEmotion}
+                  ritualCompleted={todayCheckIn?.ritual_completed || false}
+                  onCompleteRitual={handleCompleteRitual}
+                />
+                <ShareRitual ritualCompleted={todayCheckIn?.ritual_completed || false} />
               </div>
-            );
-          })}
-        </div>
+            )}
 
-        {/* Hair Care Module */}
-        <HairCareModule />
+            {/* SECTION 3: Pillar Balance */}
+            {checkInSaved && (
+              <div className="glass-card p-6 md:p-8 animate-slide-up animation-delay-200 rounded-2xl">
+                <PillarBalance
+                  todayActions={todayPillarActions}
+                  weeklyActions={weeklyPillarActions}
+                  onAddAction={handleAddPillarAction}
+                />
+              </div>
+            )}
 
-        {/* GymRats-style Challenges */}
-        <GymRatsChallenges className="mb-6 animate-slide-up" />
+            {/* SECTION 4: Weekly Evolution */}
+            <div className="glass-card p-6 animate-slide-up animation-delay-200 rounded-2xl">
+              <WeeklyEvolution weeklyCheckIns={weeklyCheckIns} />
+            </div>
+
+            {/* Daily Tip (kept) */}
+            <div className="glass-card p-6 animate-slide-up rounded-2xl">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="w-5 h-5 text-warning" />
+                <h3 className="font-medium text-sm">Dica do Dia</h3>
+              </div>
+              <p className="text-sm mb-4 text-foreground/80">{currentTip}</p>
+              <div className="flex gap-3">
+                {!tipCompleted ? (
+                  <button onClick={handleCompleteTip} className="btn-gradient px-4 py-2 rounded-lg flex items-center gap-2 text-sm hover:scale-105 transition-transform">
+                    <CheckCircle className="w-4 h-4" />
+                    Feito
+                  </button>
+                ) : (
+                  <span className="text-sm text-primary flex items-center gap-1"><CheckCircle className="w-4 h-4" /> Concluído!</span>
+                )}
+                <button onClick={handleNewTip} className="px-4 py-2 rounded-lg bg-muted hover:bg-muted/80 text-sm transition-all">Nova dica</button>
+              </div>
+            </div>
+
+            {/* Categories (kept) */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {categories.map((cat, i) => {
+                const Icon = cat.icon;
+                return (
+                  <div key={cat.id} className="glass-card p-4 animate-slide-up hover:scale-[1.02] transition-transform rounded-2xl" style={{ animationDelay: `${(i + 3) * 100}ms` }}>
+                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${cat.color} flex items-center justify-center mb-2`}>
+                      <Icon className="w-5 h-5 text-white" />
+                    </div>
+                    <h4 className="font-medium text-sm mb-1">{cat.name}</h4>
+                    <ul className="text-xs text-muted-foreground space-y-0.5">
+                      {cat.activities.map(a => <li key={a}>• {a}</li>)}
+                    </ul>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* GymRats-style Challenges */}
+            <GymRatsChallenges className="animate-slide-up" />
+          </TabsContent>
+
+          <TabsContent value="capilar" className="mt-4">
+            <HairCareModule />
+          </TabsContent>
+
+          {isAdmin && (
+            <TabsContent value="admin-capilar" className="mt-4">
+              <div className="glass-card p-6 md:p-8 rounded-2xl animate-slide-up">
+                <AdminHairCareSection />
+              </div>
+            </TabsContent>
+          )}
+        </Tabs>
       </div>
     </DashboardLayout>
   );
