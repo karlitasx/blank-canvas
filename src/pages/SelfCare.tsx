@@ -56,6 +56,7 @@ const categories = [
 const SelfCare = () => {
   const [currentTip, setCurrentTip] = useState("");
   const [tipCompleted, setTipCompleted] = useState(false);
+  const [activeMainTab, setActiveMainTab] = useState("autocuidado");
   
 
   // New immersive state
