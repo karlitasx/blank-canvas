@@ -52,11 +52,12 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import XPProgressBar from "@/components/achievements/XPProgressBar";
+import ResetProfileModal from "@/components/profile/ResetProfileModal";
 import { LEVEL_EMOJIS, RARITY_COLORS, RARITY_LABELS, Achievement } from "@/types/achievements";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
-import { Lock } from "lucide-react";
+import { Lock, RotateCcw } from "lucide-react";
 
 interface UserPreferences {
   theme: 'dark' | 'light' | 'system';
@@ -89,6 +90,7 @@ const Profile = () => {
   const { currency, language, setCurrency, setLanguage, t } = usePreferences();
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState("");
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   
   const [preferences, setPreferences] = useState<UserPreferences>(() => {
     const saved = localStorage.getItem('vidaflow_preferences');
@@ -917,6 +919,34 @@ const Profile = () => {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Reset Profile Section */}
+        <Card className="bg-card border-destructive/20 mt-8">
+          <CardContent className="pt-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-destructive/10 flex items-center justify-center">
+                  <RotateCcw className="w-5 h-5 text-destructive" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground">Recomeçar do Zero</p>
+                  <p className="text-xs text-muted-foreground">Apaga todo progresso, mantém e-mail e plano</p>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                onClick={() => setIsResetModalOpen(true)}
+              >
+                <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
+                Resetar Perfil
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <ResetProfileModal isOpen={isResetModalOpen} onClose={() => setIsResetModalOpen(false)} />
       </div>
     </DashboardLayout>
   );
