@@ -2,12 +2,12 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders });
   }
 
   try {
@@ -22,7 +22,6 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    // User client to get user id
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
@@ -36,20 +35,45 @@ Deno.serve(async (req) => {
     }
 
     const userId = user.id;
-
-    // Service role client to delete data
     const adminClient = createClient(supabaseUrl, supabaseServiceKey);
+    const errors: string[] = [];
 
-    // Tables to clear (order matters for foreign keys)
-    // Delete child tables first, then parent tables
-    const deletionOrder = [
-      // Habit related
+    // Helper to delete from a table by user_id
+    const deleteByUserId = async (table: string, column = "user_id") => {
+      const { error } = await adminClient.from(table).delete().eq(column, userId);
+      if (error) {
+        console.error(`Error deleting from ${table}:`, error.message);
+        errors.push(`${table}: ${error.message}`);
+      }
+    };
+
+    // 1. Hair care - handle schedule_items first (no user_id column)
+    const { data: schedules } = await adminClient
+      .from("hair_schedules")
+      .select("id")
+      .eq("user_id", userId);
+
+    if (schedules && schedules.length > 0) {
+      const scheduleIds = schedules.map((s: { id: string }) => s.id);
+      // Delete treatment logs for these schedules' items
+      const { data: items } = await adminClient
+        .from("hair_schedule_items")
+        .select("id")
+        .in("schedule_id", scheduleIds);
+      if (items && items.length > 0) {
+        const itemIds = items.map((i: { id: string }) => i.id);
+        await adminClient.from("hair_treatment_logs").delete().in("schedule_item_id", itemIds);
+      }
+      // Delete schedule items
+      await adminClient.from("hair_schedule_items").delete().in("schedule_id", scheduleIds);
+    }
+
+    // 2. Delete tables with standard user_id column
+    const userIdTables = [
       "habit_completions",
       "habits",
-      // Routine related
       "routine_completions",
       "routine_tasks",
-      // Finance related
       "transactions",
       "finance_goals",
       "finance_cards",
@@ -60,67 +84,38 @@ Deno.serve(async (req) => {
       "business_settings",
       "das_payments",
       "fiscal_reminders",
-      // Hair care related
       "hair_treatment_logs",
-      "hair_schedule_items",  // needs schedule_id, handled via cascade or manual
       "hair_schedules",
       "hair_profiles",
-      // Social related
       "post_likes",
       "comments",
       "posts",
-      "follows",
       "connections",
       "introduction_likes",
       "introduction_comments",
       "introductions",
-      // Challenge related
       "challenge_checkins",
       "challenge_participants",
-      // We don't delete challenges created by user to not break other participants
-      // Selfcare
       "selfcare_checkins",
       "selfcare_pillar_actions",
-      // Achievements
       "achievement_shares",
       "user_achievements",
-      // Points & stats
       "point_history",
-      // Events
       "events",
-      // Wishlist
       "wishlist",
     ];
 
-    const errors: string[] = [];
-
-    for (const table of deletionOrder) {
-      const { error } = await adminClient
-        .from(table)
-        .delete()
-        .eq("user_id", userId);
-
-      if (error) {
-        console.error(`Error deleting from ${table}:`, error.message);
-        errors.push(`${table}: ${error.message}`);
-      }
+    for (const table of userIdTables) {
+      await deleteByUserId(table);
     }
 
-    // Delete hair_schedule_items via schedule ids (no direct user_id column)
-    const { data: schedules } = await adminClient
-      .from("hair_schedules")
-      .select("id")
-      .eq("user_id", userId);
-    
-    if (schedules && schedules.length > 0) {
-      const scheduleIds = schedules.map((s: { id: string }) => s.id);
-      await adminClient
-        .from("hair_schedule_items")
-        .delete()
-        .in("schedule_id", scheduleIds);
-    }
+    // 3. Follows uses follower_id / following_id, not user_id
+    const { error: f1 } = await adminClient.from("follows").delete().eq("follower_id", userId);
+    if (f1) errors.push(`follows(follower): ${f1.message}`);
+    const { error: f2 } = await adminClient.from("follows").delete().eq("following_id", userId);
+    if (f2) errors.push(`follows(following): ${f2.message}`);
 
-    // Reset user_stats to zero (don't delete, just reset)
+    // 4. Reset user_stats to zero
     await adminClient
       .from("user_stats")
       .update({
@@ -134,7 +129,7 @@ Deno.serve(async (req) => {
       })
       .eq("user_id", userId);
 
-    // Reset profile (keep user_id, reset display name and avatar)
+    // 5. Reset profile (keep user_id & created_at)
     await adminClient
       .from("profiles")
       .update({
@@ -147,28 +142,21 @@ Deno.serve(async (req) => {
       })
       .eq("user_id", userId);
 
-    // Don't delete: subscriptions, user_roles (keep access & plan)
+    // Don't delete: subscriptions, user_roles
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
+      JSON.stringify({
+        success: true,
         message: "Profile reset successfully",
-        warnings: errors.length > 0 ? errors : undefined 
+        warnings: errors.length > 0 ? errors : undefined,
       }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {
     console.error("Reset profile error:", err);
     return new Response(
       JSON.stringify({ error: "Internal server error" }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 });
-
