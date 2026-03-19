@@ -28,6 +28,7 @@ const categories = [
   { id: "spiritual", name: "Espiritual", emoji: "🧘" },
   { id: "financial", name: "Financeiro", emoji: "💰" },
   { id: "selfcare", name: "Autocuidado", emoji: "🌸" },
+  { id: "haircare", name: "Cronograma Capilar", emoji: "🧖🏽‍♀️" },
 ];
 
 const frequencyOptions = [
