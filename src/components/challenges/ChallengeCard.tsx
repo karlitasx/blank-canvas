@@ -1,25 +1,53 @@
+import { useState } from "react";
 import { Challenge, CHALLENGE_TYPES } from "@/types/challenges";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Users, Calendar, LogIn, LogOut, Trophy } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Users, Calendar, LogIn, LogOut, Trophy, Trash2 } from "lucide-react";
 import { format, parseISO, differenceInDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface ChallengeCardProps {
   challenge: Challenge;
   onJoin: (id: string) => void;
   onLeave: (id: string) => void;
   onViewLeaderboard: (challenge: Challenge) => void;
+  onDelete?: (id: string) => void;
 }
 
-const ChallengeCard = ({ challenge, onJoin, onLeave, onViewLeaderboard }: ChallengeCardProps) => {
+const ChallengeCard = ({ challenge, onJoin, onLeave, onViewLeaderboard, onDelete }: ChallengeCardProps) => {
+  const { user } = useAuth();
   const challengeType = CHALLENGE_TYPES.find(t => t.value === challenge.challenge_type);
   const progress = challenge.my_progress || 0;
   const progressPercent = Math.min((progress / challenge.target_value) * 100, 100);
   const daysLeft = differenceInDays(parseISO(challenge.end_date), new Date());
   const isEnded = daysLeft < 0;
   const isCompleted = progress >= challenge.target_value;
+  const isCreator = user?.id === challenge.created_by;
+
+  const [confirmName, setConfirmName] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleConfirmDelete = () => {
+    if (confirmName.trim().toLowerCase() === challenge.title.trim().toLowerCase()) {
+      onDelete?.(challenge.id);
+      setDialogOpen(false);
+      setConfirmName("");
+    }
+  };
 
   return (
     <Card className={`p-4 border-border transition-all hover:border-primary/50 ${isEnded ? 'opacity-60' : ''}`}>
@@ -86,7 +114,7 @@ const ChallengeCard = ({ challenge, onJoin, onLeave, onViewLeaderboard }: Challe
           )}
 
           {/* Actions */}
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             {!isEnded && (
               challenge.is_joined ? (
                 <>
@@ -119,6 +147,49 @@ const ChallengeCard = ({ challenge, onJoin, onLeave, onViewLeaderboard }: Challe
                   Participar
                 </Button>
               )
+            )}
+
+            {/* Delete button for creator */}
+            {isCreator && onDelete && (
+              <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="gap-1 text-muted-foreground hover:text-destructive ml-auto"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                    Excluir
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Excluir desafio</AlertDialogTitle>
+                    <AlertDialogDescription className="space-y-3">
+                      <p>
+                        Esta ação é irreversível. Para confirmar, digite o nome do desafio:
+                      </p>
+                      <p className="font-semibold text-foreground">"{challenge.title}"</p>
+                      <Input
+                        placeholder="Digite o nome do desafio"
+                        value={confirmName}
+                        onChange={(e) => setConfirmName(e.target.value)}
+                        className="mt-2"
+                      />
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setConfirmName("")}>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleConfirmDelete}
+                      disabled={confirmName.trim().toLowerCase() !== challenge.title.trim().toLowerCase()}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      Excluir definitivamente
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             )}
           </div>
         </div>

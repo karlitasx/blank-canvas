@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Users, UserPlus, UserCheck, Loader2, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Users, UserPlus, UserCheck, Loader2, Sparkles, Clock } from "lucide-react";
 import { useConnections, UserProfile } from "@/hooks/useConnections";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -7,8 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 export const ConnectionsTab = () => {
+  const { user } = useAuth();
   const {
     discoverProfiles,
     matches,
@@ -19,6 +22,36 @@ export const ConnectionsTab = () => {
   const [activeTab, setActiveTab] = useState<"discover" | "matches">("discover");
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [connectedIds, setConnectedIds] = useState<Set<string>>(new Set());
+  const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
+
+  // Fetch pending connections (I liked but they haven't liked back)
+  useEffect(() => {
+    const fetchPending = async () => {
+      if (!user) return;
+      const { data: myLikes } = await supabase
+        .from("connections")
+        .select("target_user_id")
+        .eq("user_id", user.id)
+        .eq("action", "like");
+
+      if (!myLikes?.length) return;
+
+      const likedIds = myLikes.map(l => l.target_user_id);
+
+      // Check which ones liked back
+      const { data: theirLikes } = await supabase
+        .from("connections")
+        .select("user_id")
+        .eq("target_user_id", user.id)
+        .eq("action", "like")
+        .in("user_id", likedIds);
+
+      const mutualSet = new Set((theirLikes || []).map(l => l.user_id));
+      const pendingSet = new Set(likedIds.filter(id => !mutualSet.has(id)));
+      setPendingIds(pendingSet);
+    };
+    fetchPending();
+  }, [user, matches]);
 
   const getInitials = (name: string) => {
     return name
@@ -34,6 +67,8 @@ export const ConnectionsTab = () => {
     const success = await connect(userId);
     if (success) {
       setConnectedIds(prev => new Set(prev).add(userId));
+      // Check if it became a match or pending
+      setPendingIds(prev => new Set(prev).add(userId));
     }
     setProcessingId(null);
   };
@@ -43,12 +78,22 @@ export const ConnectionsTab = () => {
     return matches.some(m => m.user.user_id === userId);
   };
 
+  const isPending = (userId: string) => {
+    return pendingIds.has(userId) && !isMatched(userId);
+  };
+
   const isConnected = (userId: string) => {
-    return connectedIds.has(userId) || isMatched(userId);
+    return connectedIds.has(userId) || isMatched(userId) || isPending(userId);
+  };
+
+  const getConnectionStatus = (userId: string) => {
+    if (isMatched(userId)) return "matched";
+    if (isPending(userId)) return "pending";
+    return "none";
   };
 
   const ProfileCard = ({ profile }: { profile: UserProfile }) => {
-    const connected = isConnected(profile.user_id);
+    const status = getConnectionStatus(profile.user_id);
 
     return (
       <Card className="bg-card border-border overflow-hidden">
@@ -77,10 +122,15 @@ export const ConnectionsTab = () => {
               )}
             </div>
 
-            {connected ? (
+            {status === "matched" ? (
               <Button size="sm" variant="secondary" disabled className="shrink-0 gap-1.5">
                 <UserCheck className="w-4 h-4" />
                 <span className="hidden sm:inline">Conectado</span>
+              </Button>
+            ) : status === "pending" ? (
+              <Button size="sm" variant="outline" disabled className="shrink-0 gap-1.5 text-muted-foreground">
+                <Clock className="w-4 h-4" />
+                <span className="hidden sm:inline">Aguardando</span>
               </Button>
             ) : (
               <Button
@@ -187,6 +237,10 @@ export const ConnectionsTab = () => {
                         </p>
                       )}
                     </div>
+                    <Badge variant="secondary" className="gap-1 shrink-0">
+                      <UserCheck className="w-3 h-3" />
+                      Conectado
+                    </Badge>
                   </CardContent>
                 </Card>
               ))}

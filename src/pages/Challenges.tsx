@@ -7,7 +7,7 @@ import { Plus, Trophy } from "lucide-react";
 import { useState } from "react";
 
 const Challenges = () => {
-  const { challenges, loading, createChallenge, joinChallenge } = useSupabaseChallenges();
+  const { challenges, loading, createChallenge, joinChallenge, leaveChallenge, deleteChallenge } = useSupabaseChallenges();
   const [showCreate, setShowCreate] = useState(false);
 
   return (
@@ -34,8 +34,9 @@ const Challenges = () => {
                 key={challenge.id}
                 challenge={challenge}
                 onJoin={(id) => joinChallenge(id)}
-                onLeave={() => {}}
+                onLeave={(id) => leaveChallenge(id)}
                 onViewLeaderboard={() => {}}
+                onDelete={(id) => deleteChallenge(id)}
               />
             ))}
           </div>
