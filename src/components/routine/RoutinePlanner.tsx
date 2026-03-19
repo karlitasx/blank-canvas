@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight, Plus, CheckCircle2, Circle, LayoutGrid, List
 import { cn } from "@/lib/utils";
 import { AddRoutineTaskModal } from "./AddRoutineTaskModal";
 import { Progress } from "@/components/ui/progress";
-import AnimatedPlant from "@/components/dashboard/AnimatedPlant";
+
 
 type ViewMode = "horizontal" | "vertical";
 
