@@ -27,7 +27,6 @@ export const RoutinePlanner = () => {
   const navigateNextWeek = () => setCurrentDate(addDays(currentDate, 7));
 
   const todayProgress = getDayProgress(new Date());
-  const plantStage = Math.floor((todayProgress.percentage / 100) * 4);
 
   const renderDayCard = (day: Date) => {
     const isCurrentDay = isToday(day);
