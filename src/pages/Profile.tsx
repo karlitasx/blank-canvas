@@ -90,6 +90,7 @@ const Profile = () => {
   const { currency, language, setCurrency, setLanguage, t } = usePreferences();
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState("");
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   
   const [preferences, setPreferences] = useState<UserPreferences>(() => {
     const saved = localStorage.getItem('vidaflow_preferences');
