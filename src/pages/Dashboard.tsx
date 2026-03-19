@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import HeroSection from "@/components/dashboard/HeroSection";
 import DailyProgress from "@/components/dashboard/DailyProgress";
-import VirtualPlant from "@/components/dashboard/VirtualPlant";
+
 import QuickStats from "@/components/dashboard/QuickStats";
 import QuickNavigation from "@/components/dashboard/QuickNavigation";
 import WeeklySummary from "@/components/dashboard/WeeklySummary";
