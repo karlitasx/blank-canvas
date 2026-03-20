@@ -739,44 +739,288 @@ export type Database = {
         }
         Relationships: []
       }
-      hair_profiles: {
+      hair_client_access: {
         Row: {
           created_at: string
+          granted_by: string
+          id: string
+          is_active: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          granted_by: string
+          id?: string
+          is_active?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          granted_by?: string
+          id?: string
+          is_active?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
+      hair_diagnoses: {
+        Row: {
+          alerts: string | null
+          analysis: string
+          created_at: string
+          created_by: string
+          hydration_level: string | null
+          id: string
+          photo_url: string | null
+          recommended_proteins: string | null
+          restrictions: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          alerts?: string | null
+          analysis: string
+          created_at?: string
+          created_by: string
+          hydration_level?: string | null
+          id?: string
+          photo_url?: string | null
+          recommended_proteins?: string | null
+          restrictions?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          alerts?: string | null
+          analysis?: string
+          created_at?: string
+          created_by?: string
+          hydration_level?: string | null
+          id?: string
+          photo_url?: string | null
+          recommended_proteins?: string | null
+          restrictions?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      hair_evolution: {
+        Row: {
+          added_by: string
+          created_at: string
+          id: string
+          month_label: string
+          notes: string | null
+          photo_url: string
+          user_id: string
+        }
+        Insert: {
+          added_by: string
+          created_at?: string
+          id?: string
+          month_label: string
+          notes?: string | null
+          photo_url: string
+          user_id: string
+        }
+        Update: {
+          added_by?: string
+          created_at?: string
+          id?: string
+          month_label?: string
+          notes?: string | null
+          photo_url?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      hair_goals: {
+        Row: {
+          brightness_progress: number | null
+          created_at: string
+          created_by: string
+          elasticity_progress: number | null
+          id: string
+          main_goal: string
+          overall_progress: number | null
+          softness_progress: number | null
+          target_date: string | null
+          target_length: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          brightness_progress?: number | null
+          created_at?: string
+          created_by: string
+          elasticity_progress?: number | null
+          id?: string
+          main_goal: string
+          overall_progress?: number | null
+          softness_progress?: number | null
+          target_date?: string | null
+          target_length?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          brightness_progress?: number | null
+          created_at?: string
+          created_by?: string
+          elasticity_progress?: number | null
+          id?: string
+          main_goal?: string
+          overall_progress?: number | null
+          softness_progress?: number | null
+          target_date?: string | null
+          target_length?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      hair_products: {
+        Row: {
+          brand: string | null
+          created_at: string
+          how_to_use: string | null
+          id: string
+          name: string
+          price_range: string | null
+          purchase_link: string | null
+          schedule_id: string
+          sort_order: number
+          substitute: string | null
+        }
+        Insert: {
+          brand?: string | null
+          created_at?: string
+          how_to_use?: string | null
+          id?: string
+          name: string
+          price_range?: string | null
+          purchase_link?: string | null
+          schedule_id: string
+          sort_order?: number
+          substitute?: string | null
+        }
+        Update: {
+          brand?: string | null
+          created_at?: string
+          how_to_use?: string | null
+          id?: string
+          name?: string
+          price_range?: string | null
+          purchase_link?: string | null
+          schedule_id?: string
+          sort_order?: number
+          substitute?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hair_products_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "hair_schedules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hair_profiles: {
+        Row: {
+          chemical_state: string | null
+          complaints: string | null
+          created_at: string
+          damage_level: string | null
           extra_notes: string | null
           goal: string
           hair_type: string
           id: string
+          length: string | null
           main_problem: string
+          porosity: string | null
+          scalp_type: string | null
           texture: string
+          thickness: string | null
           updated_at: string
           user_id: string
           wash_frequency: string
         }
         Insert: {
+          chemical_state?: string | null
+          complaints?: string | null
           created_at?: string
+          damage_level?: string | null
           extra_notes?: string | null
           goal: string
           hair_type: string
           id?: string
+          length?: string | null
           main_problem: string
+          porosity?: string | null
+          scalp_type?: string | null
           texture: string
+          thickness?: string | null
           updated_at?: string
           user_id: string
           wash_frequency: string
         }
         Update: {
+          chemical_state?: string | null
+          complaints?: string | null
           created_at?: string
+          damage_level?: string | null
           extra_notes?: string | null
           goal?: string
           hair_type?: string
           id?: string
+          length?: string | null
           main_problem?: string
+          porosity?: string | null
+          scalp_type?: string | null
           texture?: string
+          thickness?: string | null
           updated_at?: string
           user_id?: string
           wash_frequency?: string
         }
         Relationships: []
+      }
+      hair_restrictions: {
+        Row: {
+          contraindicated_procedures: string | null
+          created_at: string
+          id: string
+          ingredients_to_avoid: string | null
+          min_chemical_interval: string | null
+          schedule_id: string
+        }
+        Insert: {
+          contraindicated_procedures?: string | null
+          created_at?: string
+          id?: string
+          ingredients_to_avoid?: string | null
+          min_chemical_interval?: string | null
+          schedule_id: string
+        }
+        Update: {
+          contraindicated_procedures?: string | null
+          created_at?: string
+          id?: string
+          ingredients_to_avoid?: string | null
+          min_chemical_interval?: string | null
+          schedule_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hair_restrictions_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "hair_schedules"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       hair_schedule_items: {
         Row: {
@@ -904,6 +1148,133 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      hair_washing_steps: {
+        Row: {
+          conditioner_instructions: string | null
+          created_at: string
+          drying_technique: string | null
+          finishing_instructions: string | null
+          id: string
+          leave_in_instructions: string | null
+          mask_duration: string | null
+          mask_instructions: string | null
+          pre_poo: boolean | null
+          pre_poo_instructions: string | null
+          schedule_id: string
+          shampoo_frequency: string | null
+          shampoo_instructions: string | null
+          updated_at: string
+        }
+        Insert: {
+          conditioner_instructions?: string | null
+          created_at?: string
+          drying_technique?: string | null
+          finishing_instructions?: string | null
+          id?: string
+          leave_in_instructions?: string | null
+          mask_duration?: string | null
+          mask_instructions?: string | null
+          pre_poo?: boolean | null
+          pre_poo_instructions?: string | null
+          schedule_id: string
+          shampoo_frequency?: string | null
+          shampoo_instructions?: string | null
+          updated_at?: string
+        }
+        Update: {
+          conditioner_instructions?: string | null
+          created_at?: string
+          drying_technique?: string | null
+          finishing_instructions?: string | null
+          id?: string
+          leave_in_instructions?: string | null
+          mask_duration?: string | null
+          mask_instructions?: string | null
+          pre_poo?: boolean | null
+          pre_poo_instructions?: string | null
+          schedule_id?: string
+          shampoo_frequency?: string | null
+          shampoo_instructions?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hair_washing_steps_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "hair_schedules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hair_weekly_checkins: {
+        Row: {
+          created_at: string
+          feedback: string
+          id: string
+          schedule_id: string
+          user_id: string
+          week_number: number
+        }
+        Insert: {
+          created_at?: string
+          feedback: string
+          id?: string
+          schedule_id: string
+          user_id: string
+          week_number: number
+        }
+        Update: {
+          created_at?: string
+          feedback?: string
+          id?: string
+          schedule_id?: string
+          user_id?: string
+          week_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hair_weekly_checkins_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "hair_schedules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hair_yara_tips: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          nutrition_tips: string | null
+          personal_message: string | null
+          tips_content: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: string
+          nutrition_tips?: string | null
+          personal_message?: string | null
+          tips_content?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          nutrition_tips?: string | null
+          personal_message?: string | null
+          tips_content?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       introduction_comments: {
         Row: {
@@ -1551,6 +1922,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      has_hair_access: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1559,9 +1931,10 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: never; Returns: boolean }
+      is_hair_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user"
+      app_role: "admin" | "moderator" | "user" | "hair_admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1689,7 +2062,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user"],
+      app_role: ["admin", "moderator", "user", "hair_admin"],
     },
   },
 } as const
