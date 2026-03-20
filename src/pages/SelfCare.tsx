@@ -156,15 +156,16 @@ const SelfCare = () => {
 
         {/* Main Tabs */}
         <Tabs value={activeMainTab} onValueChange={setActiveMainTab} className="mb-6">
-          <TabsList className="w-full bg-card border border-border">
+           <TabsList className="w-full bg-card border border-border">
             <TabsTrigger value="autocuidado" className="flex-1 gap-1.5">
               <Heart className="w-4 h-4" />
               <span className="hidden sm:inline">Autocuidado</span>
             </TabsTrigger>
-            {showHairTab && (
-              <TabsTrigger value="capilar" className="flex-1 gap-1.5">
-                <Scissors className="w-4 h-4" />
-                <span className="hidden sm:inline">Cronograma Capilar</span>
+            <TabsTrigger value="capilar" className="flex-1 gap-1.5">
+              <Scissors className="w-4 h-4" />
+              <span className="hidden sm:inline">Cronograma Capilar</span>
+              <span className="sm:hidden">Capilar</span>
+            </TabsTrigger>
                 <span className="sm:hidden">Capilar</span>
               </TabsTrigger>
             )}
