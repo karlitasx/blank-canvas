@@ -33,11 +33,13 @@ const GOAL_LABELS: Record<string, string> = {
 
 const AdminHairCareSection = () => {
   const { user } = useAuth();
-  const { subscribers, loading, createSchedule, fetchSubscribers } = useAdminHairCare();
+  const adminHook = useAdminHairCare();
+  const { subscribers, loading, createSchedule, fetchSubscribers } = adminHook;
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
   const [showGrantAccess, setShowGrantAccess] = useState(false);
   const [searchEmail, setSearchEmail] = useState("");
+  const [detailUser, setDetailUser] = useState<string | null>(null);
   const [grantingAccess, setGrantingAccess] = useState(false);
 
   // Schedule creation state
