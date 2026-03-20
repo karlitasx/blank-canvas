@@ -1,23 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Heart, Sparkles, Brain, Palette, Activity, CheckCircle, Leaf, Scissors } from "lucide-react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import confetti from "canvas-confetti";
 import { useSelfCare } from "@/hooks/useSelfCare";
 import { usePoints } from "@/hooks/usePoints";
 import { useAdmin } from "@/hooks/useAdmin";
+import { useHairAccess } from "@/hooks/useHairAccess";
 import EmotionalCheckIn from "@/components/selfcare/EmotionalCheckIn";
 import MicroRitual from "@/components/selfcare/MicroRitual";
 import PillarBalance from "@/components/selfcare/PillarBalance";
 import ShareRitual from "@/components/selfcare/ShareRitual";
 import WeeklyEvolution from "@/components/selfcare/WeeklyEvolution";
 import GymRatsChallenges from "@/components/selfcare/GymRatsChallenges";
-import HairCareModule from "@/components/haircare/HairCareModule";
+import HairCareClientView from "@/components/haircare/HairCareClientView";
 import AdminHairCareSection from "@/components/admin/AdminHairCareSection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useEffect } from "react";
 
-// Self-care tips array
 const selfCareTips = [
   "Faça uma pausa de 5 minutos para respirar profundamente",
   "Beba um copo de água agora mesmo",
@@ -45,7 +45,6 @@ const selfCareTips = [
   "Faça algo gentil por alguém",
 ];
 
-// Categories
 const categories = [
   { id: "body", name: "Corpo", icon: Activity, color: "from-green-400 to-emerald-500", activities: ["Exercício", "Alongamento", "Caminhada", "Yoga"] },
   { id: "mind", name: "Mente", icon: Brain, color: "from-blue-400 to-indigo-500", activities: ["Meditação", "Leitura", "Aprendizado", "Jogos mentais"] },
@@ -57,9 +56,6 @@ const SelfCare = () => {
   const [currentTip, setCurrentTip] = useState("");
   const [tipCompleted, setTipCompleted] = useState(false);
   const [activeMainTab, setActiveMainTab] = useState("autocuidado");
-  
-
-  // New immersive state
   const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [energyLevel, setEnergyLevel] = useState(5);
@@ -67,21 +63,16 @@ const SelfCare = () => {
   const [checkInSaved, setCheckInSaved] = useState(false);
 
   const {
-    todayCheckIn,
-    weeklyCheckIns,
-    todayPillarActions,
-    weeklyPillarActions,
-    loading,
-    saveCheckIn,
-    completeRitual,
-    addPillarAction,
-    refetch,
+    todayCheckIn, weeklyCheckIns, todayPillarActions, weeklyPillarActions,
+    loading, saveCheckIn, completeRitual, addPillarAction, refetch,
   } = useSelfCare();
-
   const { awardPoints } = usePoints();
   const { isAdmin } = useAdmin();
+  const { hasAccess, isHairAdmin, loading: hairAccessLoading } = useHairAccess();
 
-  // Load existing data
+  // Show hair tab if user has any kind of hair access
+  const showHairTab = hasAccess || isHairAdmin || isAdmin;
+
   useEffect(() => {
     if (todayCheckIn) {
       setSelectedEmotion(todayCheckIn.emotional_state);
@@ -96,7 +87,6 @@ const SelfCare = () => {
     }
   }, [todayCheckIn]);
 
-  // Random tip on mount
   useEffect(() => {
     setCurrentTip(selfCareTips[Math.floor(Math.random() * selfCareTips.length)]);
   }, []);
@@ -106,21 +96,11 @@ const SelfCare = () => {
       toast({ title: "Selecione como você está", description: "Escolha um estado emocional", variant: "destructive" });
       return;
     }
-
     try {
-      await saveCheckIn({
-        emotional_state: selectedEmotion,
-        note,
-        energy_level: energyLevel,
-        gratitudes,
-      });
-
+      await saveCheckIn({ emotional_state: selectedEmotion, note, energy_level: energyLevel, gratitudes });
       setCheckInSaved(true);
-
-      // Award points for check-in
       const today = new Date().toISOString().split("T")[0];
       await awardPoints("selfcare_checkin" as any, `checkin-${today}`);
-
       confetti({ particleCount: 30, spread: 50, origin: { y: 0.6 }, colors: ["#7f1d1d", "#1e3a8a", "#f59e0b"] });
       toast({ title: "Check-in salvo ✨", description: "Seu momento de reconexão foi registrado" });
     } catch {
@@ -161,9 +141,6 @@ const SelfCare = () => {
     setTipCompleted(false);
   };
 
-
-
-
   return (
     <DashboardLayout activeNav="/selfcare">
       <div className="max-w-4xl mx-auto">
@@ -187,12 +164,14 @@ const SelfCare = () => {
               <Heart className="w-4 h-4" />
               <span className="hidden sm:inline">Autocuidado</span>
             </TabsTrigger>
-            <TabsTrigger value="capilar" className="flex-1 gap-1.5">
-              <Scissors className="w-4 h-4" />
-              <span className="hidden sm:inline">Cronograma Capilar</span>
-              <span className="sm:hidden">Capilar</span>
-            </TabsTrigger>
-            {isAdmin && (
+            {showHairTab && (
+              <TabsTrigger value="capilar" className="flex-1 gap-1.5">
+                <Scissors className="w-4 h-4" />
+                <span className="hidden sm:inline">Cronograma Capilar</span>
+                <span className="sm:hidden">Capilar</span>
+              </TabsTrigger>
+            )}
+            {(isAdmin || isHairAdmin) && (
               <TabsTrigger value="admin-capilar" className="flex-1 gap-1.5">
                 <Scissors className="w-4 h-4" />
                 <span className="hidden sm:inline">Gestão (Yara)</span>
@@ -202,7 +181,7 @@ const SelfCare = () => {
           </TabsList>
 
           <TabsContent value="autocuidado" className="mt-4 space-y-6">
-            {/* SECTION 1: Emotional Check-In */}
+            {/* Emotional Check-In */}
             <div className="glass-card p-6 md:p-8 animate-slide-up rounded-2xl">
               <EmotionalCheckIn
                 selectedEmotion={selectedEmotion}
@@ -218,7 +197,6 @@ const SelfCare = () => {
               />
             </div>
 
-            {/* SECTION 2: Micro-Ritual (only after check-in) */}
             {checkInSaved && selectedEmotion && (
               <div className="glass-card p-6 md:p-8 animate-slide-up animation-delay-100 rounded-2xl">
                 <MicroRitual
@@ -230,7 +208,6 @@ const SelfCare = () => {
               </div>
             )}
 
-            {/* SECTION 3: Pillar Balance */}
             {checkInSaved && (
               <div className="glass-card p-6 md:p-8 animate-slide-up animation-delay-200 rounded-2xl">
                 <PillarBalance
@@ -241,12 +218,11 @@ const SelfCare = () => {
               </div>
             )}
 
-            {/* SECTION 4: Weekly Evolution */}
             <div className="glass-card p-6 animate-slide-up animation-delay-200 rounded-2xl">
               <WeeklyEvolution weeklyCheckIns={weeklyCheckIns} />
             </div>
 
-            {/* Daily Tip (kept) */}
+            {/* Daily Tip */}
             <div className="glass-card p-6 animate-slide-up rounded-2xl">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-5 h-5 text-warning" />
@@ -266,7 +242,7 @@ const SelfCare = () => {
               </div>
             </div>
 
-            {/* Categories (kept) */}
+            {/* Categories */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {categories.map((cat, i) => {
                 const Icon = cat.icon;
@@ -284,15 +260,16 @@ const SelfCare = () => {
               })}
             </div>
 
-            {/* GymRats-style Challenges */}
             <GymRatsChallenges className="animate-slide-up" />
           </TabsContent>
 
-          <TabsContent value="capilar" className="mt-4">
-            <HairCareModule />
-          </TabsContent>
+          {showHairTab && (
+            <TabsContent value="capilar" className="mt-4">
+              <HairCareClientView />
+            </TabsContent>
+          )}
 
-          {isAdmin && (
+          {(isAdmin || isHairAdmin) && (
             <TabsContent value="admin-capilar" className="mt-4">
               <div className="glass-card p-6 md:p-8 rounded-2xl animate-slide-up">
                 <AdminHairCareSection />
