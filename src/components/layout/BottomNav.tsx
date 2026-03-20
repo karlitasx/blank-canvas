@@ -17,6 +17,7 @@ interface BottomNavProps {
 const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
   ({ activeItem = "/" }, ref) => {
     const { t } = usePreferences();
+    const { isAdmin } = useAdmin();
     const navigate = useNavigate();
     const location = useLocation();
     const [showMore, setShowMore] = useState(false);
