@@ -119,6 +119,27 @@ const Sidebar = ({ activeItem = "/" }: SidebarProps) => {
             })}
           </div>
         ))}
+
+        {/* Admin section - only visible for admins */}
+        {isAdmin && (
+          <div className="px-3 mb-2">
+            <p className="px-3 py-2.5 text-xs font-semibold uppercase tracking-wider text-primary">
+              Administração
+            </p>
+            <button
+              onClick={() => handleNavigate("/admin")}
+              className={cn(
+                "flex items-center gap-4 w-full px-3 py-3 rounded-lg text-left transition-colors",
+                isActive("/admin")
+                  ? "bg-primary/10 text-primary font-medium"
+                  : "text-foreground hover:bg-muted"
+              )}
+            >
+              <Shield className="w-5 h-5 flex-shrink-0" />
+              <span className="text-[15px]">Painel Admin</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Footer */}
