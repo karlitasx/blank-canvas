@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Scissors, User, Plus, Calendar, Droplets, Leaf, Wrench, UserPlus, Search } from "lucide-react";
+import { Scissors, User, Plus, Calendar, Droplets, Leaf, Wrench, UserPlus, Search, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,6 +8,7 @@ import { toast } from "@/hooks/use-toast";
 import { useAdminHairCare } from "@/hooks/useAdminHairCare";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import AdminClientDetail from "./AdminClientDetail";
 import type { HairScheduleItem } from "@/hooks/useHairCare";
 
 const TREATMENT_TYPES = [
@@ -32,11 +33,13 @@ const GOAL_LABELS: Record<string, string> = {
 
 const AdminHairCareSection = () => {
   const { user } = useAuth();
-  const { subscribers, loading, createSchedule, fetchSubscribers } = useAdminHairCare();
+  const adminHook = useAdminHairCare();
+  const { subscribers, loading, createSchedule, fetchSubscribers } = adminHook;
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
   const [showGrantAccess, setShowGrantAccess] = useState(false);
   const [searchEmail, setSearchEmail] = useState("");
+  const [detailUser, setDetailUser] = useState<string | null>(null);
   const [grantingAccess, setGrantingAccess] = useState(false);
 
   // Schedule creation state
@@ -122,6 +125,19 @@ const AdminHairCareSection = () => {
   }
 
   const selectedSub = subscribers.find(s => s.user_id === selectedUser);
+  const detailSub = subscribers.find(s => s.user_id === detailUser);
+
+  // Detail view
+  if (detailUser && detailSub) {
+    return (
+      <AdminClientDetail
+        userId={detailUser}
+        displayName={detailSub.display_name || "Cliente"}
+        admin={adminHook}
+        onBack={() => setDetailUser(null)}
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -188,6 +204,15 @@ const AdminHairCareSection = () => {
                   </div>
                 </div>
                 <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setDetailUser(sub.user_id)}
+                    className="gap-1"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    Detalhes
+                  </Button>
                   {sub.hair_profile && (
                     <Button
                       size="sm"
