@@ -14,6 +14,7 @@ import ShareRitual from "@/components/selfcare/ShareRitual";
 import WeeklyEvolution from "@/components/selfcare/WeeklyEvolution";
 import GymRatsChallenges from "@/components/selfcare/GymRatsChallenges";
 import HairCareClientView from "@/components/haircare/HairCareClientView";
+import HairCarePreview from "@/components/haircare/HairCarePreview";
 import AdminHairCareSection from "@/components/admin/AdminHairCareSection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect } from "react";
@@ -262,19 +263,7 @@ const SelfCare = () => {
             {hasAccess || isHairAdmin || isAdmin ? (
               <HairCareClientView />
             ) : (
-              <div className="glass-card p-8 md:p-12 rounded-2xl animate-slide-up text-center space-y-4">
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-                  <Scissors className="w-8 h-8 text-primary" />
-                </div>
-                <h3 className="text-lg font-bold">Cronograma Capilar da Yara</h3>
-                <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                  Um plano personalizado de cuidados capilares feito exclusivamente para você pela Yara. 
-                  Solicite seu acesso para começar sua jornada capilar! 💇‍♀️
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Entre em contato com a Yara para liberar seu acesso ao cronograma.
-                </p>
-              </div>
+              <HairCarePreview />
             )}
           </TabsContent>
 
