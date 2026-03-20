@@ -14,6 +14,7 @@ import ShareRitual from "@/components/selfcare/ShareRitual";
 import WeeklyEvolution from "@/components/selfcare/WeeklyEvolution";
 import GymRatsChallenges from "@/components/selfcare/GymRatsChallenges";
 import HairCareClientView from "@/components/haircare/HairCareClientView";
+import HairCarePreview from "@/components/haircare/HairCarePreview";
 import AdminHairCareSection from "@/components/admin/AdminHairCareSection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect } from "react";
