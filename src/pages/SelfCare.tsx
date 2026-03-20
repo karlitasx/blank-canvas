@@ -166,9 +166,6 @@ const SelfCare = () => {
               <span className="hidden sm:inline">Cronograma Capilar</span>
               <span className="sm:hidden">Capilar</span>
             </TabsTrigger>
-                <span className="sm:hidden">Capilar</span>
-              </TabsTrigger>
-            )}
             {(isAdmin || isHairAdmin) && (
               <TabsTrigger value="admin-capilar" className="flex-1 gap-1.5">
                 <Scissors className="w-4 h-4" />
@@ -261,11 +258,25 @@ const SelfCare = () => {
             <GymRatsChallenges className="animate-slide-up" />
           </TabsContent>
 
-          {showHairTab && (
-            <TabsContent value="capilar" className="mt-4">
+          <TabsContent value="capilar" className="mt-4">
+            {hasAccess || isHairAdmin || isAdmin ? (
               <HairCareClientView />
-            </TabsContent>
-          )}
+            ) : (
+              <div className="glass-card p-8 md:p-12 rounded-2xl animate-slide-up text-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                  <Scissors className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-lg font-bold">Cronograma Capilar da Yara</h3>
+                <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                  Um plano personalizado de cuidados capilares feito exclusivamente para você pela Yara. 
+                  Solicite seu acesso para começar sua jornada capilar! 💇‍♀️
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Entre em contato com a Yara para liberar seu acesso ao cronograma.
+                </p>
+              </div>
+            )}
+          </TabsContent>
 
           {(isAdmin || isHairAdmin) && (
             <TabsContent value="admin-capilar" className="mt-4">
