@@ -125,6 +125,19 @@ const AdminHairCareSection = () => {
   }
 
   const selectedSub = subscribers.find(s => s.user_id === selectedUser);
+  const detailSub = subscribers.find(s => s.user_id === detailUser);
+
+  // Detail view
+  if (detailUser && detailSub) {
+    return (
+      <AdminClientDetail
+        userId={detailUser}
+        displayName={detailSub.display_name || "Cliente"}
+        admin={adminHook}
+        onBack={() => setDetailUser(null)}
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">
