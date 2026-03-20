@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Scissors, User, Plus, Calendar, Droplets, Leaf, Wrench, UserPlus, Search } from "lucide-react";
+import { Scissors, User, Plus, Calendar, Droplets, Leaf, Wrench, UserPlus, Search, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,6 +8,7 @@ import { toast } from "@/hooks/use-toast";
 import { useAdminHairCare } from "@/hooks/useAdminHairCare";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import AdminClientDetail from "./AdminClientDetail";
 import type { HairScheduleItem } from "@/hooks/useHairCare";
 
 const TREATMENT_TYPES = [
