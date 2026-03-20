@@ -204,6 +204,15 @@ const AdminHairCareSection = () => {
                   </div>
                 </div>
                 <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setDetailUser(sub.user_id)}
+                    className="gap-1"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    Detalhes
+                  </Button>
                   {sub.hair_profile && (
                     <Button
                       size="sm"
