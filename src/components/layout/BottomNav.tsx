@@ -60,6 +60,20 @@ const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
                   </button>
                 );
               })}
+              {isAdmin && (
+                <button
+                  onClick={() => handleNav("/admin")}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors w-full text-left",
+                    isActiveHref("/admin")
+                      ? "bg-primary/10 text-primary"
+                      : "text-foreground hover:bg-muted"
+                  )}
+                >
+                  <Shield className="w-5 h-5" />
+                  <span className="text-sm font-medium">Painel Admin</span>
+                </button>
+              )}
             </div>
           </div>
         )}
