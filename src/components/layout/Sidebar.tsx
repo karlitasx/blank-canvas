@@ -65,6 +65,7 @@ const Sidebar = ({ activeItem = "/" }: SidebarProps) => {
   const location = useLocation();
   const { user, signOut } = useAuth();
   const { profile } = useProfile();
+  const { isAdmin } = useAdmin();
 
   const handleNavigate = (href: string) => {
     navigate(href);
