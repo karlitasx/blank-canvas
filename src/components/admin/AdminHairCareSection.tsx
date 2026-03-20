@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Scissors, User, Plus, Eye, Calendar, Droplets, Leaf, Wrench } from "lucide-react";
+import { Scissors, User, Plus, Calendar, Droplets, Leaf, Wrench, UserPlus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/hooks/use-toast";
 import { useAdminHairCare } from "@/hooks/useAdminHairCare";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import type { HairScheduleItem } from "@/hooks/useHairCare";
 
 const TREATMENT_TYPES = [
@@ -17,19 +19,25 @@ const TREATMENT_TYPES = [
 const DAY_NAMES = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 const HAIR_TYPE_LABELS: Record<string, string> = {
-  liso: "Liso (1)", ondulado: "Ondulado (2)", cacheado: "Cacheado (3)", crespo: "Crespo (4)",
+  liso: "Liso", ondulado: "Ondulado", cacheado: "Cacheado", crespo: "Crespo",
+  "1A": "1A", "1B": "1B", "1C": "1C", "2A": "2A", "2B": "2B", "2C": "2C",
+  "3A": "3A", "3B": "3B", "3C": "3C", "4A": "4A", "4B": "4B", "4C": "4C",
 };
 const PROBLEM_LABELS: Record<string, string> = {
   ressecamento: "Ressecamento", quebra: "Quebra", frizz: "Frizz", oleosidade: "Oleosidade", queda: "Queda", quimicamente_danificado: "Dano químico",
 };
 const GOAL_LABELS: Record<string, string> = {
-  crescimento: "Crescimento", hidratacao: "Hidratação", reconstrucao: "Reconstrução", definicao: "Definição de cachos", brilho: "Brilho e maciez", anti_queda: "Reduzir queda",
+  crescimento: "Crescimento", hidratacao: "Hidratação", reconstrucao: "Reconstrução", definicao: "Definição", brilho: "Brilho e maciez", anti_queda: "Reduzir queda",
 };
 
 const AdminHairCareSection = () => {
-  const { subscribers, loading, createSchedule } = useAdminHairCare();
+  const { user } = useAuth();
+  const { subscribers, loading, createSchedule, fetchSubscribers } = useAdminHairCare();
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
+  const [showGrantAccess, setShowGrantAccess] = useState(false);
+  const [searchEmail, setSearchEmail] = useState("");
+  const [grantingAccess, setGrantingAccess] = useState(false);
 
   // Schedule creation state
   const [title, setTitle] = useState("Cronograma Capilar");
@@ -41,12 +49,8 @@ const AdminHairCareSection = () => {
 
   const addItem = () => {
     setItems(prev => [...prev, {
-      day_of_week: 1,
-      week_number: 1,
-      treatment_type: "hidratacao",
-      product_recommendation: null,
-      yara_note: null,
-      sort_order: prev.length,
+      day_of_week: 1, week_number: 1, treatment_type: "hidratacao",
+      product_recommendation: null, yara_note: null, sort_order: prev.length,
     }]);
   };
 
@@ -63,7 +67,6 @@ const AdminHairCareSection = () => {
       toast({ title: "Adicione ao menos 1 tratamento", variant: "destructive" });
       return;
     }
-
     setSaving(true);
     try {
       await createSchedule(selectedUser, title, durationWeeks, startsAt, notes || null, items);
@@ -71,10 +74,46 @@ const AdminHairCareSection = () => {
       setShowCreate(false);
       setItems([]);
       setSelectedUser(null);
-    } catch (err) {
+    } catch {
       toast({ title: "Erro ao criar cronograma", variant: "destructive" });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleGrantAccess = async () => {
+    if (!searchEmail.trim() || !user) return;
+    setGrantingAccess(true);
+    try {
+      // Find user by email via profiles
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("user_id, display_name")
+        .ilike("display_name", `%${searchEmail.trim()}%`);
+
+      if (!profiles || profiles.length === 0) {
+        toast({ title: "Usuária não encontrada", variant: "destructive" });
+        setGrantingAccess(false);
+        return;
+      }
+
+      const targetUserId = profiles[0].user_id;
+
+      // Grant access
+      const { error } = await supabase
+        .from("hair_client_access" as any)
+        .upsert({ user_id: targetUserId, granted_by: user.id, is_active: true }, { onConflict: "user_id" });
+
+      if (error) throw error;
+
+      toast({ title: `Acesso concedido para ${profiles[0].display_name || "usuária"} ✨` });
+      setSearchEmail("");
+      setShowGrantAccess(false);
+      fetchSubscribers();
+    } catch {
+      toast({ title: "Erro ao conceder acesso", variant: "destructive" });
+    } finally {
+      setGrantingAccess(false);
     }
   };
 
@@ -86,16 +125,42 @@ const AdminHairCareSection = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-2">
           <Scissors className="w-5 h-5 text-pink-400" />
-          <h3 className="font-semibold">Cronograma Capilar</h3>
-          <span className="text-xs text-muted-foreground">({subscribers.length} assinantes)</span>
+          <h3 className="font-semibold">Painel da Yara</h3>
+          <span className="text-xs text-muted-foreground">({subscribers.length} clientes)</span>
         </div>
+        <Button size="sm" variant="outline" onClick={() => setShowGrantAccess(!showGrantAccess)} className="gap-1.5">
+          <UserPlus className="w-4 h-4" />
+          Conceder Acesso
+        </Button>
       </div>
 
+      {/* Grant Access Panel */}
+      {showGrantAccess && (
+        <div className="p-4 rounded-xl border border-primary/30 bg-primary/5 space-y-3">
+          <p className="text-sm font-medium">Conceder acesso ao Cronograma Capilar</p>
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                value={searchEmail}
+                onChange={e => setSearchEmail(e.target.value)}
+                placeholder="Buscar por nome..."
+                className="pl-9"
+              />
+            </div>
+            <Button size="sm" onClick={handleGrantAccess} disabled={grantingAccess || !searchEmail.trim()}>
+              {grantingAccess ? "..." : "Conceder"}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Client list */}
       {subscribers.length === 0 ? (
-        <p className="text-sm text-muted-foreground text-center py-8">Nenhuma assinante ativa encontrada.</p>
+        <p className="text-sm text-muted-foreground text-center py-8">Nenhuma cliente encontrada. Conceda acesso para começar.</p>
       ) : (
         <div className="space-y-3">
           {subscribers.map(sub => (
@@ -131,17 +196,13 @@ const AdminHairCareSection = () => {
                       className="gap-1"
                     >
                       <Plus className="w-3.5 h-3.5" />
-                      {sub.has_schedule ? "Novo" : "Criar"} cronograma
+                      {sub.has_schedule ? "Novo" : "Criar"}
                     </Button>
                   )}
                 </div>
               </div>
-
-              {/* Show hair profile details if expanded */}
-              {sub.hair_profile && sub.hair_profile.extra_notes && (
-                <p className="text-xs text-muted-foreground mt-2 pl-13">
-                  📝 {sub.hair_profile.extra_notes}
-                </p>
+              {sub.hair_profile?.extra_notes && (
+                <p className="text-xs text-muted-foreground mt-2 pl-13">📝 {sub.hair_profile.extra_notes}</p>
               )}
             </div>
           ))}
@@ -156,12 +217,10 @@ const AdminHairCareSection = () => {
 
             {selectedSub.hair_profile && (
               <div className="p-3 rounded-xl bg-muted/50 text-xs space-y-1">
-                <p><strong>Tipo:</strong> {HAIR_TYPE_LABELS[selectedSub.hair_profile.hair_type]}</p>
+                <p><strong>Tipo:</strong> {HAIR_TYPE_LABELS[selectedSub.hair_profile.hair_type] || selectedSub.hair_profile.hair_type}</p>
                 <p><strong>Textura:</strong> {selectedSub.hair_profile.texture}</p>
-                <p><strong>Problema:</strong> {PROBLEM_LABELS[selectedSub.hair_profile.main_problem]}</p>
-                <p><strong>Objetivo:</strong> {GOAL_LABELS[selectedSub.hair_profile.goal]}</p>
-                <p><strong>Lavagem:</strong> {selectedSub.hair_profile.wash_frequency}</p>
-                {selectedSub.hair_profile.extra_notes && <p><strong>Obs:</strong> {selectedSub.hair_profile.extra_notes}</p>}
+                <p><strong>Problema:</strong> {PROBLEM_LABELS[selectedSub.hair_profile.main_problem] || selectedSub.hair_profile.main_problem}</p>
+                <p><strong>Objetivo:</strong> {GOAL_LABELS[selectedSub.hair_profile.goal] || selectedSub.hair_profile.goal}</p>
               </div>
             )}
 
@@ -181,17 +240,15 @@ const AdminHairCareSection = () => {
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-medium">Observações para a usuária</label>
+              <label className="text-xs font-medium">Observações</label>
               <Textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Dicas, orientações gerais..." rows={2} className="resize-none" />
             </div>
 
-            {/* Items */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <label className="text-sm font-medium">Tratamentos</label>
                 <Button size="sm" variant="outline" onClick={addItem} className="gap-1">
-                  <Plus className="w-3.5 h-3.5" />
-                  Adicionar
+                  <Plus className="w-3.5 h-3.5" /> Adicionar
                 </Button>
               </div>
 
@@ -200,56 +257,30 @@ const AdminHairCareSection = () => {
                   <div className="grid grid-cols-3 gap-2">
                     <div className="space-y-1">
                       <label className="text-xs text-muted-foreground">Semana</label>
-                      <Input
-                        type="number"
-                        min={1}
-                        max={durationWeeks}
-                        value={item.week_number}
-                        onChange={e => updateItem(idx, "week_number", Number(e.target.value))}
-                      />
+                      <Input type="number" min={1} max={durationWeeks} value={item.week_number} onChange={e => updateItem(idx, "week_number", Number(e.target.value))} />
                     </div>
                     <div className="space-y-1">
                       <label className="text-xs text-muted-foreground">Dia</label>
-                      <select
-                        className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
-                        value={item.day_of_week}
-                        onChange={e => updateItem(idx, "day_of_week", Number(e.target.value))}
-                      >
+                      <select className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm" value={item.day_of_week} onChange={e => updateItem(idx, "day_of_week", Number(e.target.value))}>
                         {DAY_NAMES.map((d, i) => <option key={i} value={i}>{d}</option>)}
                       </select>
                     </div>
                     <div className="space-y-1">
                       <label className="text-xs text-muted-foreground">Tipo</label>
-                      <select
-                        className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
-                        value={item.treatment_type}
-                        onChange={e => updateItem(idx, "treatment_type", e.target.value)}
-                      >
+                      <select className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm" value={item.treatment_type} onChange={e => updateItem(idx, "treatment_type", e.target.value)}>
                         {TREATMENT_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
                       </select>
                     </div>
                   </div>
-                  <Input
-                    placeholder="Produto recomendado (opcional)"
-                    value={item.product_recommendation || ""}
-                    onChange={e => updateItem(idx, "product_recommendation", e.target.value || null)}
-                  />
-                  <Input
-                    placeholder="Observação da Yara (opcional)"
-                    value={item.yara_note || ""}
-                    onChange={e => updateItem(idx, "yara_note", e.target.value || null)}
-                  />
-                  <Button size="sm" variant="ghost" className="text-destructive text-xs" onClick={() => removeItem(idx)}>
-                    Remover
-                  </Button>
+                  <Input placeholder="Produto recomendado (opcional)" value={item.product_recommendation || ""} onChange={e => updateItem(idx, "product_recommendation", e.target.value || null)} />
+                  <Input placeholder="Observação da Yara (opcional)" value={item.yara_note || ""} onChange={e => updateItem(idx, "yara_note", e.target.value || null)} />
+                  <Button size="sm" variant="ghost" className="text-destructive text-xs" onClick={() => removeItem(idx)}>Remover</Button>
                 </div>
               ))}
             </div>
 
             <div className="flex gap-3 pt-2">
-              <Button variant="outline" className="flex-1" onClick={() => { setShowCreate(false); setItems([]); }}>
-                Cancelar
-              </Button>
+              <Button variant="outline" className="flex-1" onClick={() => { setShowCreate(false); setItems([]); }}>Cancelar</Button>
               <Button className="flex-1 btn-gradient" onClick={handleCreate} disabled={saving || items.length === 0}>
                 {saving ? "Criando..." : "Criar cronograma"}
               </Button>
