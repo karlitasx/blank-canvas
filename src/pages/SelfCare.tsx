@@ -70,9 +70,6 @@ const SelfCare = () => {
   const { isAdmin } = useAdmin();
   const { hasAccess, isHairAdmin, loading: hairAccessLoading } = useHairAccess();
 
-  // Show hair tab if user has any kind of hair access
-  const showHairTab = hasAccess || isHairAdmin || isAdmin;
-
   useEffect(() => {
     if (todayCheckIn) {
       setSelectedEmotion(todayCheckIn.emotional_state);
