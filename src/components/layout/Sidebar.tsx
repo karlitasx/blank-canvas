@@ -2,11 +2,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
+import { useAdmin } from "@/hooks/useAdmin";
 import { toast } from "@/hooks/use-toast";
 import {
   Home, User, LogOut, HelpCircle, Calendar,
   Wallet, Target, Heart, Award, Trophy, Medal,
-  Sparkles, UserPlus, BookOpen, Newspaper, Users, Bell, Rss, Dumbbell,
+  Sparkles, UserPlus, BookOpen, Newspaper, Users, Bell, Rss, Dumbbell, Shield,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
@@ -64,6 +65,7 @@ const Sidebar = ({ activeItem = "/" }: SidebarProps) => {
   const location = useLocation();
   const { user, signOut } = useAuth();
   const { profile } = useProfile();
+  const { isAdmin } = useAdmin();
 
   const handleNavigate = (href: string) => {
     navigate(href);
@@ -117,6 +119,27 @@ const Sidebar = ({ activeItem = "/" }: SidebarProps) => {
             })}
           </div>
         ))}
+
+        {/* Admin section - only visible for admins */}
+        {isAdmin && (
+          <div className="px-3 mb-2">
+            <p className="px-3 py-2.5 text-xs font-semibold uppercase tracking-wider text-primary">
+              Administração
+            </p>
+            <button
+              onClick={() => handleNavigate("/admin")}
+              className={cn(
+                "flex items-center gap-4 w-full px-3 py-3 rounded-lg text-left transition-colors",
+                isActive("/admin")
+                  ? "bg-primary/10 text-primary font-medium"
+                  : "text-foreground hover:bg-muted"
+              )}
+            >
+              <Shield className="w-5 h-5 flex-shrink-0" />
+              <span className="text-[15px]">Painel Admin</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Footer */}

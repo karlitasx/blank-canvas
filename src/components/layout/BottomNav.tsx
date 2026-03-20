@@ -2,7 +2,8 @@ import { useState, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 import { navigationItems } from "@/lib/navigation";
 import { usePreferences } from "@/contexts/PreferencesContext";
-import { MoreHorizontal, X } from "lucide-react";
+import { useAdmin } from "@/hooks/useAdmin";
+import { MoreHorizontal, X, Shield } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const PRIMARY_HREFS = ["/", "/routine", "/finance", "/gymrats"];
@@ -16,6 +17,7 @@ interface BottomNavProps {
 const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
   ({ activeItem = "/" }, ref) => {
     const { t } = usePreferences();
+    const { isAdmin } = useAdmin();
     const navigate = useNavigate();
     const location = useLocation();
     const [showMore, setShowMore] = useState(false);
@@ -58,6 +60,20 @@ const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
                   </button>
                 );
               })}
+              {isAdmin && (
+                <button
+                  onClick={() => handleNav("/admin")}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors w-full text-left",
+                    isActiveHref("/admin")
+                      ? "bg-primary/10 text-primary"
+                      : "text-foreground hover:bg-muted"
+                  )}
+                >
+                  <Shield className="w-5 h-5" />
+                  <span className="text-sm font-medium">Painel Admin</span>
+                </button>
+              )}
             </div>
           </div>
         )}
