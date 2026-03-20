@@ -2,7 +2,8 @@ import { useState, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 import { navigationItems } from "@/lib/navigation";
 import { usePreferences } from "@/contexts/PreferencesContext";
-import { MoreHorizontal, X } from "lucide-react";
+import { useAdmin } from "@/hooks/useAdmin";
+import { MoreHorizontal, X, Shield } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const PRIMARY_HREFS = ["/", "/routine", "/finance", "/gymrats"];
