@@ -2,11 +2,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
+import { useAdmin } from "@/hooks/useAdmin";
 import { toast } from "@/hooks/use-toast";
 import {
   Home, User, LogOut, HelpCircle, Calendar,
   Wallet, Target, Heart, Award, Trophy, Medal,
-  Sparkles, UserPlus, BookOpen, Newspaper, Users, Bell, Rss, Dumbbell,
+  Sparkles, UserPlus, BookOpen, Newspaper, Users, Bell, Rss, Dumbbell, Shield,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
